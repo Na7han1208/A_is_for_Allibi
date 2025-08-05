@@ -19329,7 +19329,7 @@ MonoBehaviour:
   moveSpeed: 5
   gravity: -9.81
   cameraTransform: {fileID: 399152651}
-  lookSensitivity: 0.4
+  lookSensitivity: 0.7
   verticalLookLimit: 90
 --- !u!43 &307200446
 Mesh:

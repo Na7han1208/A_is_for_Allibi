@@ -9,7 +9,7 @@ public class FPController : MonoBehaviour
 
     [Header("Look Settings")]
     public Transform cameraTransform;
-    public float lookSensitivity = 1f;
+    public float lookSensitivity = 0.7f;
     public float verticalLookLimit = 90f;
 
     private CharacterController controller;
