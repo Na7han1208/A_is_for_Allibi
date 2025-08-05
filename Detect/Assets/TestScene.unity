@@ -68177,6 +68177,37 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &1232323814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1232323815}
+  m_Layer: 0
+  m_Name: HoldPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1232323815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232323814}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5552671368873201840}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1243131285
 GameObject:
   m_ObjectHideFlags: 0
@@ -95361,9 +95392,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4169614486597661684, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1232323815}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+--- !u!4 &5552671368873201840 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4169614486597661684, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+  m_PrefabInstance: {fileID: 5552671368873201839}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

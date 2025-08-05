@@ -24,7 +24,14 @@ public class FPController : MonoBehaviour
     private Vector3 velocity;
     private float verticalRotation = 0f;
 
-    //Pickup System
+    [Header("Pickup System")]
+    public float pickupRange = 2f;
+    public Transform holdPoint;
+    public float pickupSmoothness = 10f;
+
+    private GameObject heldObject;
+    private Rigidbody heldRb;
+
     private LayerMask layerMask;
     private float pickupInput;
     private bool isHoldingObject = false;
@@ -60,26 +67,37 @@ public class FPController : MonoBehaviour
         lookInput = context.ReadValue<Vector2>();
     }
 
-    //BUG - this method is run 3 times every key press
     public void OnPickup(InputAction.CallbackContext context){
-        if (context.performed){
-            pickupInput = context.ReadValue<float>();
-            Debug.Log("DEBUG: " + pickupInput);
-            Debug.Log("DEBUG : HandlePickup Run");
-            
-            if (!isHoldingObject){
-                Debug.Log("DEBUG: Raycast drawn");
+        if (context.performed)
+        {
+            if (!isHoldingObject)
+            {
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask)){
-                    Debug.Log("HIT");
-                    isHoldingObject = true;
-                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
+                if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
+                {
+                    if (hit.rigidbody != null)
+                    {
+                        heldObject = hit.collider.gameObject;
+                        heldRb = heldObject.GetComponent<Rigidbody>();
+                        heldRb.useGravity = false;
+                        heldRb.isKinematic = true;
+                        heldObject.transform.position = holdPoint.position;
+                        heldObject.transform.SetParent(holdPoint);
+                        isHoldingObject = true;
+                    }
                 }
-                else{
-                    Debug.Log("MISS");
-                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
-                }
-            } 
+            }
+            else
+            {
+                //Drop Obj
+                heldObject.transform.SetParent(null);
+                heldRb.useGravity = true;
+                heldRb.isKinematic = false;
+
+                heldObject = null;
+                heldRb = null;
+                isHoldingObject = false;
+            }
         }
     }
 
