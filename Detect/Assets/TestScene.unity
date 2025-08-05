@@ -19137,6 +19137,17 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!114 &304809804 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3377446839837533157, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+  m_PrefabInstance: {fileID: 5552671368873201839}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db765c50bf43ca4c83f4e96de82a756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &307200446
 Mesh:
   m_ObjectHideFlags: 0
@@ -94905,7 +94916,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 178725302409938841, guid: 2c50cb5e4950bf840b3bd4692347ccfc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.506508
+      value: 35.77
       objectReference: {fileID: 0}
     - target: {fileID: 178725302409938841, guid: 2c50cb5e4950bf840b3bd4692347ccfc, type: 3}
       propertyPath: m_LocalPosition.y
@@ -94913,7 +94924,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 178725302409938841, guid: 2c50cb5e4950bf840b3bd4692347ccfc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -34
+      value: -97.49
       objectReference: {fileID: 0}
     - target: {fileID: 178725302409938841, guid: 2c50cb5e4950bf840b3bd4692347ccfc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -94947,6 +94958,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 1x1
       objectReference: {fileID: 0}
+    - target: {fileID: 8678849057344581390, guid: 2c50cb5e4950bf840b3bd4692347ccfc, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -94960,6 +94975,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 304809804}
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnPickup
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FPController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031214656954164618, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4169614486597661684, guid: 988aba5949750604abb4c429a4854b66, type: 3}
       propertyPath: m_LocalPosition.x
       value: 41.47369

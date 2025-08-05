@@ -19,17 +19,20 @@ public class FPController : MonoBehaviour
     private Vector3 velocity;
     private float verticalRotation = 0f;
 
-    private Boolean pickupInput;
-    private Boolean isHoldingObject;
+    private LayerMask layerMask;
+    private float pickupInput;
+    private bool isHoldingObject = false;
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //hides and locks cursor ^
+
+        layerMask = LayerMask.GetMask("Pickupable", "Player");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         HandleMovement();
         HandleLook();
@@ -46,9 +49,33 @@ public class FPController : MonoBehaviour
         lookInput = context.ReadValue<Vector2>();
     }
 
+    //BUG - this method is run 3 times every key press
     public void OnPickup(InputAction.CallbackContext context)
     {
-        pickupInput = context.ReadValue<Boolean>();
+        if (context.performed)
+        {
+            pickupInput = context.ReadValue<float>();
+            Debug.Log("DEBUG: " + pickupInput);
+            Debug.Log("DEBUG : HandlePickup Run");
+            
+            if (!isHoldingObject)
+            {
+                Debug.Log("DEBUG: Raycast drawn");
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+                {
+                    Debug.Log("HIT");
+                    isHoldingObject = true;
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
+                }
+                else
+                {
+                    Debug.Log("MISS");
+                    Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
+                }
+            } 
+        }
+
     }
 
     // --- Input Handling ---
@@ -74,19 +101,6 @@ public class FPController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
-    }
-
-    public void HandlePickup()
-    {
-        if (!isHoldingObject)
-        {
-            
-        }
-
-        /// Raycast to obj within range
-        /// McYoink that obj
-        /// Child to parent(player)
-
     }
 }
 
