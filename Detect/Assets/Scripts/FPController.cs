@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,10 +19,13 @@ public class FPController : MonoBehaviour
     private Vector3 velocity;
     private float verticalRotation = 0f;
 
+    private Boolean pickupInput;
+    private Boolean isHoldingObject;
+
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked; 
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //hides and locks cursor ^
     }
 
@@ -30,6 +34,8 @@ public class FPController : MonoBehaviour
         HandleMovement();
         HandleLook();
     }
+
+    // --- Input Reads ---
     public void OnMovement(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -40,6 +46,12 @@ public class FPController : MonoBehaviour
         lookInput = context.ReadValue<Vector2>();
     }
 
+    public void OnPickup(InputAction.CallbackContext context)
+    {
+        pickupInput = context.ReadValue<Boolean>();
+    }
+
+    // --- Input Handling ---
     public void HandleMovement()
     {
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
@@ -62,6 +74,19 @@ public class FPController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    public void HandlePickup()
+    {
+        if (!isHoldingObject)
+        {
+            
+        }
+
+        /// Raycast to obj within range
+        /// McYoink that obj
+        /// Child to parent(player)
+
     }
 }
 
