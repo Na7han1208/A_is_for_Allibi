@@ -33,7 +33,6 @@ public class FPController : MonoBehaviour
     private Rigidbody heldRb;
 
     private LayerMask layerMask;
-    private float pickupInput;
     private bool isHoldingObject = false;
 
     //Crouch
@@ -101,17 +100,28 @@ public class FPController : MonoBehaviour
         }
     }
 
-    public void OnCrouch(InputAction.CallbackContext context){
+    private void LateUpdate()
+    {
+        if (!isHoldingObject && heldObject != null)
+        {
+            heldObject.transform.position = Vector3.Lerp(heldObject.transform.position, holdPoint.position, Time.deltaTime * pickupSmoothness);
+        }
+    }
+
+    public void OnCrouch(InputAction.CallbackContext context)
+    {
         Transform playerTransform = this.transform;
         Vector3 currentScale = transform.localScale;
 
-        if (context.performed){ //Start crouching
+        if (context.performed)
+        { //Start crouching
             currentScale.y = crouchSize;
             playerTransform.localScale = currentScale;
             isCrouching = true;
             isSprinting = false;
         }
-        else if (context.canceled){ //Stop crouching
+        else if (context.canceled)
+        { //Stop crouching
             currentScale.y = 1;
             playerTransform.localScale = currentScale;
             isCrouching = false;

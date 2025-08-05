@@ -81733,7 +81733,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2760683d9fead6f418e0c2aef0dc6935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 69
 --- !u!65 &1653869977
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -95346,6 +95345,10 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 3377446839837533157, guid: 988aba5949750604abb4c429a4854b66, type: 3}
+      propertyPath: holdPoint
+      value: 
+      objectReference: {fileID: 1232323815}
     - target: {fileID: 4169614486597661684, guid: 988aba5949750604abb4c429a4854b66, type: 3}
       propertyPath: m_LocalPosition.x
       value: 41.47369
