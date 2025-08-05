@@ -11,6 +11,7 @@ public class FPController : MonoBehaviour
     private float moveSpeed;
     public float gravity = -9.81f;
     private bool isSprinting;
+    private bool isJumping;
 
     [Header("Look Settings")]
     public Transform cameraTransform;
@@ -36,8 +37,7 @@ public class FPController : MonoBehaviour
     private bool isCrawling;
     private float crawlSize = 0.2f;
 
-    private void Awake()
-    {
+    private void Awake(){
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //hides and locks cursor ^
@@ -45,44 +45,37 @@ public class FPController : MonoBehaviour
         layerMask = LayerMask.GetMask("Pickupable", "Player");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         HandleMovement();
         HandleLook();
     }
 
     // --- Input Reads ---
-    public void OnMovement(InputAction.CallbackContext context)
-    {
+    public void OnMovement(InputAction.CallbackContext context){
         moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnLook(InputAction.CallbackContext context)
-    {
+    public void OnLook(InputAction.CallbackContext context){
         lookInput = context.ReadValue<Vector2>();
     }
 
     //BUG - this method is run 3 times every key press
-    public void OnPickup(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
+    public void OnPickup(InputAction.CallbackContext context){
+        if (context.performed){
             pickupInput = context.ReadValue<float>();
             Debug.Log("DEBUG: " + pickupInput);
             Debug.Log("DEBUG : HandlePickup Run");
             
-            if (!isHoldingObject)
-            {
+            if (!isHoldingObject){
                 Debug.Log("DEBUG: Raycast drawn");
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-                {
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask)){
                     Debug.Log("HIT");
                     isHoldingObject = true;
                     Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
                 }
-                else
-                {
+                else{
                     Debug.Log("MISS");
                     Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.red);
                 }
@@ -90,76 +83,77 @@ public class FPController : MonoBehaviour
         }
     }
 
-    public void OnCrouch(InputAction.CallbackContext context)
-    {
+    public void OnCrouch(InputAction.CallbackContext context){
         Transform playerTransform = this.transform;
         Vector3 currentScale = transform.localScale;
 
-        if (context.performed) //Start crouching
-        {
+        if (context.performed){ //Start crouching
             currentScale.y = crouchSize;
             playerTransform.localScale = currentScale;
             isCrouching = true;
             isSprinting = false;
         }
-        else if (context.canceled) //Stop crouching
-        {
+        else if (context.canceled){ //Stop crouching
             currentScale.y = 1;
             playerTransform.localScale = currentScale;
             isCrouching = false;
         }
     }
 
-    public void OnCrawl(InputAction.CallbackContext context)
-    {
+    public void OnCrawl(InputAction.CallbackContext context){
         Transform playerTransform = this.transform;
         Vector3 currentScale = transform.localScale;
 
-        if (context.performed) //Start crawling
-        {
+        if (context.performed){ //Start crawling
             currentScale.y = crawlSize;
             playerTransform.localScale = currentScale;
             isCrawling = true;
         }
-        else if (context.canceled) //Stop crawling
-        {
+        else if (context.canceled){ //Stop crawling
             currentScale.y = 1;
             playerTransform.localScale = currentScale;
             isCrawling = false;
         }
     }
 
-    public void OnSprint(InputAction.CallbackContext context)
-    {
-        if (context.performed && !isCrouching)
-        {
+    public void OnSprint(InputAction.CallbackContext context){
+        if (context.performed && !isCrouching){
             isSprinting = true;
         }
-        else if (context.canceled)
-        {
+        else if (context.canceled){
             isSprinting = false;
         }
     }
+    /*
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isJumping = true;
+        }
+    }
+    */
 
     // --- Input Handling ---
     public void HandleMovement()
     {
-        if(isSprinting)         {moveSpeed = sprintSpeed;}
-        else if(isCrouching)    {moveSpeed = crouchSpeed;}
-        else                    {moveSpeed = walkSpeed;}
+        if (isSprinting) { moveSpeed = sprintSpeed; }
+        else if (isCrouching) { moveSpeed = crouchSpeed; }
+        else { moveSpeed = walkSpeed; }
 
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
         controller.Move(move * moveSpeed * Time.deltaTime);
 
         if (controller.isGrounded && velocity.y < 0)
+        {
             velocity.y = -2f;
+        }
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 
-    public void HandleLook()
-    {
+    public void HandleLook(){
         float mouseX = lookInput.x * lookSensitivity;
         float mouseY = lookInput.y * lookSensitivity;
 
