@@ -5,8 +5,12 @@ using UnityEngine.InputSystem;
 public class FPController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 5f;
+    public float walkSpeed = 5f;
+    public float sprintSpeed = 8f;
+    public float crouchSpeed = 3f;
+    private float moveSpeed;
     public float gravity = -9.81f;
+    private bool isSprinting;
 
     [Header("Look Settings")]
     public Transform cameraTransform;
@@ -19,9 +23,18 @@ public class FPController : MonoBehaviour
     private Vector3 velocity;
     private float verticalRotation = 0f;
 
+    //Pickup System
     private LayerMask layerMask;
     private float pickupInput;
     private bool isHoldingObject = false;
+
+    //Crouch
+    private bool isCrouching;
+    private float crouchSize = 0.5f;
+
+    //Crawling
+    private bool isCrawling;
+    private float crawlSize = 0.2f;
 
     private void Awake()
     {
@@ -75,12 +88,66 @@ public class FPController : MonoBehaviour
                 }
             } 
         }
+    }
 
+    public void OnCrouch(InputAction.CallbackContext context)
+    {
+        Transform playerTransform = this.transform;
+        Vector3 currentScale = transform.localScale;
+
+        if (context.performed) //Start crouching
+        {
+            currentScale.y = crouchSize;
+            playerTransform.localScale = currentScale;
+            isCrouching = true;
+            isSprinting = false;
+        }
+        else if (context.canceled) //Stop crouching
+        {
+            currentScale.y = 1;
+            playerTransform.localScale = currentScale;
+            isCrouching = false;
+        }
+    }
+
+    public void OnCrawl(InputAction.CallbackContext context)
+    {
+        Transform playerTransform = this.transform;
+        Vector3 currentScale = transform.localScale;
+
+        if (context.performed) //Start crawling
+        {
+            currentScale.y = crawlSize;
+            playerTransform.localScale = currentScale;
+            isCrawling = true;
+        }
+        else if (context.canceled) //Stop crawling
+        {
+            currentScale.y = 1;
+            playerTransform.localScale = currentScale;
+            isCrawling = false;
+        }
+    }
+
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isCrouching)
+        {
+            isSprinting = true;
+        }
+        else if (context.canceled)
+        {
+            isSprinting = false;
+        }
     }
 
     // --- Input Handling ---
     public void HandleMovement()
     {
+        if(isSprinting)         {moveSpeed = sprintSpeed;}
+        else if(isCrouching)    {moveSpeed = crouchSpeed;}
+        else                    {moveSpeed = walkSpeed;}
+
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
         controller.Move(move * moveSpeed * Time.deltaTime);
 
