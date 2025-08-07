@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,7 +12,9 @@ public class FPController : MonoBehaviour
     private float moveSpeed;
     public float gravity = -9.81f;
     private bool isSprinting;
+
     private bool isJumping;
+    public float jumpHeight = 10f;
 
     [Header("Look Settings")]
     public Transform cameraTransform;
@@ -34,6 +37,8 @@ public class FPController : MonoBehaviour
 
     private LayerMask layerMask;
     private bool isHoldingObject = false;
+
+    private float throwForce = 7f;
 
     //Crouch
     private bool isCrouching;
@@ -100,6 +105,21 @@ public class FPController : MonoBehaviour
         }
     }
 
+    public void OnThrow(InputAction.CallbackContext context)
+    {
+        if (context.performed &&isHoldingObject)
+        {
+            heldObject.transform.SetParent(null);
+            heldRb.useGravity = true;
+            heldRb.isKinematic = false;
+
+            heldRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
+            heldObject = null;
+            heldRb = null;
+            isHoldingObject = false;
+        }
+    }
+
     private void LateUpdate()
     {
         if (!isHoldingObject && heldObject != null)
@@ -152,15 +172,18 @@ public class FPController : MonoBehaviour
             isSprinting = false;
         }
     }
+    
     /*
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && controller.isGrounded)
         {
             isJumping = true;
+            velocity.y = (float)Math.Sqrt(jumpHeight * -2f * gravity);
         }
     }
     */
+    
 
     // --- Input Handling ---
     public void HandleMovement()
