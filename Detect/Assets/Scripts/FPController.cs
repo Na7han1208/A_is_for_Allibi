@@ -12,8 +12,6 @@ public class FPController : MonoBehaviour
     private float moveSpeed;
     public float gravity = -9.81f;
     private bool isSprinting;
-
-    private bool isJumping;
     public float jumpHeight = 10f;
 
     [Header("Look Settings")]
@@ -40,9 +38,15 @@ public class FPController : MonoBehaviour
 
     private float throwForce = 7f;
 
+    [Header("Shooting")]
+    public GameObject dartPrefab;
+    public Transform gunPoint;
+    public float muzzleVelocity = 5f;
+
     //Crouch
     private bool isCrouching;
-    private float crouchSize = 0.5f;
+    private float playerHeight = 2f;
+    private float crouchHeight = 1f;
 
     //Crawling
     private bool isCrawling;
@@ -84,7 +88,10 @@ public class FPController : MonoBehaviour
                         heldObject = hit.collider.gameObject;
                         heldRb = heldObject.GetComponent<Rigidbody>();
                         heldRb.useGravity = false;
+
                         heldRb.isKinematic = true;
+                        //heldRb.constraints = RigidbodyConstraints.FreezeRotation;
+
                         heldObject.transform.position = holdPoint.position;
                         heldObject.transform.SetParent(holdPoint);
                         isHoldingObject = true;
@@ -96,7 +103,9 @@ public class FPController : MonoBehaviour
                 //Drop Obj
                 heldObject.transform.SetParent(null);
                 heldRb.useGravity = true;
+
                 heldRb.isKinematic = false;
+                //heldRb.constraints = RigidbodyConstraints.None;
 
                 heldObject = null;
                 heldRb = null;
@@ -105,13 +114,32 @@ public class FPController : MonoBehaviour
         }
     }
 
+    public void OnShoot(InputAction.CallbackContext context)
+    {
+        if (dartPrefab != null && gunPoint != null && context.performed)
+        {
+            for (int i = 1; i < 20; i++)
+            {
+                GameObject dart = Instantiate(dartPrefab, gunPoint.position, gunPoint.rotation);
+                Rigidbody rb = dart.GetComponent<Rigidbody>();
+
+                if (rb != null)
+                {
+                    rb.AddForce(gunPoint.forward * muzzleVelocity);
+                } 
+            }
+        }
+    }
+
     public void OnThrow(InputAction.CallbackContext context)
     {
-        if (context.performed &&isHoldingObject)
+        if (context.performed && isHoldingObject)
         {
             heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
+
             heldRb.isKinematic = false;
+            //heldRb.constraints = RigidbodyConstraints.None;
 
             heldRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
             heldObject = null;
@@ -135,14 +163,14 @@ public class FPController : MonoBehaviour
 
         if (context.performed)
         { //Start crouching
-            currentScale.y = crouchSize;
+            controller.height = crouchHeight;
             playerTransform.localScale = currentScale;
             isCrouching = true;
             isSprinting = false;
         }
         else if (context.canceled)
         { //Stop crouching
-            currentScale.y = 1;
+            controller.height = playerHeight;
             playerTransform.localScale = currentScale;
             isCrouching = false;
         }
@@ -173,17 +201,13 @@ public class FPController : MonoBehaviour
         }
     }
     
-    /*
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.performed && controller.isGrounded)
         {
-            isJumping = true;
             velocity.y = (float)Math.Sqrt(jumpHeight * -2f * gravity);
         }
     }
-    */
-    
 
     // --- Input Handling ---
     public void HandleMovement()
