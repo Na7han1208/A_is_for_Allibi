@@ -118,7 +118,7 @@ public class FPController : MonoBehaviour
     {
         if (dartPrefab != null && gunPoint != null && context.performed)
         {
-            for (int i = 1; i < 20; i++)
+            for (int i = 1; i < 100; i++)
             {
                 GameObject dart = Instantiate(dartPrefab, gunPoint.position, gunPoint.rotation);
                 Rigidbody rb = dart.GetComponent<Rigidbody>();
@@ -126,6 +126,7 @@ public class FPController : MonoBehaviour
                 if (rb != null)
                 {
                     rb.AddForce(gunPoint.forward * muzzleVelocity);
+                    Destroy(dart, 7);
                 } 
             }
         }
@@ -137,7 +138,7 @@ public class FPController : MonoBehaviour
         {
             heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
-
+    
             heldRb.isKinematic = false;
             //heldRb.constraints = RigidbodyConstraints.None;
 
@@ -165,6 +166,7 @@ public class FPController : MonoBehaviour
         { //Start crouching
             controller.height = crouchHeight;
             playerTransform.localScale = currentScale;
+
             isCrouching = true;
             isSprinting = false;
         }
