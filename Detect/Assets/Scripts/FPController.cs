@@ -303,13 +303,14 @@ public class FPController : MonoBehaviour
         }     
     }
 
-    //Checks collision for heldObjects
+    //Checks collision for heldObjects 
+    // **NOTE PART OF FIX NOT YET COMPLETE
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (isHoldingObject && hit.gameObject.layer == LayerMask.NameToLayer("Pickupable"))
         {
             isColliding = true;
-            Debug.Log("Colliding");
+            //Debug.Log("Colliding");
         }
         else
         {

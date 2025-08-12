@@ -53,11 +53,22 @@ public class BlockLockPuzzle : MonoBehaviour
         {
             puzzleSolved = true;
             Debug.Log("Puzzle solved");
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Instantiate(dartPrefab, confettiPosition.position, confettiPosition.rotation);
                 Debug.Log("DARTS");
             }
+            for (int i = 0; i < 50; i++)
+            {
+                Instantiate(dartPrefab, confettiPosition.position, confettiPosition.rotation);
+                Debug.Log("DARTS");
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                Instantiate(dartPrefab, confettiPosition.position, confettiPosition.rotation);
+                Debug.Log("DARTS");
+            }
+            
         }
     }
 }
