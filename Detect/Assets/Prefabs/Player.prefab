@@ -381,6 +381,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 675bf70b-7321-49a8-b0b2-0067c68fa032
     m_ActionName: 'Player/Shoot[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 203490489893484305}
+        m_TargetAssemblyTypeName: FPController, Assembly-CSharp
+        m_MethodName: OnInspect
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e9129c2c-1b8a-46cf-9082-26a85e32e31e
+    m_ActionName: 'Player/Inspect[/Mouse/delta]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -434,6 +450,8 @@ MonoBehaviour:
   pickupRange: 2
   holdPoint: {fileID: 5608628979092456598}
   pickupSmoothness: 10
+  heldObject: {fileID: 0}
+  heldRb: {fileID: 0}
   dartPrefab: {fileID: 550747888352737358, guid: 1a789604d1890bc439040262f506c363, type: 3}
   gunPoint: {fileID: 0}
   muzzleVelocity: 400
@@ -462,7 +480,7 @@ Transform:
   m_GameObject: {fileID: 5718539557336989980}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.24, z: 1.86}
+  m_LocalPosition: {x: 0, y: 0, z: 1.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -12,7 +12,9 @@ public class FPController : MonoBehaviour
     private float moveSpeed;
     public float gravity = -9.81f;
     private bool isSprinting;
+
     public float jumpHeight = 10f;
+    public float jumpGravityMultiplier = 5f;
 
     [Header("Look Settings")]
     public Transform cameraTransform;
@@ -30,13 +32,13 @@ public class FPController : MonoBehaviour
     public Transform holdPoint;
     public float pickupSmoothness = 10f;
 
-    private GameObject heldObject;
-    private Rigidbody heldRb;
+    public GameObject heldObject;
+    public Rigidbody heldRb;
 
     private LayerMask layerMask;
     private bool isHoldingObject = false;
 
-    private float throwForce = 7f;
+    public float throwForce = 7f;
     private bool isColliding;
 
     [Header("Shooting")]
@@ -109,16 +111,7 @@ public class FPController : MonoBehaviour
             }
             else
             {
-                //Drop Obj
-                heldObject.transform.SetParent(null);
-                heldRb.useGravity = true;
-                heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
-
-                heldRb.constraints = RigidbodyConstraints.None;
-
-                heldObject = null;
-                heldRb = null;
-                isHoldingObject = false;
+                DropObject();
             }
         }
     }
@@ -141,9 +134,25 @@ public class FPController : MonoBehaviour
         }
     }
 
+    public void DropObject()
+    {
+        if (heldObject != null && !isInspecting)
+        {
+            heldObject.transform.SetParent(null);
+            heldRb.useGravity = true;
+            heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+
+            heldRb.constraints = RigidbodyConstraints.None;
+
+            heldObject = null;
+            heldRb = null;
+            isHoldingObject = false;
+        }
+    }
+
     public void OnThrow(InputAction.CallbackContext context)
     {
-        if (context.performed && isHoldingObject)
+        if (context.performed && isHoldingObject && !isInspecting)
         {
             heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
@@ -244,7 +253,15 @@ public class FPController : MonoBehaviour
             velocity.y = -2f;
         }
 
-        velocity.y += gravity * Time.deltaTime;
+        if (!controller.isGrounded)
+        {
+            velocity.y += gravity * jumpGravityMultiplier * Time.deltaTime;
+        }
+        else
+        {
+            velocity.y += gravity * Time.deltaTime;
+        }
+
         controller.Move(velocity * Time.deltaTime);
     }
 
