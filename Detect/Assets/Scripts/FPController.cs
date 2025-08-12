@@ -53,6 +53,9 @@ public class FPController : MonoBehaviour
     private bool isCrawling;
     private float crawlSize = 0.2f;
 
+    [Header("Inspect")]
+    private bool isInspecting = false;
+
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -64,9 +67,13 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
-        HandleMovement();
-        HandleLook();
+        if (!isInspecting)
+        {
+            HandleMovement();
+            HandleLook();
+        }
         HandlePickup();
+        HandleInspect();
     }
 
     // --- Input Reads ---
@@ -109,7 +116,7 @@ public class FPController : MonoBehaviour
                 //Drop Obj
                 heldObject.transform.SetParent(null);
                 heldRb.useGravity = true;
-                heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete; //now you can go through walls its okay
+                heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
 
                 heldRb.constraints = RigidbodyConstraints.None;
 
@@ -152,6 +159,28 @@ public class FPController : MonoBehaviour
             heldObject = null;
             heldRb = null;
             isHoldingObject = false;
+        }
+    }
+
+    public void OnInspect(InputAction.CallbackContext context)
+    {
+        if (context.performed && isHoldingObject)
+        {
+            isInspecting = !isInspecting;
+
+            if (isInspecting)
+            {
+                holdPoint.localPosition += new Vector3(0f, 0f, 0.5f);
+                heldObject.transform.localScale *= 2f;
+
+                moveInput = Vector2.zero;
+                lookInput = Vector2.zero;
+            }
+            else
+            {
+                holdPoint.localPosition -= new Vector3(0f, 0f, 0.5f);
+                heldObject.transform.localScale /= 2f;
+            }
         }
     }
 
@@ -263,9 +292,26 @@ public class FPController : MonoBehaviour
             {
                 Vector3 direction = (holdPoint.position - heldObject.transform.position).normalized;
                 heldRb.AddForce(direction * distance, ForceMode.Impulse);
-                heldRb.linearVelocity = Vector3.zero;
+                heldRb.velocity = Vector3.zero;
             }
         }
+
+        if (heldRb != null && heldRb.isKinematic) //allows other scripts to make heldRb kinematic without this shitting its pants
+        {
+            isHoldingObject = false;
+        }
+    }
+
+    public void HandleInspect()
+    {
+        if (isInspecting && heldObject != null)
+        {
+            float rotateX = lookInput.y * 100f * Time.deltaTime;
+            float rotateY = -lookInput.x * 100f * Time.deltaTime;
+
+            heldObject.transform.Rotate(cameraTransform.up, rotateY, Space.World);
+            heldObject.transform.Rotate(cameraTransform.right, rotateX, Space.World);
+        }     
     }
 
     //Checks collision for heldObjects

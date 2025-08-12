@@ -33,6 +33,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Inspect",
+                    "type": "Value",
+                    "id": "e9129c2c-1b8a-46cf-9082-26a85e32e31e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Throw",
+                    "type": "Button",
+                    "id": "9db34bf4-052d-4d82-85dc-5c2aedc90321",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Crouch",
                     "type": "Button",
                     "id": "9cde8fc0-0234-46e9-9b0a-6ae102af4dad",
@@ -54,15 +72,6 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "40f18a34-fb2a-4d47-9ed7-19e1f370b302",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Throw",
-                    "type": "Button",
-                    "id": "9db34bf4-052d-4d82-85dc-5c2aedc90321",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -351,6 +360,28 @@
                     "processors": "",
                     "groups": ";Keyboard",
                     "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "031795cf-80f2-442d-8118-8390b6d47bc6",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inspect",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8851dd17-e2f6-49a4-9d25-4149b77b3645",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inspect",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
