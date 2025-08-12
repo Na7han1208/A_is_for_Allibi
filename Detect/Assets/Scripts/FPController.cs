@@ -37,6 +37,7 @@ public class FPController : MonoBehaviour
     private bool isHoldingObject = false;
 
     private float throwForce = 7f;
+    private bool isColliding;
 
     [Header("Shooting")]
     public GameObject dartPrefab;
@@ -52,7 +53,8 @@ public class FPController : MonoBehaviour
     private bool isCrawling;
     private float crawlSize = 0.2f;
 
-    private void Awake(){
+    private void Awake()
+    {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //hides and locks cursor ^
@@ -64,34 +66,22 @@ public class FPController : MonoBehaviour
     {
         HandleMovement();
         HandleLook();
-
-        if(isHoldingObject)
-        {
-            float distance = Vector3.Distance(heldObject.transform.position, holdPoint.position);
-            if (distance > 0)
-            {
-                Vector3 direction = (holdPoint.position - heldObject.transform.position).normalized;
-                heldRb.AddForce(direction * distance, ForceMode.Impulse);
-                heldRb.linearVelocity = Vector3.zero;
-            }
-            else
-            {
-                heldRb.linearVelocity = Vector3.zero;
-                //heldObject.transform.position = holdPoint.transform.position;
-            }
-        }
+        HandlePickup();
     }
 
     // --- Input Reads ---
-    public void OnMovement(InputAction.CallbackContext context){
+    public void OnMovement(InputAction.CallbackContext context)
+    {
         moveInput = context.ReadValue<Vector2>();
     }
 
-    public void OnLook(InputAction.CallbackContext context){
+    public void OnLook(InputAction.CallbackContext context)
+    {
         lookInput = context.ReadValue<Vector2>();
     }
 
-    public void OnPickup(InputAction.CallbackContext context){
+    public void OnPickup(InputAction.CallbackContext context)
+    {
         if (context.performed)
         {
             if (!isHoldingObject)
@@ -105,7 +95,7 @@ public class FPController : MonoBehaviour
                         heldRb = heldObject.GetComponent<Rigidbody>();
                         heldRb.useGravity = false;
 
-                        //heldRb.isKinematic = true;
+                        heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
                         heldRb.constraints = RigidbodyConstraints.FreezeRotation;
 
                         heldObject.transform.position = holdPoint.position;
@@ -119,8 +109,8 @@ public class FPController : MonoBehaviour
                 //Drop Obj
                 heldObject.transform.SetParent(null);
                 heldRb.useGravity = true;
+                heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete; //now you can go through walls its okay
 
-                //heldRb.isKinematic = false;
                 heldRb.constraints = RigidbodyConstraints.None;
 
                 heldObject = null;
@@ -143,7 +133,7 @@ public class FPController : MonoBehaviour
                 {
                     rb.AddForce(gunPoint.forward * muzzleVelocity);
                     Destroy(dart, 7);
-                } 
+                }
             }
         }
     }
@@ -154,7 +144,7 @@ public class FPController : MonoBehaviour
         {
             heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
-    
+
             //heldRb.isKinematic = false;
             heldRb.constraints = RigidbodyConstraints.None;
 
@@ -194,31 +184,37 @@ public class FPController : MonoBehaviour
         }
     }
 
-    public void OnCrawl(InputAction.CallbackContext context){
+    public void OnCrawl(InputAction.CallbackContext context)
+    {
         Transform playerTransform = this.transform;
         Vector3 currentScale = transform.localScale;
 
-        if (context.performed){ //Start crawling
+        if (context.performed)
+        { //Start crawling
             currentScale.y = crawlSize;
             playerTransform.localScale = currentScale;
             isCrawling = true;
         }
-        else if (context.canceled){ //Stop crawling
+        else if (context.canceled)
+        { //Stop crawling
             currentScale.y = 1;
             playerTransform.localScale = currentScale;
             isCrawling = false;
         }
     }
 
-    public void OnSprint(InputAction.CallbackContext context){
-        if (context.performed && !isCrouching){
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isCrouching)
+        {
             isSprinting = true;
         }
-        else if (context.canceled){
+        else if (context.canceled)
+        {
             isSprinting = false;
         }
     }
-    
+
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.performed && controller.isGrounded)
@@ -246,7 +242,8 @@ public class FPController : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
     }
 
-    public void HandleLook(){
+    public void HandleLook()
+    {
         float mouseX = lookInput.x * lookSensitivity;
         float mouseY = lookInput.y * lookSensitivity;
 
@@ -255,6 +252,34 @@ public class FPController : MonoBehaviour
 
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    public void HandlePickup()
+    {
+        if (isHoldingObject)
+        {
+            float distance = Vector3.Distance(heldObject.transform.position, holdPoint.position);
+            if (distance > 0 && !isColliding)
+            {
+                Vector3 direction = (holdPoint.position - heldObject.transform.position).normalized;
+                heldRb.AddForce(direction * distance, ForceMode.Impulse);
+                heldRb.linearVelocity = Vector3.zero;
+            }
+        }
+    }
+
+    //Checks collision for heldObjects
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (isHoldingObject && hit.gameObject.layer == LayerMask.NameToLayer("Pickupable"))
+        {
+            isColliding = true;
+            Debug.Log("Colliding");
+        }
+        else
+        {
+            isColliding = false;
+        }
     }
 }
 
