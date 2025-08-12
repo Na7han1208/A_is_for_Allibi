@@ -64,6 +64,22 @@ public class FPController : MonoBehaviour
     {
         HandleMovement();
         HandleLook();
+
+        if(isHoldingObject)
+        {
+            float distance = Vector3.Distance(heldObject.transform.position, holdPoint.position);
+            if (distance > 0)
+            {
+                Vector3 direction = (holdPoint.position - heldObject.transform.position).normalized;
+                heldRb.AddForce(direction * distance, ForceMode.Impulse);
+                heldRb.linearVelocity = Vector3.zero;
+            }
+            else
+            {
+                heldRb.linearVelocity = Vector3.zero;
+                //heldObject.transform.position = holdPoint.transform.position;
+            }
+        }
     }
 
     // --- Input Reads ---
@@ -89,8 +105,8 @@ public class FPController : MonoBehaviour
                         heldRb = heldObject.GetComponent<Rigidbody>();
                         heldRb.useGravity = false;
 
-                        heldRb.isKinematic = true;
-                        //heldRb.constraints = RigidbodyConstraints.FreezeRotation;
+                        //heldRb.isKinematic = true;
+                        heldRb.constraints = RigidbodyConstraints.FreezeRotation;
 
                         heldObject.transform.position = holdPoint.position;
                         heldObject.transform.SetParent(holdPoint);
@@ -104,8 +120,8 @@ public class FPController : MonoBehaviour
                 heldObject.transform.SetParent(null);
                 heldRb.useGravity = true;
 
-                heldRb.isKinematic = false;
-                //heldRb.constraints = RigidbodyConstraints.None;
+                //heldRb.isKinematic = false;
+                heldRb.constraints = RigidbodyConstraints.None;
 
                 heldObject = null;
                 heldRb = null;
@@ -139,8 +155,8 @@ public class FPController : MonoBehaviour
             heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
     
-            heldRb.isKinematic = false;
-            //heldRb.constraints = RigidbodyConstraints.None;
+            //heldRb.isKinematic = false;
+            heldRb.constraints = RigidbodyConstraints.None;
 
             heldRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
             heldObject = null;
