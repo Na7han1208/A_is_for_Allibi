@@ -49,10 +49,6 @@ public class FPController : MonoBehaviour
     private float playerHeight = 2f;
     private float crouchHeight = 1f;
 
-    //Crawling
-    private bool isCrawling;
-    private float crawlSize = 0.2f;
-
     [Header("Inspect")]
     private bool isInspecting = false;
 
@@ -213,25 +209,6 @@ public class FPController : MonoBehaviour
         }
     }
 
-    public void OnCrawl(InputAction.CallbackContext context)
-    {
-        Transform playerTransform = this.transform;
-        Vector3 currentScale = transform.localScale;
-
-        if (context.performed)
-        { //Start crawling
-            currentScale.y = crawlSize;
-            playerTransform.localScale = currentScale;
-            isCrawling = true;
-        }
-        else if (context.canceled)
-        { //Stop crawling
-            currentScale.y = 1;
-            playerTransform.localScale = currentScale;
-            isCrawling = false;
-        }
-    }
-
     public void OnSprint(InputAction.CallbackContext context)
     {
         if (context.performed && !isCrouching)
@@ -292,13 +269,8 @@ public class FPController : MonoBehaviour
             {
                 Vector3 direction = (holdPoint.position - heldObject.transform.position).normalized;
                 heldRb.AddForce(direction * distance, ForceMode.Impulse);
-                heldRb.velocity = Vector3.zero;
+                heldRb.linearVelocity = Vector3.zero;
             }
-        }
-
-        if (heldRb != null && heldRb.isKinematic) //allows other scripts to make heldRb kinematic without this shitting its pants
-        {
-            isHoldingObject = false;
         }
     }
 
