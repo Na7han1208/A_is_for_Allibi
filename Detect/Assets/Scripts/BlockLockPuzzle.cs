@@ -30,6 +30,7 @@ public class BlockLockPuzzle : MonoBehaviour
                 isLocked[i] = true;
                 Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, Quaternion.identity);
                 Blocks[i].GetComponent<Rigidbody>().isKinematic = true;
+                Blocks[i].layer = 0;
 
                 FPController player = FindFirstObjectByType<FPController>();
                 if (player != null && player.heldObject == Blocks[i])
