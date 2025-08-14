@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -53,6 +54,7 @@ public class FPController : MonoBehaviour
 
     [Header("Inspect")]
     private bool isInspecting = false;
+    public float inspectSizeMult = 3f;
 
     private void Awake()
     {
@@ -176,15 +178,18 @@ public class FPController : MonoBehaviour
             if (isInspecting)
             {
                 holdPoint.localPosition += new Vector3(0f, 0f, 0.5f);
-                heldObject.transform.localScale *= 2f;
+                heldObject.transform.localScale *= inspectSizeMult;
+
+                heldRb.isKinematic = true;
 
                 moveInput = Vector2.zero;
                 lookInput = Vector2.zero;
             }
             else
             {
+                heldRb.isKinematic = false;
                 holdPoint.localPosition -= new Vector3(0f, 0f, 0.5f);
-                heldObject.transform.localScale /= 2f;
+                heldObject.transform.localScale /= inspectSizeMult;
             }
         }
     }
@@ -235,6 +240,18 @@ public class FPController : MonoBehaviour
         if (context.performed && controller.isGrounded)
         {
             velocity.y = (float)Math.Sqrt(jumpHeight * -2f * gravity);
+        }
+    }
+
+    public void OnQuit(InputAction.CallbackContext context)
+    {
+        if (Application.isEditor)
+        {
+            EditorApplication.isPlaying = false;
+        }
+        else
+        {
+            Application.Quit(0);
         }
     }
 
