@@ -16,6 +16,7 @@ public class FPController : MonoBehaviour
 
     public float jumpHeight = 10f;
     public float jumpGravityMultiplier = 5f;
+    private bool isUsingController; //True if player is on controller, false if player is on KBM
 
     [Header("Look Settings")]
     public Transform cameraTransform;
@@ -47,7 +48,7 @@ public class FPController : MonoBehaviour
     public Transform gunPoint;
     public float muzzleVelocity = 5f;
 
-    //Crouch
+    //[Header("Crouch)]
     private bool isCrouching;
     private float playerHeight = 2f;
     private float crouchHeight = 1f;
@@ -108,6 +109,13 @@ public class FPController : MonoBehaviour
                         heldObject.transform.position = holdPoint.position;
                         heldObject.transform.SetParent(holdPoint);
                         isHoldingObject = true;
+
+                        //Play sound if object has it
+                        if (heldObject.GetComponent<CharacterSoundBits>() != null)
+                        {
+                            heldObject.GetComponent<CharacterSoundBits>().OnInteract();
+                            Debug.Log("PLAYED SOUND OF A DUDE"); // <---- DEBUG
+                        }
                     }
                 }
             }
