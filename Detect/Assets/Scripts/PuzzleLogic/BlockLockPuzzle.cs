@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class BlockLockPuzzle : MonoBehaviour
 {
-    public GameObject[] Blocks;
-    public GameObject[] LockPos;
+    [Header("Blocks")]
+    [SerializeField] private GameObject[] Blocks;
 
-    public Transform confettiPosition;
+    [Header("Lock Positions")]
+    [SerializeField] private  GameObject[] LockPos;
 
     private bool[] isLocked;
     private bool puzzleSolved = false;
-    public GameObject dartPrefab;
 
     void Start()
     {
@@ -52,24 +52,7 @@ public class BlockLockPuzzle : MonoBehaviour
 
         if (allLocked && !puzzleSolved)
         {
-            puzzleSolved = true;
-            Debug.Log("Puzzle solved");
-            for (int i = 0; i < 50; i++)
-            {
-                Instantiate(dartPrefab, confettiPosition.position, confettiPosition.rotation);
-                Debug.Log("DARTS");
-            }
-            for (int i = 0; i < 50; i++)
-            {
-                Instantiate(dartPrefab, confettiPosition.position, confettiPosition.rotation);
-                Debug.Log("DARTS");
-            }
-            for (int i = 0; i < 50; i++)
-            {
-                Instantiate(dartPrefab, confettiPosition.position, confettiPosition.rotation);
-                Debug.Log("DARTS");
-            }
-            
+            puzzleSolved = true;            
         }
     }
 }

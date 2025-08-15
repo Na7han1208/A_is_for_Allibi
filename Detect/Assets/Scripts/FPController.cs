@@ -16,8 +16,8 @@ public class FPController : MonoBehaviour
 
     public float jumpHeight = 10f;
     public float jumpGravityMultiplier = 5f;
-    private bool isUsingController; //True if player is on controller, false if player is on KBM
-
+    private bool isUsingController;
+    
     [Header("Look Settings")]
     public Transform cameraTransform;
     public float lookSensitivity = 0.7f;
