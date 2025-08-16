@@ -116,6 +116,16 @@ public class FPController : MonoBehaviour
                             heldObject.GetComponent<CharacterSoundBits>().OnInteract();
                             Debug.Log("PLAYED SOUND OF A DUDE"); // <---- DEBUG
                         }
+
+                        //Open Combo Lock UI if is combo lock
+                        if (heldObject.GetComponent<CombinationLock>() != null)
+                        {
+                            heldObject.GetComponent<CombinationLock>().ShowPuzzle();
+                            Debug.Log("COMBO LOCK INIT"); // <---- DEBUG
+
+                            moveInput = Vector2.zero;
+                            lookInput = Vector2.zero;
+                        }
                     }
                 }
             }

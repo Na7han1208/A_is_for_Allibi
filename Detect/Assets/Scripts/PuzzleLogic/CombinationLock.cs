@@ -12,72 +12,84 @@ using UnityEngine.UI;
 */
 public class CombinationLock : MonoBehaviour
 {
-    [SerializeField] private int Combination;
+    [SerializeField] private int[] combo;
+    [SerializeField] private Button[] upButtons;
+    [SerializeField] private Button[] downButtons;
+    [SerializeField] private TMP_Text[] numDisplays;
 
-    private GameObject canvasGameObject;
-    private Canvas canvas;
-
-    private GameObject[] images;
-    private GameObject[] texts;
-    private GameObject[] upButtons;
-    private GameObject[] downButtons;
-
-    public void Initialise()
+    public void Awake()
     {
-        canvasGameObject = new GameObject("CombinationLock");
-        canvas = canvasGameObject.AddComponent<Canvas>();
-        canvasGameObject.AddComponent<CanvasScaler>();
-        canvasGameObject.AddComponent<GraphicRaycaster>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        HidePuzzle();
+    }
 
-        //Add all necessary components
-        for (int i = 0; i < Combination.ToString().Length; i++)
+    public void ShowPuzzle()
+    {
+        foreach (Button button in upButtons)
         {
-            //Add Image
-            GameObject imageGameObject = new GameObject("NumberBackground" + i);
-            imageGameObject.AddComponent<Image>();
-            imageGameObject.transform.SetParent(canvas.transform, false);
-            images[i] = imageGameObject;
-            //Assign up arrow sprite
-
-            //Add Text
-            GameObject textGameObject = new GameObject("NumberDisplay" + i);
-            textGameObject.AddComponent<TMP_Text>();
-            textGameObject.transform.SetParent(canvas.transform, false);
-            textGameObject.GetComponent<TMP_Text>().text = Combination.ToString()[i].ToString();
-            texts[i] = textGameObject;
-
-
-            //Add up button
-            GameObject upButtonGameObject = new GameObject("UpButton" + i);
-            upButtonGameObject.AddComponent<Button>();
-            upButtonGameObject.transform.SetParent(canvas.transform, false);
-            upButtons[i] = upButtonGameObject;
-
-            //Add down button
-            GameObject downButtonGameObject = new GameObject("DownButton" + i);
-            downButtonGameObject.AddComponent<Button>();
-            downButtonGameObject.transform.SetParent(canvas.transform, false);
-            downButtons[i] = downButtonGameObject;
+            button.gameObject.SetActive(true);
+        }
+        foreach (Button button in downButtons)
+        {
+            button.gameObject.SetActive(true);
+        }
+        foreach (TMP_Text text in numDisplays)
+        {
+            text.gameObject.SetActive(true);
         }
 
-        //Calculate necessary positions
-        int screenWidth = Screen.width;
-        int screenHeight = Screen.height;
-        int comboLength = Combination.ToString().Length;
-
-        int x_Distance = screenWidth / (comboLength + 2);
-        int x_Current = 0;
-
-        //Place components in correct position
-        for (int i = 0; i < comboLength; i++)
+        foreach (TMP_Text text in numDisplays)
         {
-            x_Current += x_Distance;
-            images[i].GetComponent<Image>().rectTransform.anchoredPosition = new UnityEngine.Vector2(x_Current, screenHeight / 2);
-            texts[i].GetComponent<TMP_Text>().rectTransform.anchoredPosition = new UnityEngine.Vector2(x_Current, screenHeight / 2);
+            text.text = "0";
+        }
+    }
 
-            upButtons[i].GetComponent<Button>().GetComponent<RectTransform>().anchoredPosition = new UnityEngine.Vector2(x_Current, screenHeight / 2 + 50);
-            downButtons[i].GetComponent<Button>().GetComponent<RectTransform>().anchoredPosition = new UnityEngine.Vector2(x_Current, screenHeight / 2 - 50);
+    public void HidePuzzle()
+    {
+        foreach (Button button in upButtons)
+        {
+            button.gameObject.SetActive(false);
+        }
+        foreach (Button button in downButtons)
+        {
+            button.gameObject.SetActive(false);
+        }
+        foreach (TMP_Text text in numDisplays)
+        {
+            text.gameObject.SetActive(false);
+        }
+    }
+
+    public void ButtonIncrease(int index)
+    {
+        if (combo[index] == 9)
+        {
+            combo[index] = 0;
+        }
+        else
+        {
+            combo[index]++;
+        }
+        numDisplays[index].text = combo[index].ToString();
+    }
+
+    public void ButtonDecrease(int index)
+    {
+        if (combo[index] == 0)
+        {
+            combo[index] = 9;
+        }
+        else
+        {
+            combo[index]--;
+        }
+        numDisplays[index].text = combo[index].ToString();
+    }
+
+    private void CheckIfSolved()
+    {
+        if (numDisplays[0].text == combo[0].ToString() && numDisplays[1].text == combo[1].ToString() && numDisplays[2].text == combo[2].ToString() && numDisplays[3].text == combo[3].ToString())
+        {
+            Debug.Log("PUZZLE SOLVED");
         }
     }
 }
