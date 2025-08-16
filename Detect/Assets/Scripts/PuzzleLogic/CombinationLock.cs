@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Numerics;
 using TMPro;
 using Unity.VisualScripting;
@@ -12,10 +13,14 @@ using UnityEngine.UI;
 */
 public class CombinationLock : MonoBehaviour
 {
-    [SerializeField] private int[] combo;
+    [SerializeField] private int[] correctCombo;
+    private int[] currentCombo = {0,0,0,0};
+    
+
     [SerializeField] private Button[] upButtons;
     [SerializeField] private Button[] downButtons;
     [SerializeField] private TMP_Text[] numDisplays;
+    [SerializeField] private Button returnButton;
 
     public void Awake()
     {
@@ -24,6 +29,14 @@ public class CombinationLock : MonoBehaviour
 
     public void ShowPuzzle()
     {
+        FPController controller = FindFirstObjectByType<FPController>();
+        if (controller != null)
+        {
+            controller.isInspecting = true;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
         foreach (Button button in upButtons)
         {
             button.gameObject.SetActive(true);
@@ -36,15 +49,24 @@ public class CombinationLock : MonoBehaviour
         {
             text.gameObject.SetActive(true);
         }
+        returnButton.gameObject.SetActive(true);
 
-        foreach (TMP_Text text in numDisplays)
+        for (int i = 0; i < 4; i++)
         {
-            text.text = "0";
+            numDisplays[i].text = currentCombo[i].ToString();
         }
     }
 
     public void HidePuzzle()
     {
+        FPController controller = FindFirstObjectByType<FPController>();
+        if (controller != null)
+        {
+            controller.isInspecting = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
         foreach (Button button in upButtons)
         {
             button.gameObject.SetActive(false);
@@ -57,39 +79,45 @@ public class CombinationLock : MonoBehaviour
         {
             text.gameObject.SetActive(false);
         }
+        returnButton.gameObject.SetActive(false);
     }
 
     public void ButtonIncrease(int index)
     {
-        if (combo[index] == 9)
+        if (currentCombo[index] == 9)
         {
-            combo[index] = 0;
+            currentCombo[index] = 0;
         }
         else
         {
-            combo[index]++;
+            currentCombo[index]++;
         }
-        numDisplays[index].text = combo[index].ToString();
+        numDisplays[index].text = currentCombo[index].ToString();
+        CheckIfSolved();
     }
 
     public void ButtonDecrease(int index)
     {
-        if (combo[index] == 0)
+        if (currentCombo[index] == 0)
         {
-            combo[index] = 9;
+            currentCombo[index] = 9;
         }
         else
         {
-            combo[index]--;
+            currentCombo[index]--;
         }
-        numDisplays[index].text = combo[index].ToString();
+        numDisplays[index].text = currentCombo[index].ToString();
+        CheckIfSolved();
     }
 
     private void CheckIfSolved()
     {
-        if (numDisplays[0].text == combo[0].ToString() && numDisplays[1].text == combo[1].ToString() && numDisplays[2].text == combo[2].ToString() && numDisplays[3].text == combo[3].ToString())
+        if (currentCombo.SequenceEqual(correctCombo))
         {
             Debug.Log("PUZZLE SOLVED");
+            HidePuzzle();
+            SoundManager.Instance.Play("Unlock", this.transform);
+            this.enabled = false;
         }
     }
 }

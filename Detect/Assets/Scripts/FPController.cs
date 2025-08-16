@@ -54,7 +54,7 @@ public class FPController : MonoBehaviour
     private float crouchHeight = 1f;
 
     [Header("Inspect")]
-    private bool isInspecting = false;
+    public bool isInspecting = false;
     public float inspectSizeMult = 3f;
 
     private void Awake()
@@ -92,46 +92,39 @@ public class FPController : MonoBehaviour
     {
         if (context.performed)
         {
-            if (!isHoldingObject)
+            RaycastHit hit;
+            if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
             {
-                RaycastHit hit;
-                if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
+                // case: combo lock
+                CombinationLock lockUI = hit.collider.GetComponentInChildren<CombinationLock>();
+                if (lockUI != null)
                 {
-                    if (hit.rigidbody != null)
-                    {
-                        heldObject = hit.collider.gameObject;
-                        heldRb = heldObject.GetComponent<Rigidbody>();
-                        heldRb.useGravity = false;
+                    lockUI.ShowPuzzle();
+                    Debug.Log("Opened combo lock UI");
 
-                        heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-                        heldRb.constraints = RigidbodyConstraints.FreezeRotation;
-
-                        heldObject.transform.position = holdPoint.position;
-                        heldObject.transform.SetParent(holdPoint);
-                        isHoldingObject = true;
-
-                        //Play sound if object has it
-                        if (heldObject.GetComponent<CharacterSoundBits>() != null)
-                        {
-                            heldObject.GetComponent<CharacterSoundBits>().OnInteract();
-                            Debug.Log("PLAYED SOUND OF A DUDE"); // <---- DEBUG
-                        }
-
-                        //Open Combo Lock UI if is combo lock
-                        if (heldObject.GetComponent<CombinationLock>() != null)
-                        {
-                            heldObject.GetComponent<CombinationLock>().ShowPuzzle();
-                            Debug.Log("COMBO LOCK INIT"); // <---- DEBUG
-
-                            moveInput = Vector2.zero;
-                            lookInput = Vector2.zero;
-                        }
-                    }
+                    moveInput = Vector2.zero;
+                    lookInput = Vector2.zero;
+                    return; 
                 }
-            }
-            else
-            {
-                DropObject();
+
+                // case: normal pickup
+                if (!isHoldingObject && hit.rigidbody != null)
+                {
+                    heldObject = hit.collider.gameObject;
+                    heldRb = heldObject.GetComponent<Rigidbody>();
+                    heldRb.useGravity = false;
+
+                    heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    heldRb.constraints = RigidbodyConstraints.FreezeRotation;
+
+                    heldObject.transform.position = holdPoint.position;
+                    heldObject.transform.SetParent(holdPoint);
+                    isHoldingObject = true;
+                }
+                else
+                {
+                    DropObject();
+                }
             }
         }
     }

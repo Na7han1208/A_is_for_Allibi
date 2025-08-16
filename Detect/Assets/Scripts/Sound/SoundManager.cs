@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 public class SoundManager : MonoBehaviour
 {
@@ -31,24 +33,42 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void Play(string name)
+    public void Play(string name, Transform caller)
     {
         foreach (Sound s in Sounds)
         {
             if (s.name == name)
             {
-                try
+                if (s.clip == null)
                 {
-                    s.source.volume = s.volume * PlayerPrefs.GetFloat("MasterVolume", 1f);
+                    Debug.LogWarning("Sound clip is null: " + name);
+                    return;
                 }
-                catch (Exception e)
+
+                GameObject tempGameObject = new GameObject("TempAudio_" + s.name);
+                tempGameObject.transform.position = caller.position;
+                AudioSource source = tempGameObject.AddComponent<AudioSource>();
+
+                source.clip = s.clip;
+                source.volume = s.volume;
+                source.pitch = s.pitch;
+                source.loop = s.loop;
+
+                source.spatialBlend = 0f;
+                source.minDistance = 1f;
+                source.maxDistance = 20f;
+                source.rolloffMode = AudioRolloffMode.Linear;
+
+                source.PlayDelayed(0.01f); //just incase theres issues with instantiating the audio source on object
+                Debug.Log("PLAYING SOUND" + name);
+                Debug.Log($"AudioSource: {source}, Clip: {source.clip}");
+
+
+                if (!s.loop)
                 {
-                    s.source.volume = s.volume;
-                    Debug.LogWarning(e);
+                    Destroy(source, s.clip.length);
                 }
-                s.source.pitch = s.pitch;
-                s.source.loop = s.loop;
-                s.source.Play();
+                return;
             }
         }
     }
