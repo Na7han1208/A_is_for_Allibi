@@ -149,6 +149,7 @@ public class FPController : MonoBehaviour
 
                     heldObject.transform.position = holdPoint.position;
                     //heldObject.transform.SetParent(holdPoint);
+                    heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
 
                     isHoldingObject = true;
                 }
@@ -192,6 +193,8 @@ public class FPController : MonoBehaviour
             heldObject = null;
             heldRb = null;
             isHoldingObject = false;
+
+            heldObject.layer = LayerMask.NameToLayer("Pickupable");
         }
     }
 
