@@ -189,12 +189,13 @@ public class FPController : MonoBehaviour
             heldRb.interpolation = RigidbodyInterpolation.None;
 
             heldRb.constraints = RigidbodyConstraints.None;
+            heldObject.layer = LayerMask.NameToLayer("Pickupable");
 
             heldObject = null;
             heldRb = null;
             isHoldingObject = false;
 
-            heldObject.layer = LayerMask.NameToLayer("Pickupable");
+            
         }
     }
 
