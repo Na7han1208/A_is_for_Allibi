@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void Play(string name, Transform caller)
+    public void PlayComplex(string name, Transform caller)
     {
         foreach (Sound s in Sounds)
         {
@@ -73,6 +73,39 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    public void PlaySimple(String name)
+    {
+        foreach (Sound s in Sounds)
+        {
+            if (s.name == name)
+            {
+                if (s.clip == null)
+                {
+                    Debug.LogWarning("Sound clip is null: " + name);
+                    return;
+                }
+
+                GameObject tempGO = new GameObject("Temp2DAudio_" + s.name);
+                AudioSource source = tempGO.AddComponent<AudioSource>();
+
+                source.clip = s.clip;
+                source.volume = s.volume;
+                source.pitch = s.pitch;
+                source.loop = s.loop;
+                source.spatialBlend = 0f; // 2D mode
+
+                source.Play();
+
+                if (!s.loop)
+                {
+                    Destroy(tempGO, s.clip.length / Mathf.Abs(s.pitch));
+                }
+
+                return;
+            }
+        }
+    }
+
     public bool isPlaying(string name)
     {
         foreach (Sound s in Sounds)
@@ -105,4 +138,8 @@ public class SoundManager : MonoBehaviour
             s.source.Stop();
         }
     }
+
+
 }
+
+
