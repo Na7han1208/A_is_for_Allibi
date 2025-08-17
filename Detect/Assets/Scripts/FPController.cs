@@ -1,6 +1,5 @@
 using System;
 using UnityEditor;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -80,12 +79,22 @@ public class FPController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        HandlePickup();
+    }
+
+    public void HandlePickup()
+    {
         if (isHoldingObject && heldObject != null)
         {
             Vector3 toTarget = holdPoint.position - heldRb.position;
             Vector3 force = toTarget * pickupStrength - heldRb.linearVelocity * pickupDamping;
             heldRb.AddForce(force * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            if (Vector3.Distance(heldObject.transform.position, holdPoint.transform.position) > 5)
+            {
+                heldObject.transform.position = holdPoint.transform.position;
+            } //if object gets too far away tp it back into hold point
         }
+
     }
 
     // --- Input Reads ---
@@ -139,7 +148,7 @@ public class FPController : MonoBehaviour
                     heldRb.interpolation = RigidbodyInterpolation.Interpolate;
 
                     heldObject.transform.position = holdPoint.position;
-                    heldObject.transform.SetParent(holdPoint);
+                    //heldObject.transform.SetParent(holdPoint);
 
                     isHoldingObject = true;
                 }
@@ -173,7 +182,7 @@ public class FPController : MonoBehaviour
     {
         if (heldObject != null && !isInspecting)
         {
-            heldObject.transform.SetParent(null);
+            //heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
             heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
             heldRb.interpolation = RigidbodyInterpolation.None;
@@ -273,14 +282,7 @@ public class FPController : MonoBehaviour
 
     public void OnQuit(InputAction.CallbackContext context)
     {
-        if (Application.isEditor)
-        {
-            EditorApplication.isPlaying = false;
-        }
-        else
-        {
-            Application.Quit(0);
-        }
+        Application.Quit(0);
     }
 
     // --- Input Handling ---
@@ -352,4 +354,9 @@ public class FPController : MonoBehaviour
     }
 }
 
-// ~Andy
+/*
+    _
+.__(.)<
+ \___)
+
+*/
