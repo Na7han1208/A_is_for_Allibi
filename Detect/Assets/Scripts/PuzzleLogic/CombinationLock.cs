@@ -117,6 +117,7 @@ public class CombinationLock : MonoBehaviour
             Debug.Log("PUZZLE SOLVED");
             HidePuzzle();
             SoundManager.Instance.PlayComplex("Unlock", this.transform);
+            FindFirstObjectByType<FPController>().PlaySuccessParticles();   
             this.enabled = false;
         }
     }

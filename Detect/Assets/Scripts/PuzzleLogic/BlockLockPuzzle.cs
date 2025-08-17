@@ -52,8 +52,9 @@ public class BlockLockPuzzle : MonoBehaviour
 
         if (allLocked && !puzzleSolved)
         {
-            puzzleSolved = true; 
-            SoundManager.Instance.PlayComplex("Unlock", this.transform);           
+            puzzleSolved = true;
+            SoundManager.Instance.PlayComplex("Unlock", this.transform);
+            FindFirstObjectByType<FPController>().PlaySuccessParticles();       
         }
     }
 }

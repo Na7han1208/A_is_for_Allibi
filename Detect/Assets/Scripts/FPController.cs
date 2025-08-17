@@ -15,7 +15,7 @@ public class FPController : MonoBehaviour
 
     public float jumpHeight = 10f;
     public float jumpGravityMultiplier = 5f;
-    
+
     [Header("Look Settings")]
     public Transform cameraTransform;
     public float mouseSensitivity = 0.5f;
@@ -57,6 +57,8 @@ public class FPController : MonoBehaviour
     [Header("Inspect")]
     public bool isInspecting = false;
     public float inspectSizeMult = 3f;
+
+    [SerializeField] ParticleSystem successParticles;
 
     private void Awake()
     {
@@ -111,7 +113,7 @@ public class FPController : MonoBehaviour
         {
             usingGamepad = true;
         }
-        else if(context.control.device is Mouse)
+        else if (context.control.device is Mouse)
         {
             usingGamepad = false;
         }
@@ -133,7 +135,7 @@ public class FPController : MonoBehaviour
 
                     moveInput = Vector2.zero;
                     lookInput = Vector2.zero;
-                    return; 
+                    return;
                 }
 
                 // case: normal pickup
@@ -195,7 +197,7 @@ public class FPController : MonoBehaviour
             heldRb = null;
             isHoldingObject = false;
 
-            
+
         }
     }
 
@@ -340,7 +342,7 @@ public class FPController : MonoBehaviour
 
             heldObject.transform.Rotate(cameraTransform.up, rotateY, Space.World);
             heldObject.transform.Rotate(cameraTransform.right, rotateX, Space.World);
-        }     
+        }
     }
 
     //Checks collision for heldObjects 
@@ -356,6 +358,11 @@ public class FPController : MonoBehaviour
         {
             isColliding = false;
         }
+    }
+
+    public void PlaySuccessParticles()
+    {
+        successParticles.Play();
     }
 }
 
