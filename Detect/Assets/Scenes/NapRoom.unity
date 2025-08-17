@@ -23300,6 +23300,11 @@ Transform:
   - {fileID: 566436506}
   m_Father: {fileID: 319784663}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1448692982 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+  m_PrefabInstance: {fileID: 3161889047091486977}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1450776570
 GameObject:
   m_ObjectHideFlags: 0
@@ -28393,6 +28398,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!4 &1615360622 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4585883345968120193, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
+  m_PrefabInstance: {fileID: 9029528049733666187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1616100936
 Mesh:
   m_ObjectHideFlags: 0
@@ -42490,6 +42500,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 852a518a45b0a2f4881b9b10a2ec4703, type: 3}
+--- !u!1001 &3161889047091486977
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1615360622}
+    m_Modifications:
+    - target: {fileID: 5274176204559735769, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_Name
+      value: success particles
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.00000022025779
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.00000035762787
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5914245687339623028, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9f3593f1bf046804fb00534dcb05e6fa, type: 3}
 --- !u!1001 &9029528049733666187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42548,7 +42615,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 36179965fb1fd914f9eaef3f979305ee, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4585883345968120193, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1448692982}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
 --- !u!1660057539 &9223372036854775807
