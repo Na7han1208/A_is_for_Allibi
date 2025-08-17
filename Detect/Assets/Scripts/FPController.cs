@@ -16,12 +16,13 @@ public class FPController : MonoBehaviour
 
     public float jumpHeight = 10f;
     public float jumpGravityMultiplier = 5f;
-    private bool isUsingController;
     
     [Header("Look Settings")]
     public Transform cameraTransform;
-    public float lookSensitivity = 0.7f;
+    public float mouseSensitivity = 0.5f;
+    public float controllerSensitivity = 2f;
     public float verticalLookLimit = 90f;
+    private bool usingGamepad;
 
     private CharacterController controller;
     private Vector2 moveInput;
@@ -30,9 +31,10 @@ public class FPController : MonoBehaviour
     private float verticalRotation = 0f;
 
     [Header("Pickup System")]
-    public float pickupRange = 2f;
     public Transform holdPoint;
-    public float pickupSmoothness = 10f;
+    public float pickupStrength = 200f;
+    public float pickupDamping = 20f;
+    public float pickupRange = 2f;
 
     public GameObject heldObject;
     public Rigidbody heldRb;
@@ -63,7 +65,7 @@ public class FPController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //hides and locks cursor ^
 
-        layerMask = LayerMask.GetMask("Pickupable", "Player");
+        layerMask = LayerMask.GetMask("Pickupable");
     }
 
     private void Update()
@@ -73,8 +75,17 @@ public class FPController : MonoBehaviour
             HandleMovement();
             HandleLook();
         }
-        HandlePickup();
         HandleInspect();
+    }
+
+    private void FixedUpdate()
+    {
+        if (isHoldingObject && heldObject != null)
+        {
+            Vector3 toTarget = holdPoint.position - heldRb.position;
+            Vector3 force = toTarget * pickupStrength - heldRb.linearVelocity * pickupDamping;
+            heldRb.AddForce(force * Time.fixedDeltaTime, ForceMode.VelocityChange);
+        }
     }
 
     // --- Input Reads ---
@@ -86,6 +97,15 @@ public class FPController : MonoBehaviour
     public void OnLook(InputAction.CallbackContext context)
     {
         lookInput = context.ReadValue<Vector2>();
+
+        if (context.control.device is Gamepad)
+        {
+            usingGamepad = true;
+        }
+        else if(context.control.device is Mouse)
+        {
+            usingGamepad = false;
+        }
     }
 
     public void OnPickup(InputAction.CallbackContext context)
@@ -116,9 +136,11 @@ public class FPController : MonoBehaviour
 
                     heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
                     heldRb.constraints = RigidbodyConstraints.FreezeRotation;
+                    heldRb.interpolation = RigidbodyInterpolation.Interpolate;
 
                     heldObject.transform.position = holdPoint.position;
                     heldObject.transform.SetParent(holdPoint);
+
                     isHoldingObject = true;
                 }
                 else
@@ -154,6 +176,7 @@ public class FPController : MonoBehaviour
             heldObject.transform.SetParent(null);
             heldRb.useGravity = true;
             heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            heldRb.interpolation = RigidbodyInterpolation.None;
 
             heldRb.constraints = RigidbodyConstraints.None;
 
@@ -172,6 +195,8 @@ public class FPController : MonoBehaviour
 
             //heldRb.isKinematic = false;
             heldRb.constraints = RigidbodyConstraints.None;
+            heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            heldRb.interpolation = RigidbodyInterpolation.None;
 
             heldRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
             heldObject = null;
@@ -202,14 +227,6 @@ public class FPController : MonoBehaviour
                 holdPoint.localPosition -= new Vector3(0f, 0f, 0.5f);
                 heldObject.transform.localScale /= inspectSizeMult;
             }
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (!isHoldingObject && heldObject != null)
-        {
-            heldObject.transform.position = Vector3.Lerp(heldObject.transform.position, holdPoint.position, Time.deltaTime * pickupSmoothness);
         }
     }
 
@@ -295,28 +312,16 @@ public class FPController : MonoBehaviour
 
     public void HandleLook()
     {
-        float mouseX = lookInput.x * lookSensitivity;
-        float mouseY = lookInput.y * lookSensitivity;
+        float sensitivity = usingGamepad ? controllerSensitivity : mouseSensitivity;
+
+        float mouseX = lookInput.x * sensitivity * Time.deltaTime * 100f;
+        float mouseY = lookInput.y * sensitivity * Time.deltaTime * 100f;
 
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, -verticalLookLimit, verticalLookLimit);
 
         cameraTransform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
-    }
-
-    public void HandlePickup()
-    {
-        if (isHoldingObject)
-        {
-            float distance = Vector3.Distance(heldObject.transform.position, holdPoint.position);
-            if (distance > 0 && !isColliding)
-            {
-                Vector3 direction = (holdPoint.position - heldObject.transform.position).normalized;
-                heldRb.AddForce(direction * distance, ForceMode.Impulse);
-                heldRb.linearVelocity = Vector3.zero;
-            }
-        }
     }
 
     public void HandleInspect()
