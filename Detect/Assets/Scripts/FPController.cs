@@ -210,6 +210,7 @@ public class FPController : MonoBehaviour
             heldRb.constraints = RigidbodyConstraints.None;
             heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
             heldRb.interpolation = RigidbodyInterpolation.None;
+            heldObject.layer = LayerMask.NameToLayer("Pickupable");
 
             heldRb.AddForce(cameraTransform.forward * throwForce, ForceMode.Impulse);
             heldObject = null;
