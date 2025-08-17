@@ -116,7 +116,7 @@ public class CombinationLock : MonoBehaviour
         {
             Debug.Log("PUZZLE SOLVED");
             HidePuzzle();
-            SoundManager.Instance.Play("Unlock", this.transform);
+            SoundManager.Instance.PlayComplex("Unlock", this.transform);
             this.enabled = false;
         }
     }

@@ -53,7 +53,7 @@ public class BlockLockPuzzle : MonoBehaviour
         if (allLocked && !puzzleSolved)
         {
             puzzleSolved = true; 
-            SoundManager.Instance.Play("Unlock", this.transform);           
+            SoundManager.Instance.PlayComplex("Unlock", this.transform);           
         }
     }
 }

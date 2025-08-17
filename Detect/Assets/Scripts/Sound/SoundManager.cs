@@ -54,53 +54,20 @@ public class SoundManager : MonoBehaviour
                 source.pitch = s.pitch;
                 source.loop = s.loop;
 
-                source.spatialBlend = 0f;
+                source.spatialBlend = 0f; //fully aware this means that audio isnt 3d, but itll do for now
                 source.minDistance = 1f;
                 source.maxDistance = 20f;
                 source.rolloffMode = AudioRolloffMode.Linear;
 
-                source.PlayDelayed(0.01f); //just incase theres issues with instantiating the audio source on object
+                source.Play();
                 Debug.Log("PLAYING SOUND" + name);
                 Debug.Log($"AudioSource: {source}, Clip: {source.clip}");
 
-
+                
                 if (!s.loop)
                 {
-                    Destroy(source, s.clip.length);
+                    Destroy(tempGameObject, s.clip.length + 5);
                 }
-                return;
-            }
-        }
-    }
-
-    public void PlaySimple(String name)
-    {
-        foreach (Sound s in Sounds)
-        {
-            if (s.name == name)
-            {
-                if (s.clip == null)
-                {
-                    Debug.LogWarning("Sound clip is null: " + name);
-                    return;
-                }
-
-                GameObject tempGO = new GameObject("Temp2DAudio_" + s.name);
-                AudioSource source = tempGO.AddComponent<AudioSource>();
-
-                source.clip = s.clip;
-                source.volume = s.volume;
-                source.pitch = s.pitch;
-                source.loop = s.loop;
-                source.spatialBlend = 0f; // 2D mode
-
-                source.Play();
-
-                if (!s.loop)
-                {
-                    Destroy(tempGO, s.clip.length / Mathf.Abs(s.pitch));
-                }
-
                 return;
             }
         }
