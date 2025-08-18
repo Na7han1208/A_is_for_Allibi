@@ -11,7 +11,7 @@ public class FPController : MonoBehaviour
     public float crouchSpeed = 3f;
     private float moveSpeed;
     public float gravity = -9.81f;
-    private bool isSprinting;
+    private bool isSprinting = false;
 
     public float jumpHeight = 10f;
     public float jumpGravityMultiplier = 5f;
@@ -269,6 +269,7 @@ public class FPController : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
+        /*
         if (context.performed && !isCrouching)
         {
             isSprinting = true;
@@ -277,6 +278,7 @@ public class FPController : MonoBehaviour
         {
             isSprinting = false;
         }
+        */
     }
 
     public void OnJump(InputAction.CallbackContext context)
