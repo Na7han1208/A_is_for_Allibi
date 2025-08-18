@@ -189,7 +189,7 @@ public class FPController : MonoBehaviour
 
     public void DropObject()
     {
-        if (heldObject == null) return;
+        if (heldObject == null || isInspecting) return;
 
         //heldObject.transform.SetParent(null);
         heldRb.useGravity = true;
@@ -340,10 +340,11 @@ public class FPController : MonoBehaviour
 
     public void HandleInspect()
     {
+        float sensitivity = usingGamepad ? controllerSensitivity : mouseSensitivity;
         if (isInspecting && heldObject != null)
         {
-            float rotateX = lookInput.y * 100f * Time.deltaTime;
-            float rotateY = -lookInput.x * 100f * Time.deltaTime;
+            float rotateX = lookInput.y * 120f * sensitivity * Time.deltaTime;
+            float rotateY = -lookInput.x * 120f * sensitivity * Time.deltaTime;
 
             heldObject.transform.Rotate(cameraTransform.up, rotateY, Space.World);
             heldObject.transform.Rotate(cameraTransform.right, rotateX, Space.World);
