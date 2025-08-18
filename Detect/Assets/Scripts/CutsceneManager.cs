@@ -1,9 +1,4 @@
-using System;
-using Unity.VisualScripting.Dependencies.Sqlite;
-using UnityEditor;
-using UnityEditor.Media;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Video;
 

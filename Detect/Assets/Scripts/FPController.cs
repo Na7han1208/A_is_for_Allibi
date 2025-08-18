@@ -21,7 +21,7 @@ public class FPController : MonoBehaviour
     public float mouseSensitivity = 0.5f;
     public float controllerSensitivity = 2f;
     public float verticalLookLimit = 90f;
-    private bool usingGamepad;
+    public bool usingGamepad;
 
     private CharacterController controller;
     private Vector2 moveInput;
@@ -69,6 +69,11 @@ public class FPController : MonoBehaviour
         layerMask = LayerMask.GetMask("Pickupable");
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.PlayComplex("MainMusic", this.transform);
+    }
+
     private void Update()
     {
         if (!isInspecting)
@@ -98,8 +103,7 @@ public class FPController : MonoBehaviour
         }
 
     }
-
-    // --- Input Reads ---
+    // ---------------- Input Actions ----------------
     public void OnMovement(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
@@ -155,12 +159,14 @@ public class FPController : MonoBehaviour
 
                     isHoldingObject = true;
                 }
-                else
-                {
-                    DropObject();
-                }
             }
+                    else if(isHoldingObject)
+        {
+            DropObject();
         }
+        }
+        
+
     }
 
     public void OnShoot(InputAction.CallbackContext context)
@@ -183,22 +189,19 @@ public class FPController : MonoBehaviour
 
     public void DropObject()
     {
-        if (heldObject != null && !isInspecting)
-        {
-            //heldObject.transform.SetParent(null);
-            heldRb.useGravity = true;
-            heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            heldRb.interpolation = RigidbodyInterpolation.None;
+        if (heldObject == null) return;
 
-            heldRb.constraints = RigidbodyConstraints.None;
-            heldObject.layer = LayerMask.NameToLayer("Pickupable");
+        //heldObject.transform.SetParent(null);
+        heldRb.useGravity = true;
+        heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
+        heldRb.interpolation = RigidbodyInterpolation.None;
+        heldRb.constraints = RigidbodyConstraints.None;
+        heldObject.layer = LayerMask.NameToLayer("Pickupable");
 
-            heldObject = null;
-            heldRb = null;
-            isHoldingObject = false;
-
-
-        }
+        heldObject = null;
+        heldRb = null;
+        isHoldingObject = false;
+        isInspecting = false;
     }
 
     public void OnThrow(InputAction.CallbackContext context)
@@ -294,7 +297,7 @@ public class FPController : MonoBehaviour
         Application.Quit(0);
     }
 
-    // --- Input Handling ---
+    // ---------------- Logic ----------------
     public void HandleMovement()
     {
         if (isSprinting) { moveSpeed = sprintSpeed; }

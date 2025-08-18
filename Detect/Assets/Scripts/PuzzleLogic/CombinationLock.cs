@@ -1,111 +1,119 @@
 using System.Linq;
-using System.Numerics;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
-
-/*
-    Place this on each item you wish to be a combination lock
-
-    NOTE: This only works for a 4 digit combination lock
-*/
 public class CombinationLock : MonoBehaviour
 {
     [SerializeField] private int[] correctCombo;
-    private int[] currentCombo = {0,0,0,0};
-    
+    private int[] currentCombo = { 0, 0, 0, 0 };
 
     [SerializeField] private Button[] upButtons;
     [SerializeField] private Button[] downButtons;
     [SerializeField] private TMP_Text[] numDisplays;
     [SerializeField] private Button returnButton;
 
-    public void Awake()
+    private PlayerInput playerInput;
+    private int currentIndex = 0;
+
+    private void Awake()
     {
+        playerInput = FindFirstObjectByType<PlayerInput>();
         HidePuzzle();
     }
 
     public void ShowPuzzle()
     {
+        if (playerInput != null)
+            playerInput.SwitchCurrentActionMap("Puzzle");
+
         FPController controller = FindFirstObjectByType<FPController>();
         if (controller != null)
         {
-            controller.isInspecting = true;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
 
-        foreach (Button button in upButtons)
-        {
-            button.gameObject.SetActive(true);
-        }
-        foreach (Button button in downButtons)
-        {
-            button.gameObject.SetActive(true);
-        }
-        foreach (TMP_Text text in numDisplays)
-        {
-            text.gameObject.SetActive(true);
-        }
+        foreach (var b in upButtons) b.gameObject.SetActive(true);
+        foreach (var b in downButtons) b.gameObject.SetActive(true);
+        foreach (var t in numDisplays) t.gameObject.SetActive(true);
         returnButton.gameObject.SetActive(true);
 
         for (int i = 0; i < 4; i++)
-        {
             numDisplays[i].text = currentCombo[i].ToString();
-        }
+
+        currentIndex = 0;
+        HighlightDigit();
     }
 
     public void HidePuzzle()
     {
+        if (playerInput != null)
+            playerInput.SwitchCurrentActionMap("Player");
+
         FPController controller = FindFirstObjectByType<FPController>();
         if (controller != null)
         {
-            controller.isInspecting = false;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
-        foreach (Button button in upButtons)
-        {
-            button.gameObject.SetActive(false);
-        }
-        foreach (Button button in downButtons)
-        {
-            button.gameObject.SetActive(false);
-        }
-        foreach (TMP_Text text in numDisplays)
-        {
-            text.gameObject.SetActive(false);
-        }
+        foreach (var b in upButtons) b.gameObject.SetActive(false);
+        foreach (var b in downButtons) b.gameObject.SetActive(false);
+        foreach (var t in numDisplays) t.gameObject.SetActive(false);
         returnButton.gameObject.SetActive(false);
+    }
+
+    public void OnNavigate(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        Vector2 dir = context.ReadValue<Vector2>();
+
+        if (dir.x > 0.5f) currentIndex = (currentIndex + 1) % 4;
+        if (dir.x < -0.5f) currentIndex = (currentIndex + 3) % 4;
+
+        if (dir.y > 0.5f) ButtonIncrease(currentIndex);
+        if (dir.y < -0.5f) ButtonDecrease(currentIndex);
+
+        HighlightDigit();
+    }
+
+    public void OnSubmit(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            CheckIfSolved();
+    }
+
+    public void OnCancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            HidePuzzle();
+    }
+
+    private void HighlightDigit()
+    {
+        if (IsUsingGamepad())
+        {
+            for (int i = 0; i < numDisplays.Length; i++) numDisplays[i].color = i == currentIndex ? Color.yellow : Color.black;
+        }
+        else
+        {
+            for (int i = 0; i < numDisplays.Length; i++) numDisplays[i].color = Color.black;
+        }
     }
 
     public void ButtonIncrease(int index)
     {
-        if (currentCombo[index] == 9)
-        {
-            currentCombo[index] = 0;
-        }
-        else
-        {
-            currentCombo[index]++;
-        }
+        currentCombo[index] = (currentCombo[index] + 1) % 10;
         numDisplays[index].text = currentCombo[index].ToString();
         CheckIfSolved();
     }
 
     public void ButtonDecrease(int index)
     {
-        if (currentCombo[index] == 0)
-        {
-            currentCombo[index] = 9;
-        }
-        else
-        {
-            currentCombo[index]--;
-        }
+        currentCombo[index] = (currentCombo[index] + 9) % 10;
         numDisplays[index].text = currentCombo[index].ToString();
         CheckIfSolved();
     }
@@ -117,8 +125,13 @@ public class CombinationLock : MonoBehaviour
             Debug.Log("PUZZLE SOLVED");
             HidePuzzle();
             SoundManager.Instance.PlayComplex("Unlock", this.transform);
-            FindFirstObjectByType<FPController>().PlaySuccessParticles();   
+            FindFirstObjectByType<FPController>().PlaySuccessParticles();
             this.enabled = false;
         }
+    }
+
+    private bool IsUsingGamepad()
+    {
+        return Gamepad.current != null && Gamepad.current.wasUpdatedThisFrame;
     }
 }
