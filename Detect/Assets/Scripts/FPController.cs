@@ -160,10 +160,10 @@ public class FPController : MonoBehaviour
                     isHoldingObject = true;
                 }
             }
-                    else if(isHoldingObject)
-        {
-            DropObject();
-        }
+            else if(isHoldingObject)
+            {
+                DropObject();
+            }
         }
         
 
