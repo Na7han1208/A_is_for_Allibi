@@ -153,7 +153,7 @@ public class FPController : MonoBehaviour
                     heldRb.constraints = RigidbodyConstraints.FreezeRotation;
                     heldRb.interpolation = RigidbodyInterpolation.Interpolate;
 
-                    heldObject.transform.position = holdPoint.position;
+                    //heldObject.transform.position = holdPoint.position; // <---- delete this
                     //heldObject.transform.SetParent(holdPoint);
                     heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
 
