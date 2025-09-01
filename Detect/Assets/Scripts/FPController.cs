@@ -2,9 +2,12 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class FPController : MonoBehaviour
 {
+    //---------------- Variables ----------------
+        
     [Header("Movement Settings")]
     public float walkSpeed = 5f;
     public float sprintSpeed = 8f;
@@ -44,6 +47,15 @@ public class FPController : MonoBehaviour
     public float throwForce = 7f;
     private bool isColliding;
 
+    [Header("PickupHighlight")]
+    private GameObject currentHighlighted;
+    private Material originalMaterial;
+    private Material outlineMateial;
+
+    public float outlineWidth;
+    private bool isHighlighting;
+    public Color outlineColor = Color.white;
+
     [Header("Shooting")]
     public GameObject dartPrefab;
     public Transform gunPoint;
@@ -59,6 +71,8 @@ public class FPController : MonoBehaviour
     public float inspectSizeMult = 3f;
 
     [SerializeField] ParticleSystem successParticles;
+
+    //---------------- Unity Events ----------------
 
     private void Awake()
     {
@@ -89,20 +103,6 @@ public class FPController : MonoBehaviour
         HandlePickup();
     }
 
-    public void HandlePickup()
-    {
-        if (isHoldingObject && heldObject != null)
-        {
-            Vector3 toTarget = holdPoint.position - heldRb.position;
-            Vector3 force = toTarget * pickupStrength - heldRb.linearVelocity * pickupDamping;
-            heldRb.AddForce(force * Time.fixedDeltaTime, ForceMode.VelocityChange);
-            if (Vector3.Distance(heldObject.transform.position, holdPoint.transform.position) > 5)
-            {
-                heldObject.transform.position = holdPoint.transform.position;
-            } //if object gets too far away tp it back into hold point
-        }
-
-    }
     // ---------------- Input Actions ----------------
     public void OnMovement(InputAction.CallbackContext context)
     {
@@ -153,8 +153,6 @@ public class FPController : MonoBehaviour
                     heldRb.constraints = RigidbodyConstraints.FreezeRotation;
                     heldRb.interpolation = RigidbodyInterpolation.Interpolate;
 
-                    //heldObject.transform.position = holdPoint.position; // <---- delete this
-                    //heldObject.transform.SetParent(holdPoint);
                     heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
 
                     isHoldingObject = true;
@@ -165,8 +163,6 @@ public class FPController : MonoBehaviour
                 DropObject();
             }
         }
-        
-
     }
 
     public void OnShoot(InputAction.CallbackContext context)
@@ -348,6 +344,20 @@ public class FPController : MonoBehaviour
 
             heldObject.transform.Rotate(cameraTransform.up, rotateY, Space.World);
             heldObject.transform.Rotate(cameraTransform.right, rotateX, Space.World);
+        }
+    }
+
+    public void HandlePickup()
+    {
+        if (isHoldingObject && heldObject != null)
+        {
+            Vector3 toTarget = holdPoint.position - heldRb.position;
+            Vector3 force = toTarget * pickupStrength - heldRb.linearVelocity * pickupDamping;
+            heldRb.AddForce(force * Time.fixedDeltaTime, ForceMode.VelocityChange);
+            if (Vector3.Distance(heldObject.transform.position, holdPoint.transform.position) > 5)
+            {
+                heldObject.transform.position = holdPoint.transform.position;
+            } //if object gets too far away tp it back into hold point
         }
     }
 
