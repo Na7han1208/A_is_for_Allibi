@@ -76,6 +76,8 @@ public class FPController : MonoBehaviour
     [Header("PickupOutline")]
     public Material outlineMaterial;
     private Dictionary<GameObject, Material[]> originalMaterials = new Dictionary<GameObject, Material[]>();
+    private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
+    
 
     //---------------- Unity Events ----------------
 
@@ -194,7 +196,6 @@ public class FPController : MonoBehaviour
     {
         if (heldObject == null || isInspecting) return;
 
-        //heldObject.transform.SetParent(null);
         heldRb.useGravity = true;
         heldRb.collisionDetectionMode = CollisionDetectionMode.Discrete;
         heldRb.interpolation = RigidbodyInterpolation.None;
@@ -379,14 +380,15 @@ public class FPController : MonoBehaviour
             if (currentHighlighted != target)
             {
                 ClearHighlight();
-
                 currentHighlighted = target;
 
-                if (!originalMaterials.ContainsKey(currentHighlighted))
-                {
-                    // store the original materials
+                if (!originalMaterials.ContainsKey(currentHighlighted)) // store the original materials
                     originalMaterials[currentHighlighted] = currentHighlighted.GetComponent<Renderer>().materials;
-                }
+    
+                if (!originalScales.ContainsKey(currentHighlighted)) // store the original sizes
+                    originalScales[currentHighlighted] = currentHighlighted.transform.localScale;
+                
+                currentHighlighted.transform.localScale = originalScales[currentHighlighted] * 0.92f;
 
                 // apply outline material
                 var mats = new Material[originalMaterials[currentHighlighted].Length + 1];
@@ -406,9 +408,14 @@ public class FPController : MonoBehaviour
 
     private void ClearHighlight()
     {
-        if (currentHighlighted != null && originalMaterials.ContainsKey(currentHighlighted))
+        if (currentHighlighted != null)
         {
-            currentHighlighted.GetComponent<Renderer>().materials = originalMaterials[currentHighlighted];
+            if (originalMaterials != null && originalMaterials.ContainsKey(currentHighlighted)) // restore materials
+                currentHighlighted.GetComponent<Renderer>().materials = originalMaterials[currentHighlighted];
+
+            if (originalScales != null && originalScales.ContainsKey(currentHighlighted)) // restore scale
+                currentHighlighted.transform.localScale = originalScales[currentHighlighted];
+
             currentHighlighted = null;
         }
     }
