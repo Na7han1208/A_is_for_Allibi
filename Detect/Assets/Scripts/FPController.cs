@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -71,6 +72,10 @@ public class FPController : MonoBehaviour
     public float inspectSizeMult = 3f;
 
     [SerializeField] ParticleSystem successParticles;
+
+    [Header("PickupOutline")]
+    public Material outlineMaterial;
+    private Dictionary<GameObject, Material[]> originalMaterials = new Dictionary<GameObject, Material[]>();
 
     //---------------- Unity Events ----------------
 
@@ -359,6 +364,11 @@ public class FPController : MonoBehaviour
                 heldObject.transform.position = holdPoint.transform.position;
             } //if object gets too far away tp it back into hold point
         }
+    }
+
+    public void HandleHighlight()
+    {
+        
     }
 
     //Checks collision for heldObjects 
