@@ -43256,7 +43256,6 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 8960ae5f8621b8645be178a825939f77, type: 2}
-  - {fileID: 2100000, guid: 4b3307ccdc483534e9db554ce3ee6ea8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -44750,6 +44749,10 @@ PrefabInstance:
       propertyPath: inspectSizeMult
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 203490489893484305, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
+      propertyPath: outlineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 4b3307ccdc483534e9db554ce3ee6ea8, type: 2}
     - target: {fileID: 203490489893484305, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: controllerSensitivity
       value: 3.5

@@ -101,6 +101,7 @@ public class FPController : MonoBehaviour
             HandleLook();
         }
         HandleInspect();
+        HandleHighlight();
     }
 
     private void FixedUpdate()
@@ -135,6 +136,7 @@ public class FPController : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
             {
+                ClearHighlight();
                 // case: combo lock
                 CombinationLock lockUI = hit.collider.GetComponentInChildren<CombinationLock>();
                 if (lockUI != null)
@@ -368,7 +370,47 @@ public class FPController : MonoBehaviour
 
     public void HandleHighlight()
     {
-        
+        RaycastHit hit;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
+        {
+            GameObject target = hit.collider.gameObject;
+
+            // if we are looking at a new object
+            if (currentHighlighted != target)
+            {
+                ClearHighlight();
+
+                currentHighlighted = target;
+
+                if (!originalMaterials.ContainsKey(currentHighlighted))
+                {
+                    // store the original materials
+                    originalMaterials[currentHighlighted] = currentHighlighted.GetComponent<Renderer>().materials;
+                }
+
+                // apply outline material
+                var mats = new Material[originalMaterials[currentHighlighted].Length + 1];
+                for (int i = 0; i < originalMaterials[currentHighlighted].Length; i++)
+                    mats[i] = originalMaterials[currentHighlighted][i];
+
+                mats[mats.Length - 1] = outlineMaterial;
+
+                currentHighlighted.GetComponent<Renderer>().materials = mats;
+            }
+        }
+        else
+        {
+            ClearHighlight();
+        }
+    }
+
+    private void ClearHighlight()
+    {
+        if (currentHighlighted != null && originalMaterials.ContainsKey(currentHighlighted))
+        {
+            currentHighlighted.GetComponent<Renderer>().materials = originalMaterials[currentHighlighted];
+            currentHighlighted = null;
+        }
     }
 
     //Checks collision for heldObjects 
