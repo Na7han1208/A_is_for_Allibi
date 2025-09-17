@@ -165,6 +165,8 @@ public class FPController : MonoBehaviour
                     heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
 
                     isHoldingObject = true;
+
+                    HintManager.Instance.TriggerPickupDialogue(heldObject);
                 }
             }
             else if(isHoldingObject)
