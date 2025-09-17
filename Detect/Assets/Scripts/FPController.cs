@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class FPController : MonoBehaviour
 {
     //---------------- Variables ----------------
-        
+
     [Header("Movement Settings")]
     public float walkSpeed = 5f;
     public float sprintSpeed = 8f;
@@ -77,7 +77,9 @@ public class FPController : MonoBehaviour
     public Material outlineMaterial;
     private Dictionary<GameObject, Material[]> originalMaterials = new Dictionary<GameObject, Material[]>();
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
-    
+
+    private bool puzzleActive = false;
+
 
     //---------------- Unity Events ----------------
 
@@ -97,7 +99,7 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
-        if (!isInspecting)
+        if (!isInspecting && !puzzleActive)
         {
             HandleMovement();
             HandleLook();
@@ -151,6 +153,16 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: tracing puzzle
+                TracingPuzzle tracingPuzzle = hit.collider.GetComponent<TracingPuzzle>();
+                if (tracingPuzzle != null)
+                {
+                    tracingPuzzle.ShowPuzzle();
+                    moveInput = Vector2.zero;
+                    lookInput = Vector2.zero;
+                    return;
+                }
+
                 // case: normal pickup
                 if (!isHoldingObject && hit.rigidbody != null)
                 {
@@ -166,10 +178,10 @@ public class FPController : MonoBehaviour
 
                     isHoldingObject = true;
 
-                    HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    //HintManager.Instance.TriggerPickupDialogue(heldObject);
                 }
             }
-            else if(isHoldingObject)
+            else if (isHoldingObject)
             {
                 DropObject();
             }
@@ -386,10 +398,10 @@ public class FPController : MonoBehaviour
 
                 if (!originalMaterials.ContainsKey(currentHighlighted)) // store the original materials
                     originalMaterials[currentHighlighted] = currentHighlighted.GetComponent<Renderer>().materials;
-    
+
                 if (!originalScales.ContainsKey(currentHighlighted)) // store the original sizes
                     originalScales[currentHighlighted] = currentHighlighted.transform.localScale;
-                
+
                 currentHighlighted.transform.localScale = originalScales[currentHighlighted] * 0.92f;
 
                 // apply outline material
@@ -440,6 +452,11 @@ public class FPController : MonoBehaviour
     public void PlaySuccessParticles()
     {
         successParticles.Play();
+    }
+
+    public void SetPuzzleActive(bool active)
+    {
+        puzzleActive = active;
     }
 }
 

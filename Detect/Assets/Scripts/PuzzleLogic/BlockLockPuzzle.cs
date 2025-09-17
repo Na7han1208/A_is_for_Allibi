@@ -25,7 +25,7 @@ public class BlockLockPuzzle : MonoBehaviour
     {
         for (int i = 0; i < Blocks.Length; i++)
         {
-            if (Vector3.Distance(Blocks[i].transform.position, LockPos[i].transform.position) < 0.2f && !isLocked[i])
+            if (Vector3.Distance(Blocks[i].transform.position, LockPos[i].transform.position) < 0.5f && !isLocked[i])
             {
                 isLocked[i] = true;
                 Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, Quaternion.identity);
