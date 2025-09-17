@@ -163,6 +163,16 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: music box puzzle
+                MusicBoxPuzzle musicBoxPuzzle = hit.collider.GetComponentInChildren<MusicBoxPuzzle>();
+                if (musicBoxPuzzle != null)
+                {
+                    musicBoxPuzzle.ShowPuzzle();
+                    moveInput = Vector2.zero;
+                    lookInput = Vector2.zero;
+                    return;
+                }
+
                 // case: normal pickup
                 if (!isHoldingObject && hit.rigidbody != null)
                 {
@@ -344,6 +354,8 @@ public class FPController : MonoBehaviour
 
     public void HandleLook()
     {
+        if (puzzleActive) return;
+
         float sensitivity = usingGamepad ? controllerSensitivity : mouseSensitivity;
 
         float mouseX = lookInput.x * sensitivity * Time.deltaTime * 100f;
