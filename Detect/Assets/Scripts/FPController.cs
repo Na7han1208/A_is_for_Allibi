@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class FPController : MonoBehaviour
@@ -62,10 +65,17 @@ public class FPController : MonoBehaviour
     public Transform gunPoint;
     public float muzzleVelocity = 5f;
 
-    //[Header("Crouch)]
+    [Header("Crouch")]
     private bool isCrouching;
     private float playerHeight = 2f;
     private float crouchHeight = 1f;
+
+    public Volume postProcessVolume;
+    private UnityEngine.Rendering.Universal.Vignette vignette;
+    public float crouchVignetteIntensity = 0.4f;
+    public float normalVignetteIntensity = 0.2f;
+    private Coroutine vignetteRoutine;
+
 
     [Header("Inspect")]
     public bool isInspecting = false;
@@ -95,6 +105,8 @@ public class FPController : MonoBehaviour
     private void Start()
     {
         SoundManager.Instance.PlayComplex("MainMusic", this.transform);
+        postProcessVolume.profile.TryGet(out vignette);
+        postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
     }
 
     private void Update()
@@ -289,13 +301,43 @@ public class FPController : MonoBehaviour
 
             isCrouching = true;
             isSprinting = false;
+
+            StartVignetteLerp(crouchVignetteIntensity);
+            //vignette.intensity.value = crouchVignetteIntensity;
         }
         else if (context.canceled)
         { //Stop crouching
             controller.height = playerHeight;
             playerTransform.localScale = currentScale;
             isCrouching = false;
+
+            StartVignetteLerp(normalVignetteIntensity);
+            //vignette.intensity.value = normalVignetteIntensity;
         }
+    }
+
+    private void StartVignetteLerp(float target)
+    {
+        if (vignetteRoutine != null)
+        {
+            StopCoroutine(vignetteRoutine);
+        }
+        vignetteRoutine = StartCoroutine(LerpVignette(target));
+    }
+
+    private System.Collections.IEnumerator LerpVignette(float target)
+    {
+        float start = vignette.intensity.value;
+        float t = 0f;
+
+        while (t < 0.7f)
+        {
+            t += Time.deltaTime * 4;
+            vignette.intensity.value = Mathf.Lerp(start, target, t);
+            yield return null;
+        }
+
+        //vignette.intensity.value = target;
     }
 
     public void OnSprint(InputAction.CallbackContext context)
