@@ -49,7 +49,7 @@ public class CutsceneManager : MonoBehaviour
         FindFirstObjectByType<FPController>().isInspecting = false;
 
         TutorialHelper tutorialHelper = FindFirstObjectByType<TutorialHelper>();
-        tutorialHelper.ToggleInteraction(tutorialHelper.pickedUp ? true : false);
+        tutorialHelper.ToggleInteraction(tutorialHelper.pickedUp ? false : true);
         FindFirstObjectByType<TutorialHelper>().DisplayMovement();
         skipImage.SetActive(false);
     }

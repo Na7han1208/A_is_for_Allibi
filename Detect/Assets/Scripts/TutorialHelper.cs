@@ -32,7 +32,6 @@ public class TutorialHelper : MonoBehaviour
 
     public void ToggleInteraction(bool active)
     {
-        pickedUp = true;
         StartCoroutine(FadeImage(
             InteractTip.GetComponent<Image>(),
             active ? 1f : 0f,
