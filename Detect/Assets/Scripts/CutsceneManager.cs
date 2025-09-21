@@ -9,6 +9,7 @@ public class CutsceneManager : MonoBehaviour
     [Header("UI")]
     public RawImage rawImage;
     public AudioSource audioSource;
+    public GameObject skipImage;
 
     [Header("Video")]
     public VideoPlayer videoPlayer;
@@ -46,8 +47,11 @@ public class CutsceneManager : MonoBehaviour
     {
         rawImage.enabled = false;
         FindFirstObjectByType<FPController>().isInspecting = false;
-        FindFirstObjectByType<TutorialHelper>().ToggleInteraction(true);
+
+        TutorialHelper tutorialHelper = FindFirstObjectByType<TutorialHelper>();
+        tutorialHelper.ToggleInteraction(tutorialHelper.pickedUp ? false : true);
         FindFirstObjectByType<TutorialHelper>().DisplayMovement();
+        skipImage.SetActive(false);
     }
 
     public void OnCutsceneSkip(InputAction.CallbackContext context)

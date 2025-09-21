@@ -52,6 +52,7 @@ public class FPController : MonoBehaviour
     private bool isColliding;
 
     public GameObject Foxy;
+    private bool FoxyDialogueDone = false;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -155,6 +156,7 @@ public class FPController : MonoBehaviour
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
             {
                 ClearHighlight();
+                
                 // case: combo lock
                 CombinationLock lockUI = hit.collider.GetComponentInChildren<CombinationLock>();
                 if (lockUI != null)
@@ -193,12 +195,17 @@ public class FPController : MonoBehaviour
                 }
 
                 // case: foxy
-                if (hit.collider.CompareTag("Foxy"))
+                if (hit.collider.CompareTag("Foxy") && !FoxyDialogueDone)
                 {
                     Debug.Log("FOXY TALKS");
                     SoundManager.Instance.PlayComplex("FoxyDialogue", Foxy.transform);
+
+                    FindFirstObjectByType<TutorialHelper>().pickedUp = true;
                     FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);
+
+                    hit.collider.gameObject.layer = 0;
                     heldObject = null;
+                    FoxyDialogueDone = true;
                     return;
                 }
 
