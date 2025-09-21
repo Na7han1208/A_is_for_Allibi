@@ -1,6 +1,8 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.InputSystem;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -37,12 +39,24 @@ public class CutsceneManager : MonoBehaviour
     {
         rawImage.texture = videoPlayer.texture;
         videoPlayer.Play();
-        audioSource.Play();
+        //audioSource.Play();
     }
 
     private void OnVideoFinished(VideoPlayer videoPlayer)
     {
         rawImage.enabled = false;
         FindFirstObjectByType<FPController>().isInspecting = false;
+        FindFirstObjectByType<TutorialHelper>().ToggleInteraction(true);
+        FindFirstObjectByType<TutorialHelper>().DisplayMovement();
+    }
+
+    public void OnCutsceneSkip(InputAction.CallbackContext context)
+    {
+        Debug.Log("SKIPPED");
+
+        videoPlayer.Stop();
+        audioSource.Stop();
+
+        OnVideoFinished(videoPlayer);
     }
 }

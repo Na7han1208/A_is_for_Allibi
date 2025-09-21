@@ -71,8 +71,8 @@ public class MusicBoxPuzzle : MonoBehaviour
             puzzleUI.SetActive(false);
             puzzleActive = false;
             inputSequence = "";
-
-            StartCoroutine(MoveCameraToTarget(originalCamPos, originalCamRot));
+            mainCamera.transform.position = originalCamPos;
+            //StartCoroutine(MoveCameraToTarget(originalCamPos, originalCamRot));
 
             var player = FindFirstObjectByType<FPController>();
             if (player != null) player.SetPuzzleActive(false);
@@ -108,12 +108,16 @@ public class MusicBoxPuzzle : MonoBehaviour
         inputSequence += numberButtons[index].ToString()[3];
         Debug.Log(inputSequence);
 
-        // Check if puzzle completed
+        // check if puzzle completed
         if (inputSequence.Length >= correctSequence.Length)
         {
             if (inputSequence.Contains(correctSequence))
             {
                 PuzzleCompleted();
+            }
+            else if (inputSequence.Length > 10)
+            {
+                
             }
         }
     }
@@ -124,6 +128,14 @@ public class MusicBoxPuzzle : MonoBehaviour
         var FPC = FindFirstObjectByType<FPController>();
         if (FPC != null) FPC.PlaySuccessParticles();
         HidePuzzle();
-        // You can trigger other effects here
+        SoundManager.Instance.PlayComplex("PaperTraceCompleted", this.transform);
+        StartCoroutine(waitThenCommitSuicide(0.1f));
+    }
+
+    private IEnumerator waitThenCommitSuicide(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Debug.Log("NO NO PLEASE NOOOOOOOOOOOO");
+        Destroy(this);
     }
 }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class FPController : MonoBehaviour
@@ -48,6 +51,8 @@ public class FPController : MonoBehaviour
     public float throwForce = 7f;
     private bool isColliding;
 
+    public GameObject Foxy;
+
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
     private Material originalMaterial;
@@ -62,10 +67,17 @@ public class FPController : MonoBehaviour
     public Transform gunPoint;
     public float muzzleVelocity = 5f;
 
-    //[Header("Crouch)]
+    [Header("Crouch")]
     private bool isCrouching;
     private float playerHeight = 2f;
     private float crouchHeight = 1f;
+
+    public Volume postProcessVolume;
+    private UnityEngine.Rendering.Universal.Vignette vignette;
+    public float crouchVignetteIntensity = 0.4f;
+    public float normalVignetteIntensity = 0.2f;
+    private Coroutine vignetteRoutine;
+
 
     [Header("Inspect")]
     public bool isInspecting = false;
@@ -94,7 +106,9 @@ public class FPController : MonoBehaviour
 
     private void Start()
     {
-        SoundManager.Instance.PlayComplex("MainMusic", this.transform);
+        //SoundManager.Instance.PlayComplex("MainMusic", this.transform);
+        postProcessVolume.profile.TryGet(out vignette);
+        postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
     }
 
     private void Update()
@@ -170,6 +184,21 @@ public class FPController : MonoBehaviour
                     musicBoxPuzzle.ShowPuzzle();
                     moveInput = Vector2.zero;
                     lookInput = Vector2.zero;
+
+                    heldObject = musicBoxPuzzle.transform.parent.gameObject;
+                    HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    heldObject = null;
+
+                    return;
+                }
+
+                // case: foxy
+                if (hit.collider.CompareTag("Foxy"))
+                {
+                    Debug.Log("FOXY TALKS");
+                    SoundManager.Instance.PlayComplex("FoxyDialogue", Foxy.transform);
+                    FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);
+                    heldObject = null;
                     return;
                 }
 
@@ -188,7 +217,7 @@ public class FPController : MonoBehaviour
 
                     isHoldingObject = true;
 
-                    //HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    HintManager.Instance.TriggerPickupDialogue(heldObject);
                 }
             }
             else if (isHoldingObject)
@@ -289,13 +318,43 @@ public class FPController : MonoBehaviour
 
             isCrouching = true;
             isSprinting = false;
+
+            StartVignetteLerp(crouchVignetteIntensity);
+            //vignette.intensity.value = crouchVignetteIntensity;
         }
         else if (context.canceled)
         { //Stop crouching
             controller.height = playerHeight;
             playerTransform.localScale = currentScale;
             isCrouching = false;
+
+            StartVignetteLerp(normalVignetteIntensity);
+            //vignette.intensity.value = normalVignetteIntensity;
         }
+    }
+
+    private void StartVignetteLerp(float target)
+    {
+        if (vignetteRoutine != null)
+        {
+            StopCoroutine(vignetteRoutine);
+        }
+        vignetteRoutine = StartCoroutine(LerpVignette(target));
+    }
+
+    private System.Collections.IEnumerator LerpVignette(float target)
+    {
+        float start = vignette.intensity.value;
+        float t = 0f;
+
+        while (t < 0.7f)
+        {
+            t += Time.deltaTime * 4;
+            vignette.intensity.value = Mathf.Lerp(start, target, t);
+            yield return null;
+        }
+
+        //vignette.intensity.value = target;
     }
 
     public void OnSprint(InputAction.CallbackContext context)
