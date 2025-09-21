@@ -215,6 +215,7 @@ public class TracingPuzzle : MonoBehaviour
         Debug.Log("Puzzle finished!");
         var fpc = FindFirstObjectByType<FPController>();
         if (fpc != null) fpc.PlaySuccessParticles();
+        SoundManager.Instance.PlayComplex("PaperTraceSolve", this.transform);
         StartCoroutine(WaitThenHide(3f));
     }
 

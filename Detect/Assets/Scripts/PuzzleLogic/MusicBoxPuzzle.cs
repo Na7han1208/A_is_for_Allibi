@@ -18,6 +18,7 @@ public class MusicBoxPuzzle : MonoBehaviour
     public List<Button> numberButtons;
     public List<AudioClip> buttonSounds;
     public AudioSource audioSource;
+    public ParticleSystem buttonClickParticles;
 
     private string inputSequence = "";
     private string correctSequence = "54425";
@@ -108,6 +109,8 @@ public class MusicBoxPuzzle : MonoBehaviour
         inputSequence += numberButtons[index].ToString()[3];
         Debug.Log(inputSequence);
 
+        buttonClickParticles.Play();
+
         // check if puzzle completed
         if (inputSequence.Length >= correctSequence.Length)
         {
@@ -117,7 +120,7 @@ public class MusicBoxPuzzle : MonoBehaviour
             }
             else if (inputSequence.Length > 10)
             {
-                
+
             }
         }
     }

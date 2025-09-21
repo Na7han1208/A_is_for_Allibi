@@ -7,7 +7,7 @@ public class TutorialHelper : MonoBehaviour
     [Header("Have they done it?")]
     private bool moved = false;
     private bool looked = false;
-    private bool pickedUp = false;
+    public bool pickedUp = false;
     private bool crouched = false;
     private bool inspected = false;
 
@@ -32,6 +32,7 @@ public class TutorialHelper : MonoBehaviour
 
     public void ToggleInteraction(bool active)
     {
+        pickedUp = true;
         StartCoroutine(FadeImage(
             InteractTip.GetComponent<Image>(),
             active ? 1f : 0f,
@@ -49,11 +50,11 @@ public class TutorialHelper : MonoBehaviour
         // wait before showing tips
         yield return new WaitForSeconds(16f);
 
-        yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
-        yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
-
         fPController.SetPuzzleActive(false);
         Debug.Log("Okie you can move now");
+
+        yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
+        yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
 
         yield return new WaitForSeconds(3f);
 
