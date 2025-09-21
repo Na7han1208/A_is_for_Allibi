@@ -1,7 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 public class TracingPuzzle : MonoBehaviour
 {
@@ -13,18 +13,22 @@ public class TracingPuzzle : MonoBehaviour
     [Header("Tracing Settings")]
     [SerializeField] private Sprite teddyBearSprite;
     [SerializeField] private Texture2D brushTexture;
-    [SerializeField] private int textureSize = 512;
-    [SerializeField] [Range(0f, 1f)] private float completionThreshold = 0.5f;
+    [SerializeField] private int fallbackTextureSize = 512;
+    [SerializeField, Range(0f, 1f)] private float completionThreshold = 0.5f;
     [SerializeField] private float checkInterval = 0.5f;
 
-    [Header("Brush Size (choose one)")]
+    [Header("Brush Size")]
     [SerializeField] private bool useAbsoluteBrush = true;
     [SerializeField] private int brushPixelSize = 24;
-    [SerializeField] private float brushScale = 0.1f;
+    [SerializeField] private float brushScale = 0.3f;
 
     private Texture2D maskTex;
     private Color32[] maskPixels;
+    private Color32[] originalMaskPixels;
     private Color32[] brushPixels;
+    private int brushWorig;
+    private int brushHorig;
+    private Color32[] blockBuffer;
     private bool finishedCalled;
     private float checkTimer;
     private bool dirty;
@@ -39,22 +43,48 @@ public class TracingPuzzle : MonoBehaviour
     {
         if (teddyDisplay != null && teddyBearSprite != null) teddyDisplay.texture = teddyBearSprite.texture;
 
-        maskTex = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
-        maskTex.wrapMode = TextureWrapMode.Clamp;
-        maskTex.filterMode = FilterMode.Point;
+        Texture src = (maskImage != null) ? maskImage.texture : null;
+        int w = fallbackTextureSize;
+        int h = fallbackTextureSize;
 
-        maskPixels = new Color32[textureSize * textureSize];
-        for (int i = 0; i < maskPixels.Length; i++) maskPixels[i] = new Color32(255, 255, 255, 255);
+        if (src != null && src.width > 0 && src.height > 0)
+        {
+            w = src.width;
+            h = src.height;
+            RenderTexture rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
+            Graphics.Blit(src, rt);
+            RenderTexture prev = RenderTexture.active;
+            RenderTexture.active = rt;
+            maskTex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            maskTex.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+            maskTex.Apply(false);
+            RenderTexture.active = prev;
+            RenderTexture.ReleaseTemporary(rt);
+        }
+        else
+        {
+            maskTex = new Texture2D(w, h, TextureFormat.RGBA32, false);
+            Color32[] fill = new Color32[w * h];
+            for (int i = 0; i < fill.Length; i++) fill[i] = new Color32(255, 255, 255, 255);
+            maskTex.SetPixels32(fill);
+            maskTex.Apply(false);
+        }
 
-        maskTex.SetPixels32(maskPixels);
-        maskTex.Apply(false);
-
+        maskPixels = maskTex.GetPixels32();
+        originalMaskPixels = (Color32[])maskPixels.Clone();
         if (maskImage != null) maskImage.texture = maskTex;
 
         if (brushTexture != null)
         {
-            brushPixels = brushTexture.GetPixels32();
-            if (brushPixels == null || brushPixels.Length == 0) brushPixels = new Color32[brushTexture.width * brushTexture.height];
+            brushWorig = brushTexture.width;
+            brushHorig = brushTexture.height;
+            try { brushPixels = brushTexture.GetPixels32(); }
+            catch { brushPixels = null; }
+        }
+        else
+        {
+            brushPixels = null;
+            brushWorig = brushHorig = 0;
         }
     }
 
@@ -65,7 +95,20 @@ public class TracingPuzzle : MonoBehaviour
         bool isPressed = false;
         Vector2 screenPos = Vector2.zero;
 
-        if (Mouse.current != null && Mouse.current.leftButton != null)
+        if (Touchscreen.current != null)
+        {
+            foreach (var t in Touchscreen.current.touches)
+            {
+                if (t.press.isPressed)
+                {
+                    screenPos = t.position.ReadValue();
+                    isPressed = true;
+                    break;
+                }
+            }
+        }
+
+        if (!isPressed && Mouse.current != null && Mouse.current.leftButton != null)
         {
             isPressed = Mouse.current.leftButton.isPressed;
             if (isPressed) screenPos = Mouse.current.position.ReadValue();
@@ -77,29 +120,27 @@ public class TracingPuzzle : MonoBehaviour
             else return;
         }
 
-        if (isPressed)
+        if (isPressed && maskImage != null)
         {
-            if (maskImage == null) return;
-
             Camera cam = null;
-            if (puzzleCanvas != null && puzzleCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
-                cam = puzzleCanvas.worldCamera;
+            if (puzzleCanvas != null && puzzleCanvas.renderMode != RenderMode.ScreenSpaceOverlay) cam = puzzleCanvas.worldCamera;
 
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(maskImage.rectTransform, screenPos, cam, out Vector2 localPoint))
             {
                 Rect rect = maskImage.rectTransform.rect;
                 Vector2 pivot = maskImage.rectTransform.pivot;
-
                 float localFromLeftX = localPoint.x + rect.width * pivot.x;
                 float localFromBottomY = localPoint.y + rect.height * pivot.y;
-
                 float normX = localFromLeftX / rect.width;
                 float normY = localFromBottomY / rect.height;
 
                 if (normX >= 0f && normX <= 1f && normY >= 0f && normY <= 1f)
                 {
-                    int px = Mathf.Clamp(Mathf.RoundToInt(normX * (textureSize - 1)), 0, textureSize - 1);
-                    int py = Mathf.Clamp(Mathf.RoundToInt(normY * (textureSize - 1)), 0, textureSize - 1);
+                    Rect uv = maskImage.uvRect;
+                    float u = uv.x + uv.width * normX;
+                    float v = uv.y + uv.height * normY;
+                    int px = Mathf.Clamp(Mathf.RoundToInt(u * (maskTex.width - 1)), 0, maskTex.width - 1);
+                    int py = Mathf.Clamp(Mathf.RoundToInt(v * (maskTex.height - 1)), 0, maskTex.height - 1);
                     StampAt(px, py);
                 }
             }
@@ -107,6 +148,7 @@ public class TracingPuzzle : MonoBehaviour
 
         if (dirty)
         {
+            maskTex.SetPixels32(maskPixels);
             maskTex.Apply(false);
             dirty = false;
         }
@@ -121,87 +163,85 @@ public class TracingPuzzle : MonoBehaviour
 
     private void StampAt(int cx, int cy)
     {
-        if (brushPixels == null || maskPixels == null) return;
+        if (maskPixels == null) return;
 
-        int bw, bh;
-        if (useAbsoluteBrush)
-        {
-            bw = Mathf.Max(1, brushPixelSize);
-            bh = Mathf.Max(1, brushPixelSize);
-        }
-        else
-        {
-            bw = Mathf.Max(1, Mathf.RoundToInt(brushTexture.width * Mathf.Max(0.0001f, brushScale)));
-            bh = Mathf.Max(1, Mathf.RoundToInt(brushTexture.height * Mathf.Max(0.0001f, brushScale)));
-        }
-
-        bw = Mathf.Min(bw, textureSize);
-        bh = Mathf.Min(bh, textureSize);
+        int bw = useAbsoluteBrush ? Mathf.Max(1, brushPixelSize) : Mathf.Max(1, Mathf.RoundToInt((brushWorig > 0 ? brushWorig : brushPixelSize) * Mathf.Max(0.0001f, brushScale)));
+        int bh = useAbsoluteBrush ? Mathf.Max(1, brushPixelSize) : Mathf.Max(1, Mathf.RoundToInt((brushHorig > 0 ? brushHorig : brushPixelSize) * Mathf.Max(0.0001f, brushScale)));
+        bw = Mathf.Min(bw, maskTex.width);
+        bh = Mathf.Min(bh, maskTex.height);
 
         int halfW = bw / 2;
         int halfH = bh / 2;
-
-        int startX = Mathf.Clamp(cx - halfW, 0, textureSize - 1);
-        int startY = Mathf.Clamp(cy - halfH, 0, textureSize - 1);
-        int endX = Mathf.Clamp(cx + halfW, 0, textureSize - 1);
-        int endY = Mathf.Clamp(cy + halfH, 0, textureSize - 1);
+        int startX = Mathf.Clamp(cx - halfW, 0, maskTex.width - 1);
+        int startY = Mathf.Clamp(cy - halfH, 0, maskTex.height - 1);
+        int endX = Mathf.Clamp(cx + halfW, 0, maskTex.width - 1);
+        int endY = Mathf.Clamp(cy + halfH, 0, maskTex.height - 1);
 
         int blockW = endX - startX + 1;
         int blockH = endY - startY + 1;
         if (blockW <= 0 || blockH <= 0) return;
 
-        Color32[] block = new Color32[blockW * blockH];
+        int need = blockW * blockH;
+        if (blockBuffer == null || blockBuffer.Length < need) blockBuffer = new Color32[need];
 
         int i = 0;
         for (int y = 0; y < blockH; y++)
         {
             float v = (blockH == 1) ? 0.5f : (y / (float)(blockH - 1));
-            int srcY = Mathf.Clamp(Mathf.RoundToInt(v * (brushTexture.height - 1)), 0, brushTexture.height - 1);
+            int srcY = brushPixels != null ? Mathf.Clamp(Mathf.RoundToInt(v * (brushHorig - 1)), 0, brushHorig - 1) : -1;
 
             for (int x = 0; x < blockW; x++, i++)
             {
                 float u = (blockW == 1) ? 0.5f : (x / (float)(blockW - 1));
-                int srcX = Mathf.Clamp(Mathf.RoundToInt(u * (brushTexture.width - 1)), 0, brushTexture.width - 1);
+                int srcX = brushPixels != null ? Mathf.Clamp(Mathf.RoundToInt(u * (brushWorig - 1)), 0, brushWorig - 1) : -1;
 
-                Color32 b = brushPixels[srcY * brushTexture.width + srcX];
-                if (b.a > 10)
-                    block[i] = new Color32(255, 255, 255, 0);
+                float brushAlpha = 0f;
+                if (brushPixels != null && brushWorig > 0 && brushHorig > 0)
+                {
+                    brushAlpha = brushPixels[srcY * brushWorig + srcX].a / 255f;
+                }
                 else
-                    block[i] = maskPixels[(startY + y) * textureSize + (startX + x)];
+                {
+                    float cxBrush = (x + 0.5f) - blockW * 0.5f;
+                    float cyBrush = (y + 0.5f) - blockH * 0.5f;
+                    float dist = Mathf.Sqrt(cxBrush * cxBrush + cyBrush * cyBrush);
+                    float radius = Mathf.Max(blockW, blockH) * 0.5f;
+                    float fall = Mathf.Clamp01(1f - (dist / radius));
+                    brushAlpha = fall;
+                }
+
+                int tx = startX + x;
+                int ty = startY + y;
+                int idx = ty * maskTex.width + tx;
+                Color32 cur = maskPixels[idx];
+                byte newA = cur.a;
+                if (brushAlpha > 0.05f) newA = 0;
+                cur.a = newA;
+                maskPixels[idx] = cur;
+                blockBuffer[i] = cur;
             }
         }
 
-        // write back into maskPixels and texture
-        i = 0;
-        for (int y = 0; y < blockH; y++)
-        {
-            int dst = (startY + y) * textureSize + startX;
-            for (int x = 0; x < blockW; x++, i++)
-                maskPixels[dst + x] = block[i];
-        }
-
-        maskTex.SetPixels32(startX, startY, blockW, blockH, block);
+        maskTex.SetPixels32(startX, startY, blockW, blockH, blockBuffer);
         dirty = true;
     }
 
     private void CheckCompletion()
     {
-        int sample = Mathf.Clamp(textureSize / 4, 16, 256);
-        int step = Mathf.Max(1, textureSize / sample);
-
+        if (maskPixels == null) return;
+        int sampleTarget = Mathf.Clamp(maskTex.width / 4, 16, 256);
+        int step = Mathf.Max(1, maskTex.width / sampleTarget);
         int transparent = 0;
         int total = 0;
-
-        for (int y = 0; y < textureSize; y += step)
+        for (int y = 0; y < maskTex.height; y += step)
         {
-            int baseIdx = y * textureSize;
-            for (int x = 0; x < textureSize; x += step)
+            int baseIdx = y * maskTex.width;
+            for (int x = 0; x < maskTex.width; x += step)
             {
                 total++;
                 if (maskPixels[baseIdx + x].a < 51) transparent++;
             }
         }
-
         float erasedFraction = total == 0 ? 0f : (float)transparent / total;
         if (erasedFraction >= completionThreshold)
         {
@@ -212,7 +252,6 @@ public class TracingPuzzle : MonoBehaviour
 
     private void Finished()
     {
-        Debug.Log("Puzzle finished!");
         var fpc = FindFirstObjectByType<FPController>();
         if (fpc != null) fpc.PlaySuccessParticles();
         SoundManager.Instance.PlayComplex("PaperTraceSolve", this.transform);
@@ -257,8 +296,8 @@ public class TracingPuzzle : MonoBehaviour
 
     public void ResetMask()
     {
-        if (maskPixels == null || maskTex == null) return;
-        for (int i = 0; i < maskPixels.Length; i++) maskPixels[i] = new Color32(255, 255, 255, 255);
+        if (originalMaskPixels == null || maskPixels == null) return;
+        System.Array.Copy(originalMaskPixels, maskPixels, originalMaskPixels.Length);
         maskTex.SetPixels32(maskPixels);
         maskTex.Apply(false);
         dirty = false;

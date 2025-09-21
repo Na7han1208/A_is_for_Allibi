@@ -15,6 +15,7 @@ public class TutorialHelper : MonoBehaviour
     public GameObject InteractTip;
     public GameObject MovementTip;
     public GameObject LookTip;
+    public GameObject DrawTip;
 
     private FPController fPController;
 
@@ -37,6 +38,11 @@ public class TutorialHelper : MonoBehaviour
             active ? 1f : 0f,
             2f
         ));
+    }
+
+    public void ToggleDrawTip(bool active)
+    {
+        DrawTip.SetActive(active);
     }
 
     public void DisplayMovement()
