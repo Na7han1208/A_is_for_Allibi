@@ -176,6 +176,7 @@ public class FPController : MonoBehaviour
                     tracingPuzzle.ShowPuzzle();
                     moveInput = Vector2.zero;
                     lookInput = Vector2.zero;
+
                     return;
                 }
 
@@ -424,8 +425,19 @@ public class FPController : MonoBehaviour
 
         float sensitivity = usingGamepad ? controllerSensitivity : mouseSensitivity;
 
-        float mouseX = lookInput.x * sensitivity * Time.deltaTime * 100f;
-        float mouseY = lookInput.y * sensitivity * Time.deltaTime * 100f;
+        float mouseX;
+        float mouseY;
+
+        if (usingGamepad)
+        {
+            mouseX = lookInput.x * sensitivity * Time.deltaTime;
+            mouseY = lookInput.y * sensitivity * Time.deltaTime;
+        }
+        else
+        {
+            mouseX = lookInput.x * sensitivity; // no deltaTime for mouse
+            mouseY = lookInput.y * sensitivity;
+        }
 
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, -verticalLookLimit, verticalLookLimit);

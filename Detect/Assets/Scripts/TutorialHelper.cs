@@ -16,11 +16,13 @@ public class TutorialHelper : MonoBehaviour
     public GameObject MovementTip;
     public GameObject LookTip;
     public GameObject DrawTip;
+    public GameObject Cursor;
 
     private FPController fPController;
 
     void Start()
     {
+        Cursor.SetActive(false);
         fPController = FindFirstObjectByType<FPController>();
 
         fPController.SetPuzzleActive(true);
@@ -29,6 +31,7 @@ public class TutorialHelper : MonoBehaviour
         InteractTip.SetActive(false);
         MovementTip.SetActive(false);
         LookTip.SetActive(false);
+        DrawTip.SetActive(false);
     }
 
     public void ToggleInteraction(bool active)
@@ -38,6 +41,7 @@ public class TutorialHelper : MonoBehaviour
             active ? 1f : 0f,
             2f
         ));
+        Cursor.SetActive(true);
     }
 
     public void ToggleDrawTip(bool active)
@@ -47,11 +51,13 @@ public class TutorialHelper : MonoBehaviour
 
     public void DisplayMovement()
     {
+        if (moved) return;
         StartCoroutine(MovementCoroutine());
     }
 
     private IEnumerator MovementCoroutine()
     {
+        moved = true;
         // wait before showing tips
         yield return new WaitForSeconds(16f);
 

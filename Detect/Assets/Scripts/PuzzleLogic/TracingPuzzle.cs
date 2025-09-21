@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEditor.Rendering;
 
 public class TracingPuzzle : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class TracingPuzzle : MonoBehaviour
     [SerializeField] private Canvas puzzleCanvas;
     [SerializeField] private RawImage maskImage;
     [SerializeField] private RawImage teddyDisplay;
+    [SerializeField] private Image cursorImage;
+    [SerializeField] private Vector2 cursorOffset = new Vector2(10f, -10f);
+    [SerializeField] private GameObject eddyHat;
 
     [Header("Tracing Settings")]
     [SerializeField] private Sprite teddyBearSprite;
@@ -42,6 +46,9 @@ public class TracingPuzzle : MonoBehaviour
     private void Start()
     {
         if (teddyDisplay != null && teddyBearSprite != null) teddyDisplay.texture = teddyBearSprite.texture;
+
+        cursorImage.raycastTarget = false;
+        Cursor.visible = false;
 
         Texture src = (maskImage != null) ? maskImage.texture : null;
         int w = fallbackTextureSize;
@@ -91,6 +98,9 @@ public class TracingPuzzle : MonoBehaviour
     private void Update()
     {
         if (puzzleCanvas == null || !puzzleCanvas.gameObject.activeSelf || finishedCalled) return;
+
+        Vector2 pos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
+        cursorImage.rectTransform.position = pos + cursorOffset;
 
         bool isPressed = false;
         Vector2 screenPos = Vector2.zero;
@@ -255,20 +265,61 @@ public class TracingPuzzle : MonoBehaviour
         var fpc = FindFirstObjectByType<FPController>();
         if (fpc != null) fpc.PlaySuccessParticles();
         SoundManager.Instance.PlayComplex("PaperTraceSolve", this.transform);
-        StartCoroutine(WaitThenHide(3f));
+        StartCoroutine(PuzzleCompletionCoroutine());
     }
 
-    private IEnumerator WaitThenHide(float s)
+    private IEnumerator PuzzleCompletionCoroutine()
     {
-        yield return new WaitForSeconds(s);
+        yield return new WaitForSeconds(3f);
         HidePuzzle();
+        yield return new WaitForSeconds(5f);
+
+        var fpc = FindFirstObjectByType<FPController>();
+        Transform camT = null;
+        if (fpc != null && fpc.cameraTransform != null) camT = fpc.cameraTransform;
+        if (camT == null && Camera.main != null) camT = Camera.main.transform;
+        if (camT == null || eddyHat == null) yield break;
+
+        if (fpc != null) fpc.SetPuzzleActive(true);
+
+        Vector3 dir = eddyHat.transform.position - camT.position;
+        if (dir.sqrMagnitude <= 0.0001f)
+        {
+            if (fpc != null) fpc.SetPuzzleActive(false);
+            yield break;
+        }
+
+        Quaternion startRot = camT.rotation;
+        Quaternion targetRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
+
+        float speed = 90f; // degrees per second
+        float angle = Quaternion.Angle(startRot, targetRot);
+        float duration = angle / speed;
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = Mathf.Clamp01(elapsed / duration);
+            camT.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        camT.rotation = targetRot;
+
+        yield return new WaitForSeconds(1f);
+
+        if (fpc != null) fpc.SetPuzzleActive(false);
     }
 
     public void ShowPuzzle()
     {
+        FindFirstObjectByType<TutorialHelper>().ToggleDrawTip(true);
+        cursorImage.gameObject.SetActive(true);
+
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+
         ignoreUntilReleased = IsPointerDown();
         var input = FindFirstObjectByType<PlayerInput>();
         if (input != null) input.SwitchCurrentActionMap("Puzzle");
@@ -286,9 +337,12 @@ public class TracingPuzzle : MonoBehaviour
 
     public void HidePuzzle()
     {
+        FindFirstObjectByType<TutorialHelper>().ToggleDrawTip(false);
+        cursorImage.gameObject.SetActive(false);
+
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+
         ignoreUntilReleased = false;
         var input = FindFirstObjectByType<PlayerInput>();
         if (input != null) input.SwitchCurrentActionMap("Player");
