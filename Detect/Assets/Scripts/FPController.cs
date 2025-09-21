@@ -200,7 +200,7 @@ public class FPController : MonoBehaviour
 
                     isHoldingObject = true;
 
-                    //HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    HintManager.Instance.TriggerPickupDialogue(heldObject);
                 }
             }
             else if (isHoldingObject)

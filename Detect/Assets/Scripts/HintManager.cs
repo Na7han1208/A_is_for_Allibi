@@ -11,6 +11,7 @@ public class HintManager : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource audioSource;
+    
 
     private void Awake()
     {
