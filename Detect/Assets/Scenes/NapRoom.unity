@@ -11244,7 +11244,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 16c5ed038218aa64e907e8ab2f3ec869, type: 3}
+  m_Texture: {fileID: 2800000, guid: 9eb43b1bfc78b1d41a5772e5c3808958, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -13704,6 +13704,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1264060241385759319, guid: 71c219b3cce99054db5ebc77aee58a2c, type: 3}
   m_PrefabInstance: {fileID: 458560044}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &458977371
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1901965625}
+    m_Modifications:
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.454
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.683
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 26.092
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.118760996
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.99292296
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 13.641
+      objectReference: {fileID: 0}
+    - target: {fileID: 7340588718412520993, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+      propertyPath: m_Name
+      value: wall drawings (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+--- !u!4 &458977372 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2678378793142445456, guid: 4e107b18c6b712a41a4e476a2183aaae, type: 3}
+  m_PrefabInstance: {fileID: 458977371}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &459214487
 Mesh:
   m_ObjectHideFlags: 0
@@ -13953,7 +14015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &472569264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13974,7 +14036,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: a529320fdbfe19e45962c2fab04501b9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -14126,7 +14188,7 @@ MonoBehaviour:
   puzzleCanvas: {fileID: 1235963699}
   maskImage: {fileID: 1493276430}
   teddyDisplay: {fileID: 329474782}
-  teddyBearSprite: {fileID: 21300000, guid: 16c5ed038218aa64e907e8ab2f3ec869, type: 3}
+  teddyBearSprite: {fileID: 21300000, guid: 9eb43b1bfc78b1d41a5772e5c3808958, type: 3}
   brushTexture: {fileID: 2800000, guid: 162d69042438a374c8f574b0b04ae3cc, type: 3}
   renderTextureSize: 2048
   completionThreshold: 0.6
@@ -41197,7 +41259,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1235963697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46735,14 +46797,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.62352943}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: cee9480c75420674b9bffd205029fef0, type: 3}
+  m_Texture: {fileID: 2800000, guid: a529320fdbfe19e45962c2fab04501b9, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -56122,6 +56184,7 @@ Transform:
   - {fileID: 803131505}
   - {fileID: 469236085}
   - {fileID: 6406556117326707222}
+  - {fileID: 458977372}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &1901965626
