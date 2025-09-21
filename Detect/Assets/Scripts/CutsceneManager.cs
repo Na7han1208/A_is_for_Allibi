@@ -14,6 +14,7 @@ public class CutsceneManager : MonoBehaviour
     [Header("Video")]
     public VideoPlayer videoPlayer;
     public VideoClip videoClip;
+    private bool videoFinished = false;
 
     private void Start()
     {
@@ -45,6 +46,7 @@ public class CutsceneManager : MonoBehaviour
 
     private void OnVideoFinished(VideoPlayer videoPlayer)
     {
+        if (videoFinished) return;
         rawImage.enabled = false;
         FindFirstObjectByType<FPController>().isInspecting = false;
 
@@ -52,6 +54,9 @@ public class CutsceneManager : MonoBehaviour
         tutorialHelper.ToggleInteraction(tutorialHelper.pickedUp ? false : true);
         FindFirstObjectByType<TutorialHelper>().DisplayMovement();
         skipImage.SetActive(false);
+
+        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
+        videoFinished = true;
     }
 
     public void OnCutsceneSkip(InputAction.CallbackContext context)

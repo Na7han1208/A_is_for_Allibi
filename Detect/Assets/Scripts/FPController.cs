@@ -34,7 +34,7 @@ public class FPController : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 lookInput;
     private Vector3 velocity;
-    private float verticalRotation = 0f;
+    public float verticalRotation = 0f;
 
     [Header("Pickup System")]
     public Transform holdPoint;

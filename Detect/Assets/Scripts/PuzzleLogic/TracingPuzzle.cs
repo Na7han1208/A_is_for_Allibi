@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using UnityEditor.Rendering;
 
 public class TracingPuzzle : MonoBehaviour
 {
@@ -310,6 +309,17 @@ public class TracingPuzzle : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         if (fpc != null) fpc.SetPuzzleActive(false);
+        
+        if (fpc != null)
+        {
+            Vector3 flatForward = new Vector3(camT.forward.x, 0f, camT.forward.z).normalized;
+            fpc.transform.rotation = Quaternion.LookRotation(flatForward);
+
+            fpc.verticalRotation = camT.localEulerAngles.x;
+            if (fpc.verticalRotation > 180f) fpc.verticalRotation -= 360f;
+
+            fpc.SetPuzzleActive(false);
+        }
     }
 
     public void ShowPuzzle()
