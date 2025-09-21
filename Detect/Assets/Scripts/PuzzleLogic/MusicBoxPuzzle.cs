@@ -71,8 +71,8 @@ public class MusicBoxPuzzle : MonoBehaviour
             puzzleUI.SetActive(false);
             puzzleActive = false;
             inputSequence = "";
-
-            StartCoroutine(MoveCameraToTarget(originalCamPos, originalCamRot));
+            mainCamera.transform.position = originalCamPos;
+            //StartCoroutine(MoveCameraToTarget(originalCamPos, originalCamRot));
 
             var player = FindFirstObjectByType<FPController>();
             if (player != null) player.SetPuzzleActive(false);
@@ -128,7 +128,8 @@ public class MusicBoxPuzzle : MonoBehaviour
         var FPC = FindFirstObjectByType<FPController>();
         if (FPC != null) FPC.PlaySuccessParticles();
         HidePuzzle();
-        StartCoroutine(waitThenCommitSuicide(1f));
+        SoundManager.Instance.PlayComplex("PaperTraceCompleted", this.transform);
+        StartCoroutine(waitThenCommitSuicide(0.1f));
     }
 
     private IEnumerator waitThenCommitSuicide(float time)

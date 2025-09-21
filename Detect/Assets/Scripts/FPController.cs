@@ -51,6 +51,8 @@ public class FPController : MonoBehaviour
     public float throwForce = 7f;
     private bool isColliding;
 
+    public GameObject Foxy;
+
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
     private Material originalMaterial;
@@ -104,7 +106,7 @@ public class FPController : MonoBehaviour
 
     private void Start()
     {
-        SoundManager.Instance.PlayComplex("MainMusic", this.transform);
+        //SoundManager.Instance.PlayComplex("MainMusic", this.transform);
         postProcessVolume.profile.TryGet(out vignette);
         postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
     }
@@ -182,6 +184,21 @@ public class FPController : MonoBehaviour
                     musicBoxPuzzle.ShowPuzzle();
                     moveInput = Vector2.zero;
                     lookInput = Vector2.zero;
+
+                    heldObject = musicBoxPuzzle.transform.parent.gameObject;
+                    HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    heldObject = null;
+
+                    return;
+                }
+
+                // case: foxy
+                if (hit.collider.CompareTag("Foxy"))
+                {
+                    Debug.Log("FOXY TALKS");
+                    SoundManager.Instance.PlayComplex("FoxyDialogue", Foxy.transform);
+                    FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);
+                    heldObject = null;
                     return;
                 }
 
