@@ -27936,6 +27936,7 @@ MonoBehaviour:
   - {fileID: 735193198}
   - {fileID: 1915677899}
   - {fileID: 472569262}
+  - {fileID: 1468959630}
   dialogueClips:
   - {fileID: 8300000, guid: e311689e38d752a408c22db2169acde7, type: 3}
   - {fileID: 8300000, guid: 7cb21dcf64d2a9f4db152692400b2372, type: 3}
@@ -27944,6 +27945,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e900e746dc35d904593fb7173a6adc3f, type: 3}
   - {fileID: 8300000, guid: 189c124632227094c8c963dcf194bc30, type: 3}
   - {fileID: 8300000, guid: b28a8a2738d00934db63a0d3e3cb4b70, type: 3}
+  - {fileID: 8300000, guid: b83e2817a22685f47bd3a061a1629188, type: 3}
   hasInteracted: 
   dialogueVolumes:
   - 0.45
@@ -27951,6 +27953,7 @@ MonoBehaviour:
   - 1
   - 1
   - 2
+  - 1
   - 1
   - 1
   audioSource: {fileID: 1782253390}
@@ -28481,7 +28484,7 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
@@ -28636,6 +28639,30 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: FoxyDialogue
     clip: {fileID: 8300000, guid: 72c57b077bfa1214ba9013c82ff05178, type: 3}
+    volume: 0.728
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: BlockLockSolve
+    clip: {fileID: 8300000, guid: 94b6857b6bd70134481a843f4ec9cf1b, type: 3}
+    volume: 0.728
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: G1
+    clip: {fileID: 8300000, guid: 2d4eccc299e907140a55aeb616b431df, type: 3}
+    volume: 0.728
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: G2
+    clip: {fileID: 8300000, guid: 4a77e6c63266e094290168c515c9e754, type: 3}
+    volume: 0.728
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: G3
+    clip: {fileID: 8300000, guid: 039ab47a031ea7b428fa28efa239c112, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
@@ -58683,7 +58710,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -58750,7 +58777,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -16.96, y: -3.05, z: 9.53}
-  m_LocalScale: {x: 3.4583402, y: 0.1237, z: 0.74239}
+  m_LocalScale: {x: 3.4583402, y: 0.043651257, z: 0.74239}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -74709,35 +74736,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -14.447
+      value: -14.447057
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.89
+      value: -2.8905253
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.293
+      value: 22.294523
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.99982107
+      value: -0.99982005
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.0014646213
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.018915849
+      value: 0.01891583
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.000027709515
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -0.168
       objectReference: {fileID: 0}
     - target: {fileID: 500058942119623933, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

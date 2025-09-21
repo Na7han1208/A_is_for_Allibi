@@ -27,6 +27,12 @@ public class BlockLockPuzzle : MonoBehaviour
         {
             if (Vector3.Distance(Blocks[i].transform.position, LockPos[i].transform.position) < 0.5f && !isLocked[i])
             {
+                switch (i)
+                {
+                    case 0: SoundManager.Instance.PlayComplex("G1", transform); break;
+                    case 1: SoundManager.Instance.PlayComplex("G2", transform); break;
+                    case 2: SoundManager.Instance.PlayComplex("G3", transform); break;
+                }
                 isLocked[i] = true;
                 Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, Quaternion.identity);
                 Blocks[i].GetComponent<Rigidbody>().isKinematic = true;
@@ -54,6 +60,8 @@ public class BlockLockPuzzle : MonoBehaviour
         {
             puzzleSolved = true;
             SoundManager.Instance.PlayComplex("Unlock", this.transform);
+            SoundManager.Instance.PlayComplex("BlockLockSolve", this.transform);
+
             FindFirstObjectByType<FPController>().PlaySuccessParticles();       
         }
     }
