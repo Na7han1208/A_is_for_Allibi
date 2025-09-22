@@ -491,10 +491,10 @@ public class FPController : MonoBehaviour
                 if (!originalMaterials.ContainsKey(currentHighlighted)) // store the original materials
                     originalMaterials[currentHighlighted] = currentHighlighted.GetComponent<Renderer>().materials;
 
-                if (!originalScales.ContainsKey(currentHighlighted)) // store the original sizes
-                    originalScales[currentHighlighted] = currentHighlighted.transform.localScale;
+                //if (!originalScales.ContainsKey(currentHighlighted)) // store the original sizes
+                //    originalScales[currentHighlighted] = currentHighlighted.transform.localScale;
 
-                currentHighlighted.transform.localScale = originalScales[currentHighlighted] * 0.92f;
+                //currentHighlighted.transform.localScale = originalScales[currentHighlighted] * 0.92f;
 
                 // apply outline material
                 var mats = new Material[originalMaterials[currentHighlighted].Length + 1];
@@ -519,8 +519,8 @@ public class FPController : MonoBehaviour
             if (originalMaterials != null && originalMaterials.ContainsKey(currentHighlighted)) // restore materials
                 currentHighlighted.GetComponent<Renderer>().materials = originalMaterials[currentHighlighted];
 
-            if (originalScales != null && originalScales.ContainsKey(currentHighlighted)) // restore scale
-                currentHighlighted.transform.localScale = originalScales[currentHighlighted];
+            //if (originalScales != null && originalScales.ContainsKey(currentHighlighted)) // restore scale
+            //    currentHighlighted.transform.localScale = originalScales[currentHighlighted];
 
             currentHighlighted = null;
         }
