@@ -14624,9 +14624,9 @@ MonoBehaviour:
   completionThreshold: 0.665
   checkInterval: 0.5
   useAbsoluteBrush: 1
-  brushPixelSize: 24
+  brushPixelSize: 100
   brushScale: 5
-  controllerCursorSpeed: 800
+  controllerCursorSpeed: 400
   deadzone: 0
   playerInput: {fileID: 939775210}
 --- !u!65 &472569272
@@ -58544,6 +58544,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d27ef54fd86c47949b319131d26e9a10, type: 3}
   audioSource: {fileID: 1537052506}
   buttonClickParticles: {fileID: 1598932206}
+  pointer: {fileID: 0}
 --- !u!4 &1769431305
 Transform:
   m_ObjectHideFlags: 0
