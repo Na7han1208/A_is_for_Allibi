@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TracingPuzzle
   - Foxy
+  - Case3
   layers:
   - Default
   - TransparentFX

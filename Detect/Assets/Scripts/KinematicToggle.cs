@@ -17,6 +17,7 @@ public class KinematicToggle : MonoBehaviour
         {
             rb.isKinematic = false;
             cl.isTrigger = false;
+            cl.gameObject.layer = 7;
         }       
     }
 }

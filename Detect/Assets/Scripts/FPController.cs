@@ -50,6 +50,7 @@ public class FPController : MonoBehaviour
 
     public float throwForce = 7f;
     private bool isColliding;
+    private bool pickedUpMissingPoster = false;
 
     public GameObject Foxy;
     private bool FoxyDialogueDone = false;
@@ -92,6 +93,7 @@ public class FPController : MonoBehaviour
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
 
     private bool puzzleActive = false;
+    TutorialHelper tutorialHelper;
 
 
     //---------------- Unity Events ----------------
@@ -99,6 +101,7 @@ public class FPController : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        tutorialHelper = FindFirstObjectByType<TutorialHelper>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //hides and locks cursor ^
 
@@ -178,7 +181,12 @@ public class FPController : MonoBehaviour
                     tracingPuzzle.ShowPuzzle();
                     moveInput = Vector2.zero;
                     lookInput = Vector2.zero;
+                    if (!pickedUpMissingPoster)
+                    {
+                        SoundManager.Instance.PlayComplex("TimmyMissingPoster", transform);
+                    }
 
+                    pickedUpMissingPoster = true;
                     return;
                 }
 
@@ -195,6 +203,12 @@ public class FPController : MonoBehaviour
                     heldObject = null;
 
                     return;
+                }
+
+                // case: case of the red stain
+                if (hit.collider.CompareTag("Case3"))
+                {
+                    FindFirstObjectByType<NaproomEndingManager>().StartEnding();
                 }
 
                 // case: foxy
