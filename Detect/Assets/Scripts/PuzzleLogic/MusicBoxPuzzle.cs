@@ -21,7 +21,7 @@ public class MusicBoxPuzzle : MonoBehaviour
     public ParticleSystem buttonClickParticles;
 
     [Header("Controller Settings")]
-    public RectTransform pointer; // The highlight object (like a UI cursor/highlighter)
+    public RectTransform pointer;
     private int selectedIndex = 0;
     private PlayerInput playerInput;
 
@@ -46,6 +46,19 @@ public class MusicBoxPuzzle : MonoBehaviour
 
         if (pointer != null)
             MovePointerToButton(selectedIndex);
+    }
+
+    public void Update()
+    {
+        if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f)
+        {
+            pointer.gameObject.SetActive(false);
+        }
+
+        if (Gamepad.current != null && Gamepad.current.leftStick.ReadValue().sqrMagnitude > 0.01f)
+        {
+            pointer.gameObject.SetActive(true);
+        }
     }
 
     public void ShowPuzzle()
