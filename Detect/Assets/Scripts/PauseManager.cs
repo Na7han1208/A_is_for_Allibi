@@ -46,6 +46,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        FindFirstObjectByType<FPController>().SetPuzzleActive(true);
     }
 
     public void HideMenu()
@@ -61,6 +62,7 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        FindFirstObjectByType<FPController>().SetPuzzleActive(false);
     }
 
     public void Resume()

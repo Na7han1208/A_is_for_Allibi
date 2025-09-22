@@ -1,12 +1,13 @@
 using UnityEngine;
-using System;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
     public Sound[] Sounds;
+
+    // keep track of dynamically spawned AudioSources
+    private List<AudioSource> activeTempSources = new List<AudioSource>();
 
     void Awake()
     {
@@ -21,17 +22,17 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        // For each unique sound create a gameObject of type audio source and instatiate attributes of the sounds class
+        // prepare default sources for each sound
         foreach (Sound s in Sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
-
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
+            s.source.loop = s.loop;
+            s.source.playOnAwake = false;
         }
     }
-
 
     public void PlayComplex(string name, Transform caller)
     {
@@ -54,32 +55,33 @@ public class SoundManager : MonoBehaviour
                 source.pitch = s.pitch;
                 source.loop = s.loop;
 
-                source.spatialBlend = 0f; //fully aware this means that audio isnt 3d, but itll do for now
+                // spatial audio config
+                source.spatialBlend = 0f; // i know its not 3d rn but that a later problem
                 source.minDistance = 1f;
                 source.maxDistance = 20f;
                 source.rolloffMode = AudioRolloffMode.Linear;
 
                 source.Play();
-                Debug.Log("PLAYING SOUND" + name);
-                Debug.Log($"AudioSource: {source}, Clip: {source.clip}");
+                activeTempSources.Add(source);
 
-                
                 if (!s.loop)
                 {
-                    Destroy(tempGameObject, s.clip.length + 5);
+                    Destroy(tempGameObject, s.clip.length + 0.5f);
                 }
+
                 return;
             }
         }
+
+        Debug.LogWarning("Sound not found: " + name);
     }
 
-    public bool isPlaying(string name)
+    public bool IsPlaying(string name)
     {
         foreach (Sound s in Sounds)
         {
             if (s.name == name)
             {
-                Debug.Log(name + "is playing.");
                 return s.source.isPlaying;
             }
         }
@@ -96,17 +98,45 @@ public class SoundManager : MonoBehaviour
                 return;
             }
         }
+
+        // also stop matching temp sources
+        for (int i = activeTempSources.Count - 1; i >= 0; i--)
+        {
+            if (activeTempSources[i] == null)
+            {
+                activeTempSources.RemoveAt(i);
+                continue;
+            }
+
+            if (activeTempSources[i].clip != null && activeTempSources[i].clip.name == name)
+            {
+                activeTempSources[i].Stop();
+                Destroy(activeTempSources[i].gameObject);
+                activeTempSources.RemoveAt(i);
+            }
+        }
     }
 
     public void StopAll()
     {
+        // stop static sounds
         foreach (Sound s in Sounds)
         {
             s.source.Stop();
         }
+
+        // dtop and destroy temp sounds
+        for (int i = activeTempSources.Count - 1; i >= 0; i--)
+        {
+            if (activeTempSources[i] == null)
+            {
+                activeTempSources.RemoveAt(i);
+                continue;
+            }
+
+            activeTempSources[i].Stop();
+            Destroy(activeTempSources[i].gameObject);
+            activeTempSources.RemoveAt(i);
+        }
     }
-
-
 }
-
-

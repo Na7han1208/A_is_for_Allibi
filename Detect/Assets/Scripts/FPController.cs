@@ -51,6 +51,7 @@ public class FPController : MonoBehaviour
     public float throwForce = 7f;
     private bool isColliding;
     private bool pickedUpMissingPoster = false;
+    public GameObject SelfHelpCanvas;
 
     public GameObject Foxy;
     private bool FoxyDialogueDone = false;
@@ -113,6 +114,7 @@ public class FPController : MonoBehaviour
         //SoundManager.Instance.PlayComplex("MainMusic", this.transform);
         postProcessVolume.profile.TryGet(out vignette);
         postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
+        SelfHelpCanvas.SetActive(false);
     }
 
     private void Update()
@@ -226,6 +228,14 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: self help book
+                if (hit.collider.CompareTag("SelfHelpBook"))
+                {
+                    SelfHelpCanvas.SetActive(true);
+                    SetPuzzleActive(true);
+                    return;
+                }
+
                 // case: normal pickup
                 if (!isHoldingObject && hit.rigidbody != null)
                 {
@@ -246,6 +256,8 @@ public class FPController : MonoBehaviour
             }
             else if (isHoldingObject)
             {
+                SetPuzzleActive(false);
+                SelfHelpCanvas.SetActive(false);
                 DropObject();
             }
         }
