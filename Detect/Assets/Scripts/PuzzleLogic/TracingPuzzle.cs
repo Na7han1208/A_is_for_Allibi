@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class TracingPuzzle : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("UI")]
     [SerializeField] private Canvas puzzleCanvas;
     [SerializeField] private RawImage maskImage;
     [SerializeField] private RawImage teddyDisplay;
@@ -13,17 +13,20 @@ public class TracingPuzzle : MonoBehaviour
     [SerializeField] private Vector2 cursorOffset = new Vector2(10f, -10f);
     [SerializeField] private GameObject eddyHat;
 
-    [Header("Tracing Settings")]
+    [Header("Tracing")]
     [SerializeField] private Sprite teddyBearSprite;
     [SerializeField] private Texture2D brushTexture;
     [SerializeField] private int fallbackTextureSize = 512;
     [SerializeField, Range(0f, 1f)] private float completionThreshold = 0.5f;
     [SerializeField] private float checkInterval = 0.5f;
-
-    [Header("Brush Size")]
     [SerializeField] private bool useAbsoluteBrush = true;
     [SerializeField] private int brushPixelSize = 24;
     [SerializeField] private float brushScale = 0.3f;
+
+    [Header("Controller")]
+    [SerializeField] private float controllerCursorSpeed = 400f;
+    [SerializeField] private float deadzone = 0.12f;
+    [SerializeField] private PlayerInput playerInput;
 
     private Texture2D maskTex;
     private Color32[] maskPixels;
@@ -32,10 +35,14 @@ public class TracingPuzzle : MonoBehaviour
     private int brushWorig;
     private int brushHorig;
     private Color32[] blockBuffer;
+
     private bool finishedCalled;
     private float checkTimer;
     private bool dirty;
     private bool ignoreUntilReleased;
+    private Vector2 virtualCursorPos;
+    private Vector2 moveInput;
+    private bool isDrawing;
 
     private void Awake()
     {
@@ -45,18 +52,76 @@ public class TracingPuzzle : MonoBehaviour
     private void Start()
     {
         if (teddyDisplay != null && teddyBearSprite != null) teddyDisplay.texture = teddyBearSprite.texture;
-
-        cursorImage.raycastTarget = false;
+        if (cursorImage != null) cursorImage.raycastTarget = false;
         Cursor.visible = false;
+        InitMask();
 
+        // start cursor in center
+        virtualCursorPos = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+        if (cursorImage != null) cursorImage.rectTransform.position = virtualCursorPos + cursorOffset;
+    }
+
+    private void Update()
+    {
+        if (puzzleCanvas == null || !puzzleCanvas.gameObject.activeSelf || finishedCalled) return;
+
+        // controller movement
+        if (moveInput.sqrMagnitude > (deadzone * deadzone))
+        {
+            virtualCursorPos += moveInput * controllerCursorSpeed * Time.unscaledDeltaTime;
+        }
+
+        // clamp and update cursor
+        virtualCursorPos = ConstrainToScreen(virtualCursorPos);
+        if (cursorImage != null)
+            cursorImage.rectTransform.position = virtualCursorPos + cursorOffset;
+
+        if (ignoreUntilReleased)
+        {
+            if (!isDrawing) ignoreUntilReleased = false;
+            else return;
+        }
+
+        // draw
+        if (isDrawing && maskImage != null) TryStamp();
+
+        if (dirty)
+        {
+            maskTex.Apply(false);
+            dirty = false;
+        }
+
+        // done?
+        checkTimer += Time.deltaTime;
+        if (checkTimer >= checkInterval)
+        {
+            checkTimer = 0f;
+            CheckCompletion();
+        }
+    }
+
+    public void OnMove(InputAction.CallbackContext ctx)
+    {
+        moveInput = ctx.ReadValue<Vector2>();
+    }
+
+    public void OnDraw(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+            isDrawing = true;
+        else if (ctx.canceled)
+            isDrawing = false;
+    }
+
+    private void InitMask()
+    {
         Texture src = (maskImage != null) ? maskImage.texture : null;
         int w = fallbackTextureSize;
         int h = fallbackTextureSize;
 
         if (src != null && src.width > 0 && src.height > 0)
         {
-            w = src.width;
-            h = src.height;
+            w = src.width; h = src.height;
             RenderTexture rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
             Graphics.Blit(src, rt);
             RenderTexture prev = RenderTexture.active;
@@ -84,98 +149,45 @@ public class TracingPuzzle : MonoBehaviour
         {
             brushWorig = brushTexture.width;
             brushHorig = brushTexture.height;
-            try { brushPixels = brushTexture.GetPixels32(); }
-            catch { brushPixels = null; }
-        }
-        else
-        {
-            brushPixels = null;
-            brushWorig = brushHorig = 0;
+            try { brushPixels = brushTexture.GetPixels32(); } catch { brushPixels = null; }
         }
     }
 
-    private void Update()
+    private void TryStamp()
     {
-        if (puzzleCanvas == null || !puzzleCanvas.gameObject.activeSelf || finishedCalled) return;
+        Camera cam = null;
+        if (puzzleCanvas != null && puzzleCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            cam = puzzleCanvas.worldCamera;
 
-        Vector2 pos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
-        cursorImage.rectTransform.position = pos + cursorOffset;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(maskImage.rectTransform, virtualCursorPos, cam, out Vector2 localPoint))
+            return;
 
-        bool isPressed = false;
-        Vector2 screenPos = Vector2.zero;
+        Rect rect = maskImage.rectTransform.rect;
+        Vector2 pivot = maskImage.rectTransform.pivot;
+        float localFromLeftX = localPoint.x + rect.width * pivot.x;
+        float localFromBottomY = localPoint.y + rect.height * pivot.y;
+        float normX = localFromLeftX / rect.width;
+        float normY = localFromBottomY / rect.height;
+        if (normX < 0f || normX > 1f || normY < 0f || normY > 1f) return;
 
-        if (Touchscreen.current != null)
-        {
-            foreach (var t in Touchscreen.current.touches)
-            {
-                if (t.press.isPressed)
-                {
-                    screenPos = t.position.ReadValue();
-                    isPressed = true;
-                    break;
-                }
-            }
-        }
+        Rect uv = maskImage.uvRect;
+        float u = uv.x + uv.width * normX;
+        float v = uv.y + uv.height * normY;
+        int px = Mathf.Clamp(Mathf.RoundToInt(u * (maskTex.width - 1)), 0, maskTex.width - 1);
+        int py = Mathf.Clamp(Mathf.RoundToInt(v * (maskTex.height - 1)), 0, maskTex.height - 1);
 
-        if (!isPressed && Mouse.current != null && Mouse.current.leftButton != null)
-        {
-            isPressed = Mouse.current.leftButton.isPressed;
-            if (isPressed) screenPos = Mouse.current.position.ReadValue();
-        }
-
-        if (ignoreUntilReleased)
-        {
-            if (!isPressed) ignoreUntilReleased = false;
-            else return;
-        }
-
-        if (isPressed && maskImage != null)
-        {
-            Camera cam = null;
-            if (puzzleCanvas != null && puzzleCanvas.renderMode != RenderMode.ScreenSpaceOverlay) cam = puzzleCanvas.worldCamera;
-
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(maskImage.rectTransform, screenPos, cam, out Vector2 localPoint))
-            {
-                Rect rect = maskImage.rectTransform.rect;
-                Vector2 pivot = maskImage.rectTransform.pivot;
-                float localFromLeftX = localPoint.x + rect.width * pivot.x;
-                float localFromBottomY = localPoint.y + rect.height * pivot.y;
-                float normX = localFromLeftX / rect.width;
-                float normY = localFromBottomY / rect.height;
-
-                if (normX >= 0f && normX <= 1f && normY >= 0f && normY <= 1f)
-                {
-                    Rect uv = maskImage.uvRect;
-                    float u = uv.x + uv.width * normX;
-                    float v = uv.y + uv.height * normY;
-                    int px = Mathf.Clamp(Mathf.RoundToInt(u * (maskTex.width - 1)), 0, maskTex.width - 1);
-                    int py = Mathf.Clamp(Mathf.RoundToInt(v * (maskTex.height - 1)), 0, maskTex.height - 1);
-                    StampAt(px, py);
-                }
-            }
-        }
-
-        if (dirty)
-        {
-            maskTex.SetPixels32(maskPixels);
-            maskTex.Apply(false);
-            dirty = false;
-        }
-
-        checkTimer += Time.deltaTime;
-        if (checkTimer >= checkInterval)
-        {
-            checkTimer = 0f;
-            CheckCompletion();
-        }
+        StampAt(px, py);
     }
 
     private void StampAt(int cx, int cy)
     {
         if (maskPixels == null) return;
 
-        int bw = useAbsoluteBrush ? Mathf.Max(1, brushPixelSize) : Mathf.Max(1, Mathf.RoundToInt((brushWorig > 0 ? brushWorig : brushPixelSize) * Mathf.Max(0.0001f, brushScale)));
-        int bh = useAbsoluteBrush ? Mathf.Max(1, brushPixelSize) : Mathf.Max(1, Mathf.RoundToInt((brushHorig > 0 ? brushHorig : brushPixelSize) * Mathf.Max(0.0001f, brushScale)));
+        int bw = useAbsoluteBrush ? Mathf.Max(1, brushPixelSize) :
+            Mathf.Max(1, Mathf.RoundToInt((brushWorig > 0 ? brushWorig : brushPixelSize) * Mathf.Max(0.0001f, brushScale)));
+        int bh = useAbsoluteBrush ? Mathf.Max(1, brushPixelSize) :
+            Mathf.Max(1, Mathf.RoundToInt((brushHorig > 0 ? brushHorig : brushPixelSize) * Mathf.Max(0.0001f, brushScale)));
+
         bw = Mathf.Min(bw, maskTex.width);
         bh = Mathf.Min(bh, maskTex.height);
 
@@ -185,7 +197,6 @@ public class TracingPuzzle : MonoBehaviour
         int startY = Mathf.Clamp(cy - halfH, 0, maskTex.height - 1);
         int endX = Mathf.Clamp(cx + halfW, 0, maskTex.width - 1);
         int endY = Mathf.Clamp(cy + halfH, 0, maskTex.height - 1);
-
         int blockW = endX - startX + 1;
         int blockH = endY - startY + 1;
         if (blockW <= 0 || blockH <= 0) return;
@@ -206,28 +217,22 @@ public class TracingPuzzle : MonoBehaviour
 
                 float brushAlpha = 0f;
                 if (brushPixels != null && brushWorig > 0 && brushHorig > 0)
-                {
                     brushAlpha = brushPixels[srcY * brushWorig + srcX].a / 255f;
-                }
                 else
                 {
                     float cxBrush = (x + 0.5f) - blockW * 0.5f;
                     float cyBrush = (y + 0.5f) - blockH * 0.5f;
                     float dist = Mathf.Sqrt(cxBrush * cxBrush + cyBrush * cyBrush);
                     float radius = Mathf.Max(blockW, blockH) * 0.5f;
-                    float fall = Mathf.Clamp01(1f - (dist / radius));
-                    brushAlpha = fall;
+                    brushAlpha = Mathf.Clamp01(1f - (dist / radius));
                 }
 
                 int tx = startX + x;
                 int ty = startY + y;
                 int idx = ty * maskTex.width + tx;
-                Color32 cur = maskPixels[idx];
-                byte newA = cur.a;
-                if (brushAlpha > 0.05f) newA = 0;
-                cur.a = newA;
-                maskPixels[idx] = cur;
-                blockBuffer[i] = cur;
+
+                if (brushAlpha > 0.05f) maskPixels[idx].a = 0;
+                blockBuffer[i] = maskPixels[idx];
             }
         }
 
@@ -238,10 +243,12 @@ public class TracingPuzzle : MonoBehaviour
     private void CheckCompletion()
     {
         if (maskPixels == null) return;
+
         int sampleTarget = Mathf.Clamp(maskTex.width / 4, 16, 256);
         int step = Mathf.Max(1, maskTex.width / sampleTarget);
         int transparent = 0;
         int total = 0;
+
         for (int y = 0; y < maskTex.height; y += step)
         {
             int baseIdx = y * maskTex.width;
@@ -251,6 +258,7 @@ public class TracingPuzzle : MonoBehaviour
                 if (maskPixels[baseIdx + x].a < 51) transparent++;
             }
         }
+
         float erasedFraction = total == 0 ? 0f : (float)transparent / total;
         if (erasedFraction >= completionThreshold)
         {
@@ -274,9 +282,7 @@ public class TracingPuzzle : MonoBehaviour
         yield return new WaitForSeconds(5f);
 
         var fpc = FindFirstObjectByType<FPController>();
-        Transform camT = null;
-        if (fpc != null && fpc.cameraTransform != null) camT = fpc.cameraTransform;
-        if (camT == null && Camera.main != null) camT = Camera.main.transform;
+        Transform camT = (fpc != null && fpc.cameraTransform != null) ? fpc.cameraTransform : Camera.main?.transform;
         if (camT == null || eddyHat == null) yield break;
 
         if (fpc != null) fpc.SetPuzzleActive(true);
@@ -290,12 +296,11 @@ public class TracingPuzzle : MonoBehaviour
 
         Quaternion startRot = camT.rotation;
         Quaternion targetRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
-
-        float speed = 90f; // degrees per second
+        float speed = 90f;
         float angle = Quaternion.Angle(startRot, targetRot);
-        float duration = angle / speed;
-
+        float duration = Mathf.Max(0.01f, angle / speed);
         float elapsed = 0f;
+
         while (elapsed < duration)
         {
             float t = Mathf.Clamp01(elapsed / duration);
@@ -305,19 +310,16 @@ public class TracingPuzzle : MonoBehaviour
         }
 
         camT.rotation = targetRot;
-
         yield return new WaitForSeconds(1f);
 
-        if (fpc != null) fpc.SetPuzzleActive(false);
-        
         if (fpc != null)
         {
             Vector3 flatForward = new Vector3(camT.forward.x, 0f, camT.forward.z).normalized;
-            fpc.transform.rotation = Quaternion.LookRotation(flatForward);
+            if (flatForward.sqrMagnitude > 0.001f)
+                fpc.transform.rotation = Quaternion.LookRotation(flatForward);
 
             fpc.verticalRotation = camT.localEulerAngles.x;
             if (fpc.verticalRotation > 180f) fpc.verticalRotation -= 360f;
-
             fpc.SetPuzzleActive(false);
         }
     }
@@ -325,49 +327,52 @@ public class TracingPuzzle : MonoBehaviour
     public void ShowPuzzle()
     {
         FindFirstObjectByType<TutorialHelper>().ToggleDrawTip(true);
-        cursorImage.gameObject.SetActive(true);
-
+        if (cursorImage != null) cursorImage.gameObject.SetActive(true);
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(true);
+
         Cursor.lockState = CursorLockMode.None;
 
-        ignoreUntilReleased = IsPointerDown();
-        var input = FindFirstObjectByType<PlayerInput>();
-        if (input != null) input.SwitchCurrentActionMap("Puzzle");
-    }
+        bool drawHeld = false;
+        var gp = Gamepad.current;
+        if (gp != null) drawHeld |= gp.rightTrigger.ReadValue() > 0.5f;
+        var ts = Touchscreen.current;
+        if (ts != null) drawHeld |= ts.primaryTouch.press.isPressed;
+        ignoreUntilReleased = drawHeld;
 
-    private bool IsPointerDown()
-    {
-        if (Mouse.current != null && Mouse.current.leftButton != null && Mouse.current.leftButton.isPressed) return true;
-        if (Touchscreen.current != null)
-        {
-            foreach (var t in Touchscreen.current.touches) if (t.press.isPressed) return true;
-        }
-        return false;
+        if (playerInput != null) playerInput.SwitchCurrentActionMap("Puzzle");
     }
 
     public void HidePuzzle()
     {
         FindFirstObjectByType<TutorialHelper>().ToggleDrawTip(false);
-        cursorImage.gameObject.SetActive(false);
-
+        if (cursorImage != null) cursorImage.gameObject.SetActive(false);
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
 
+        Cursor.lockState = CursorLockMode.Locked;
         ignoreUntilReleased = false;
-        var input = FindFirstObjectByType<PlayerInput>();
-        if (input != null) input.SwitchCurrentActionMap("Player");
+
+        if (playerInput != null) playerInput.SwitchCurrentActionMap("Player");
     }
 
     public void ResetMask()
     {
         if (originalMaskPixels == null || maskPixels == null) return;
+
         System.Array.Copy(originalMaskPixels, maskPixels, originalMaskPixels.Length);
         maskTex.SetPixels32(maskPixels);
         maskTex.Apply(false);
         dirty = false;
         finishedCalled = false;
     }
+
+    private Vector2 ConstrainToScreen(Vector2 pos)
+    {
+        pos.x = Mathf.Clamp(pos.x, 0f, Screen.width);
+        pos.y = Mathf.Clamp(pos.y, 0f, Screen.height);
+        return pos;
+    }
 }
+
 
 /*
     I spent way too much time in this script, so I figured I may as well put some art down here to look at for sanity.

@@ -20,6 +20,11 @@ public class MusicBoxPuzzle : MonoBehaviour
     public AudioSource audioSource;
     public ParticleSystem buttonClickParticles;
 
+    [Header("Controller Settings")]
+    public RectTransform pointer; // The highlight object (like a UI cursor/highlighter)
+    private int selectedIndex = 0;
+    private PlayerInput playerInput;
+
     private string inputSequence = "";
     private string correctSequence = "54425";
 
@@ -30,12 +35,17 @@ public class MusicBoxPuzzle : MonoBehaviour
         mainCamera = Camera.main;
         puzzleUI.SetActive(false);
 
-        // add button listeners
+        // Add button listeners
         for (int i = 0; i < numberButtons.Count; i++)
         {
             int index = i; // capture variable
             numberButtons[i].onClick.AddListener(() => ButtonPressed(index));
         }
+
+        playerInput = FindFirstObjectByType<PlayerInput>();
+
+        if (pointer != null)
+            MovePointerToButton(selectedIndex);
     }
 
     public void ShowPuzzle()
@@ -54,7 +64,6 @@ public class MusicBoxPuzzle : MonoBehaviour
             var player = FindFirstObjectByType<FPController>();
             if (player != null) player.SetPuzzleActive(true);
 
-            var playerInput = FindFirstObjectByType<PlayerInput>();
             if (playerInput != null)
                 playerInput.SwitchCurrentActionMap("Puzzle");
 
@@ -62,6 +71,9 @@ public class MusicBoxPuzzle : MonoBehaviour
             Quaternion fixedPuzzleRot = Quaternion.Euler(90f, -35f, 0f); // look straight down
 
             StartCoroutine(MoveCameraToTarget(fixedPuzzlePos, fixedPuzzleRot));
+
+            selectedIndex = 0;
+            MovePointerToButton(selectedIndex);
         }
     }
 
@@ -73,12 +85,10 @@ public class MusicBoxPuzzle : MonoBehaviour
             puzzleActive = false;
             inputSequence = "";
             mainCamera.transform.position = originalCamPos;
-            //StartCoroutine(MoveCameraToTarget(originalCamPos, originalCamRot));
 
             var player = FindFirstObjectByType<FPController>();
             if (player != null) player.SetPuzzleActive(false);
 
-            var playerInput = FindFirstObjectByType<PlayerInput>();
             if (playerInput != null)
                 playerInput.SwitchCurrentActionMap("Player");
 
@@ -109,7 +119,8 @@ public class MusicBoxPuzzle : MonoBehaviour
         inputSequence += numberButtons[index].ToString()[3];
         Debug.Log(inputSequence);
 
-        buttonClickParticles.Play();
+        if (buttonClickParticles != null)
+            buttonClickParticles.Play();
 
         // check if puzzle completed
         if (inputSequence.Length >= correctSequence.Length)
@@ -120,7 +131,7 @@ public class MusicBoxPuzzle : MonoBehaviour
             }
             else if (inputSequence.Length > 10)
             {
-
+                // reset or do nothing
             }
         }
     }
@@ -138,7 +149,43 @@ public class MusicBoxPuzzle : MonoBehaviour
     private IEnumerator waitThenCommitSuicide(float time)
     {
         yield return new WaitForSeconds(time);
-        Debug.Log("NO NO PLEASE NOOOOOOOOOOOO");
         Destroy(this);
+    }
+
+    // ---------------- CONTROLLER INPUT ----------------
+
+    public void OnNavigate(InputAction.CallbackContext ctx)
+    {
+        if (!puzzleActive || !ctx.performed) return;
+
+        Vector2 nav = ctx.ReadValue<Vector2>();
+
+        if (nav.y > 0.5f || nav.x < -0.5f)
+        {
+            // move left/up
+            selectedIndex = (selectedIndex - 1 + numberButtons.Count) % numberButtons.Count;
+            MovePointerToButton(selectedIndex);
+        }
+        else if (nav.y < -0.5f || nav.x > 0.5f)
+        {
+            // move right/down
+            selectedIndex = (selectedIndex + 1) % numberButtons.Count;
+            MovePointerToButton(selectedIndex);
+        }
+    }
+
+    public void OnSubmit(InputAction.CallbackContext ctx)
+    {
+        if (!puzzleActive || !ctx.performed) return;
+
+        numberButtons[selectedIndex].onClick.Invoke();
+    }
+
+    private void MovePointerToButton(int index)
+    {
+        if (pointer != null && numberButtons.Count > 0)
+        {
+            pointer.position = numberButtons[index].transform.position;
+        }
     }
 }

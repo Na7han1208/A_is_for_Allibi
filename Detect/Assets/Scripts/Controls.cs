@@ -565,6 +565,24 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Draw"",
+                    ""type"": ""Button"",
+                    ""id"": ""a3ad1384-e778-4c5e-97ee-dd16d0ebdbfc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drawing Movement"",
+                    ""type"": ""Value"",
+                    ""id"": ""1ec4a120-f0d2-44d9-89af-6c2f6ad86a6c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -598,6 +616,61 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3243d6b-b99b-4cfa-8a5f-4eb50b443568"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""Draw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b3802c6d-f515-4570-9a3e-f6be39b8e823"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Draw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""172700de-20f2-49d0-9c24-358d70c7d4c5"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Draw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""34ef30de-7296-4f46-a3d4-8312a0c8a61b"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""Drawing Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c1472c2-9d04-465f-85f2-ee0dd380a343"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Drawing Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -652,6 +725,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Puzzle_Navigate = m_Puzzle.FindAction("Navigate", throwIfNotFound: true);
         m_Puzzle_Cancel = m_Puzzle.FindAction("Cancel", throwIfNotFound: true);
         m_Puzzle_Submit = m_Puzzle.FindAction("Submit", throwIfNotFound: true);
+        m_Puzzle_Draw = m_Puzzle.FindAction("Draw", throwIfNotFound: true);
+        m_Puzzle_DrawingMovement = m_Puzzle.FindAction("Drawing Movement", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -942,6 +1017,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Puzzle_Navigate;
     private readonly InputAction m_Puzzle_Cancel;
     private readonly InputAction m_Puzzle_Submit;
+    private readonly InputAction m_Puzzle_Draw;
+    private readonly InputAction m_Puzzle_DrawingMovement;
     /// <summary>
     /// Provides access to input actions defined in input action map "Puzzle".
     /// </summary>
@@ -965,6 +1042,14 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Puzzle/Submit".
         /// </summary>
         public InputAction @Submit => m_Wrapper.m_Puzzle_Submit;
+        /// <summary>
+        /// Provides access to the underlying input action "Puzzle/Draw".
+        /// </summary>
+        public InputAction @Draw => m_Wrapper.m_Puzzle_Draw;
+        /// <summary>
+        /// Provides access to the underlying input action "Puzzle/DrawingMovement".
+        /// </summary>
+        public InputAction @DrawingMovement => m_Wrapper.m_Puzzle_DrawingMovement;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1000,6 +1085,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Submit.started += instance.OnSubmit;
             @Submit.performed += instance.OnSubmit;
             @Submit.canceled += instance.OnSubmit;
+            @Draw.started += instance.OnDraw;
+            @Draw.performed += instance.OnDraw;
+            @Draw.canceled += instance.OnDraw;
+            @DrawingMovement.started += instance.OnDrawingMovement;
+            @DrawingMovement.performed += instance.OnDrawingMovement;
+            @DrawingMovement.canceled += instance.OnDrawingMovement;
         }
 
         /// <summary>
@@ -1020,6 +1111,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Submit.started -= instance.OnSubmit;
             @Submit.performed -= instance.OnSubmit;
             @Submit.canceled -= instance.OnSubmit;
+            @Draw.started -= instance.OnDraw;
+            @Draw.performed -= instance.OnDraw;
+            @Draw.canceled -= instance.OnDraw;
+            @DrawingMovement.started -= instance.OnDrawingMovement;
+            @DrawingMovement.performed -= instance.OnDrawingMovement;
+            @DrawingMovement.canceled -= instance.OnDrawingMovement;
         }
 
         /// <summary>
@@ -1192,5 +1289,19 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSubmit(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Draw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDraw(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Drawing Movement" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDrawingMovement(InputAction.CallbackContext context);
     }
 }

@@ -114,6 +114,8 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(FindFirstObjectByType<PlayerInput>().currentActionMap);
+
         if (!isInspecting && !puzzleActive)
         {
             HandleMovement();
@@ -423,7 +425,7 @@ public class FPController : MonoBehaviour
     {
         if (puzzleActive) return;
 
-        float sensitivity = usingGamepad ? controllerSensitivity : mouseSensitivity;
+        float sensitivity = usingGamepad ? controllerSensitivity*50f : mouseSensitivity;
 
         float mouseX;
         float mouseY;
