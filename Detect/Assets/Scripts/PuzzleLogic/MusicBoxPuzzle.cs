@@ -251,6 +251,11 @@ public class MusicBoxPuzzle : MonoBehaviour
         ProcessButtonPress(selectedIndex);
     }
 
+    public void OnExit(InputAction.CallbackContext ctx)
+    {
+        HidePuzzle();
+    }
+
     private void MovePointerToButton(int index)
     {
         if (pointer != null && numberButtons.Count > 0)

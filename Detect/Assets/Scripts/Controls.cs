@@ -621,6 +621,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""894e8495-b2cc-432c-bd09-e070a0983c89"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""32dc773e-2c24-4184-8213-9301dda2d675"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",

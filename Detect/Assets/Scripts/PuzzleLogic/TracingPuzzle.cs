@@ -354,6 +354,11 @@ public class TracingPuzzle : MonoBehaviour
         if (playerInput != null) playerInput.SwitchCurrentActionMap("Player");
     }
 
+    public void OnExit(InputAction.CallbackContext context)
+    {
+        HidePuzzle();
+    }
+
     public void ResetMask()
     {
         if (originalMaskPixels == null || maskPixels == null) return;
