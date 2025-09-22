@@ -26598,6 +26598,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WOTD
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b797eebab3caead44955e5ddaec5ee44, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -45363,9 +45367,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1442401288}
-  - component: {fileID: 1442401291}
-  - component: {fileID: 1442401290}
-  - component: {fileID: 1442401289}
   m_Layer: 0
   m_Name: Furniture
   m_TagString: Untagged
@@ -45396,81 +45397,6 @@ Transform:
   - {fileID: 855720895}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!64 &1442401289
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1442401287}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -3381422463865716715, guid: b797eebab3caead44955e5ddaec5ee44, type: 3}
---- !u!23 &1442401290
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1442401287}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1442401291
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1442401287}
-  m_Mesh: {fileID: -3381422463865716715, guid: b797eebab3caead44955e5ddaec5ee44, type: 3}
 --- !u!1001 &1442614691
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -73231,6 +73157,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: chair Packed
       objectReference: {fileID: 0}
+    - target: {fileID: 6252894112356103509, guid: fc2f25bf3848ca24ea2a6d82f88ec712, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6741165973051387887, guid: fc2f25bf3848ca24ea2a6d82f88ec712, type: 3}
       propertyPath: m_LocalScale.x
       value: 31.940825
@@ -75153,6 +75083,10 @@ PrefabInstance:
     - target: {fileID: 3820084678487399217, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3820084678487399217, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4468359198212162631, guid: 7e2887fa3c5f8234bba24c536f17be21, type: 3}
       propertyPath: m_RenderPostProcessing
