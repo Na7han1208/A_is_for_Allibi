@@ -270,6 +270,7 @@ public class TracingPuzzle : MonoBehaviour
     private void Finished()
     {
         var fpc = FindFirstObjectByType<FPController>();
+        maskImage.enabled = false;
         if (fpc != null) fpc.PlaySuccessParticles();
         SoundManager.Instance.PlayComplex("PaperTraceSolve", this.transform);
         StartCoroutine(PuzzleCompletionCoroutine());

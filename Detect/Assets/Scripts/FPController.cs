@@ -201,7 +201,7 @@ public class FPController : MonoBehaviour
                     lookInput = Vector2.zero;
 
                     heldObject = musicBoxPuzzle.transform.parent.gameObject;
-                    HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    HintManager.Instance.TriggerDialogue(heldObject, false);
                     heldObject = null;
 
                     return;
@@ -228,13 +228,6 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
-                // case: self help book
-                if (hit.collider.CompareTag("SelfHelpBook") && !isInspecting)
-                {
-                    SelfHelpCanvas.SetActive(true);
-                    return;
-                }
-
                 // case: normal pickup
                 if (!isHoldingObject && hit.rigidbody != null)
                 {
@@ -249,8 +242,8 @@ public class FPController : MonoBehaviour
                     heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
 
                     isHoldingObject = true;
+                    HintManager.Instance.TriggerDialogue(heldObject, false);
 
-                    HintManager.Instance.TriggerPickupDialogue(heldObject);
                     FindFirstObjectByType<TutorialHelper>().ToggleInspectThrowTip();
                 }
             }
@@ -323,8 +316,18 @@ public class FPController : MonoBehaviour
         {
             isInspecting = !isInspecting;
 
+
+
             if (isInspecting)
             {
+                // case: self help book
+                if (heldObject.CompareTag("SelfHelpBook"))
+                {
+                    SelfHelpCanvas.SetActive(true);
+                    return;
+                }
+
+                // case: normal
                 holdPoint.localPosition += new Vector3(0f, 0f, 0.5f);
                 heldObject.transform.localScale *= inspectSizeMult;
 
@@ -332,9 +335,19 @@ public class FPController : MonoBehaviour
 
                 moveInput = Vector2.zero;
                 lookInput = Vector2.zero;
+                HintManager.Instance.TriggerDialogue(heldObject, true);
+
             }
             else
             {
+                // case: self help book
+                if (heldObject.CompareTag("SelfHelpBook"))
+                {
+                    SelfHelpCanvas.SetActive(false);
+                    return;
+                }
+
+                // case: normal
                 heldRb.isKinematic = false;
                 holdPoint.localPosition -= new Vector3(0f, 0f, 0.5f);
                 heldObject.transform.localScale /= inspectSizeMult;

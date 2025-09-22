@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class MusicBoxPuzzle : MonoBehaviour
 {
@@ -213,6 +214,8 @@ public class MusicBoxPuzzle : MonoBehaviour
         if (FPC != null) FPC.PlaySuccessParticles();
         HidePuzzle();
         SoundManager.Instance.PlayComplex("PaperTraceCompleted", this.transform);
+        gameObject.GetComponentInParent<Rigidbody>().isKinematic = false;
+
         StartCoroutine(waitThenCommitSuicide(0.1f));
     }
 

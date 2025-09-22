@@ -10,6 +10,7 @@ public class PauseManager : MonoBehaviour
     public GameObject BackButton;
 
     private bool inMenu = false;
+    public RectTransform cursor;
 
     void Start()
     {
@@ -18,7 +19,10 @@ public class PauseManager : MonoBehaviour
 
     void Update()
     {
-        
+        if (inMenu)
+        {
+            cursor.position = Input.mousePosition;
+        }
     }
 
     public void OnPausePressed(InputAction.CallbackContext context)
@@ -45,7 +49,6 @@ public class PauseManager : MonoBehaviour
 
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
         FindFirstObjectByType<FPController>().SetPuzzleActive(true);
     }
 
@@ -61,8 +64,8 @@ public class PauseManager : MonoBehaviour
 
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         FindFirstObjectByType<FPController>().SetPuzzleActive(false);
+        cursor.position = new Vector2(Screen.width / 2f, Screen.height / 2f);
     }
 
     public void Resume()

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class HintManager : MonoBehaviour
@@ -10,6 +11,9 @@ public class HintManager : MonoBehaviour
     public bool[] hasInteracted;
     [Range(0f, 2f)] public float[] dialogueVolumes;
 
+    [Header("Dialogue Conditions")]
+    public bool[] onInspect;
+
     [Header("Audio")]
     public AudioSource audioSource;
 
@@ -18,43 +22,112 @@ public class HintManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        if (hasInteracted == null || hasInteracted.Length != dialogueObjects.Length)
-            hasInteracted = new bool[dialogueObjects.Length];
+        int len = (dialogueObjects != null) ? dialogueObjects.Length : 0;
 
-        if (dialogueVolumes == null || dialogueVolumes.Length != dialogueObjects.Length)
+        if (hasInteracted == null || hasInteracted.Length != len)
         {
-            dialogueVolumes = new float[dialogueObjects.Length];
-            for (int i = 0; i < dialogueVolumes.Length; i++) dialogueVolumes[i] = 1f;
+            bool[] newHas = new bool[len];
+            if (hasInteracted != null)
+            {
+                int copy = Math.Min(hasInteracted.Length, len);
+                for (int i = 0; i < copy; i++) newHas[i] = hasInteracted[i];
+            }
+            hasInteracted = newHas;
+        }
+
+        if (dialogueVolumes == null || dialogueVolumes.Length != len)
+        {
+            float[] newVol = new float[len];
+            if (dialogueVolumes != null)
+            {
+                int copy = Math.Min(dialogueVolumes.Length, len);
+                for (int i = 0; i < copy; i++) newVol[i] = dialogueVolumes[i];
+            }
+            for (int i = 0; i < len; i++) if (newVol[i] == 0f) newVol[i] = 1f;
+            dialogueVolumes = newVol;
+        }
+
+        if (onInspect == null || onInspect.Length != len)
+        {
+            bool[] newOn = new bool[len];
+            if (onInspect != null)
+            {
+                int copy = Math.Min(onInspect.Length, len);
+                for (int i = 0; i < copy; i++) newOn[i] = onInspect[i];
+            }
+            for (int i = 0; i < len; i++) { } // remaining default false
+            onInspect = newOn;
         }
     }
 
-    public void TriggerPickupDialogue(GameObject pickedObject)
+    public void TriggerPickupDialogue(GameObject targetObject)
     {
+        TriggerDialogue(targetObject, false);
+    }
+
+    public void TriggerDialogue(GameObject targetObject, bool isInspect)
+    {
+        if (targetObject == null) return;
+        Debug.Log($"[HintManager] TriggerDialogue called for '{targetObject.name}' (isInspect={isInspect})");
+
         for (int i = 0; i < dialogueObjects.Length; i++)
         {
-            if (dialogueObjects[i] == pickedObject && !hasInteracted[i])
+            GameObject dialogObj = dialogueObjects[i];
+            if (dialogObj == null) continue;
+
+            bool match = dialogObj == targetObject
+                         || targetObject.transform.IsChildOf(dialogObj.transform)
+                         || dialogObj.transform.IsChildOf(targetObject.transform);
+
+            if (!match) continue;
+
+            bool wantsInspect = (onInspect != null && i < onInspect.Length) ? onInspect[i] : false;
+            Debug.Log($"[HintManager] matched index {i}. wantsInspect={wantsInspect}, hasInteracted={(hasInteracted != null && i < hasInteracted.Length ? hasInteracted[i] : false)}");
+
+            if (wantsInspect && !isInspect)
             {
-                if (i >= 9 && i <= 14)
-                {
-                    for (int j = 9; j <= 14 && j < hasInteracted.Length; j++)
-                    {
-                        hasInteracted[j] = true;
-                    }
-                }
-                else
-                {
-                    hasInteracted[i] = true;
-                }
-                
-                if (dialogueClips.Length > i && dialogueClips[i] != null)
-                {
-                    float volume = (dialogueVolumes.Length > i) ? dialogueVolumes[i] : 1f;
-                    audioSource.Stop();
-                    audioSource.PlayOneShot(dialogueClips[i], volume);
-                    Debug.Log($"[DialogueManager] Played first-time dialogue for {pickedObject.name} at volume {volume}");
-                }
+                Debug.Log($"[HintManager] skipping: object set to play only on Inspect (index {i}).");
                 return;
             }
+
+            if (!wantsInspect && isInspect)
+            {
+                Debug.Log($"[HintManager] skipping: object set to play only on Pickup (index {i}).");
+                return;
+            }
+
+            if (hasInteracted != null && i < hasInteracted.Length && hasInteracted[i])
+            {
+                Debug.Log($"[HintManager] skipping: already interacted (index {i}).");
+                return;
+            }
+
+            if (i >= 9 && i <= 14)
+            {
+                for (int j = 9; j <= 14 && j < hasInteracted.Length; j++) hasInteracted[j] = true;
+            }
+            else
+            {
+                if (hasInteracted != null && i < hasInteracted.Length) hasInteracted[i] = true;
+            }
+
+            if (dialogueClips != null && i < dialogueClips.Length && dialogueClips[i] != null)
+            {
+                float volume = (dialogueVolumes != null && i < dialogueVolumes.Length) ? dialogueVolumes[i] : 1f;
+                if (audioSource != null)
+                {
+                    audioSource.Stop();
+                    audioSource.PlayOneShot(dialogueClips[i], volume);
+                }
+                Debug.Log($"[HintManager] Played {(isInspect ? "Inspect" : "Pickup")} dialogue for '{dialogObj.name}' at volume {volume}");
+            }
+            else
+            {
+                Debug.Log($"[HintManager] No audio clip assigned for index {i}.");
+            }
+            return;
         }
+
+        Debug.Log($"[HintManager] No matching dialogueObject found for '{targetObject.name}'");
     }
 }

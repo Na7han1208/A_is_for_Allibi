@@ -491,6 +491,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""945ef554-385c-4559-9cb4-eee8291e5b8f"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inspect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""f64626a8-2795-48bc-afb7-d639a613e969"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
