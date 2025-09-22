@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using System;
 
 public class MusicBoxPuzzle : MonoBehaviour
 {
@@ -20,9 +19,12 @@ public class MusicBoxPuzzle : MonoBehaviour
     public List<AudioClip> buttonSounds;
     public AudioSource audioSource;
     public ParticleSystem buttonClickParticles;
+    public RectTransform cursor;
+    private Vector2 defaultCursorPosition;
+    public RectTransform pointer;
+    public GraphicRaycaster raycaster;
 
     [Header("Controller Settings")]
-    public RectTransform pointer;
     private int selectedIndex = 0;
     private PlayerInput playerInput;
 
@@ -31,15 +33,22 @@ public class MusicBoxPuzzle : MonoBehaviour
 
     private bool puzzleActive = false;
 
+    private enum InputMode { Mouse, Controller }
+    private InputMode currentMode = InputMode.Mouse;
+
+    private float navCooldown = 0.2f;
+    private float lastNavTime = 0f;
+
     void Start()
     {
+        defaultCursorPosition = cursor.anchoredPosition;
+
         mainCamera = Camera.main;
         puzzleUI.SetActive(false);
 
-        // Add button listeners
         for (int i = 0; i < numberButtons.Count; i++)
         {
-            int index = i; // capture variable
+            int index = i;
             numberButtons[i].onClick.AddListener(() => ButtonPressed(index));
         }
 
@@ -49,16 +58,59 @@ public class MusicBoxPuzzle : MonoBehaviour
             MovePointerToButton(selectedIndex);
     }
 
-    public void Update()
+    private void Update()
     {
+        if (!puzzleActive) return;
+
         if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f)
         {
-            pointer.gameObject.SetActive(false);
+            SetInputMode(InputMode.Mouse);
+        }
+        else if (Gamepad.current != null)
+        {
+            if (Gamepad.current.leftStick.ReadValue().sqrMagnitude > 0.2f ||
+                Gamepad.current.dpad.ReadValue().sqrMagnitude > 0.1f)
+            {
+                SetInputMode(InputMode.Controller);
+            }
         }
 
-        if (Gamepad.current != null && Gamepad.current.leftStick.ReadValue().sqrMagnitude > 0.01f)
+        if (currentMode == InputMode.Mouse && cursor.gameObject.activeSelf)
         {
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                cursor.parent as RectTransform,
+                Mouse.current.position.ReadValue(),
+                null,
+                out localPoint
+            );
+            cursor.anchoredPosition = localPoint;
+        }
+    }
+
+    private void SetInputMode(InputMode mode)
+    {
+        if (currentMode == mode) return;
+        currentMode = mode;
+
+        if (mode == InputMode.Mouse)
+        {
+            cursor.gameObject.SetActive(true);
+            pointer.gameObject.SetActive(false);
+            if (raycaster != null) raycaster.enabled = true;
+
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            cursor.anchoredPosition = new Vector2(-999999, -999999);
+            cursor.gameObject.SetActive(false);
             pointer.gameObject.SetActive(true);
+            if (raycaster != null) raycaster.enabled = false;
+
+            Cursor.lockState = CursorLockMode.Locked;
+
+            MovePointerToButton(selectedIndex);
         }
     }
 
@@ -69,11 +121,10 @@ public class MusicBoxPuzzle : MonoBehaviour
             puzzleActive = true;
             puzzleUI.SetActive(true);
 
+            pointer.gameObject.SetActive(false);
+
             originalCamPos = mainCamera.transform.position;
             originalCamRot = mainCamera.transform.rotation;
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
 
             var player = FindFirstObjectByType<FPController>();
             if (player != null) player.SetPuzzleActive(true);
@@ -82,12 +133,13 @@ public class MusicBoxPuzzle : MonoBehaviour
                 playerInput.SwitchCurrentActionMap("Puzzle");
 
             Vector3 fixedPuzzlePos = cameraTarget.position;
-            Quaternion fixedPuzzleRot = Quaternion.Euler(90f, -35f, 0f); // look straight down
+            Quaternion fixedPuzzleRot = Quaternion.Euler(90f, -35f, 0f);
 
             StartCoroutine(MoveCameraToTarget(fixedPuzzlePos, fixedPuzzleRot));
 
             selectedIndex = 0;
-            MovePointerToButton(selectedIndex);
+            SetInputMode(InputMode.Mouse);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
@@ -106,8 +158,10 @@ public class MusicBoxPuzzle : MonoBehaviour
             if (playerInput != null)
                 playerInput.SwitchCurrentActionMap("Player");
 
+            cursor.gameObject.SetActive(true);
+            cursor.anchoredPosition = defaultCursorPosition;
+
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = false;
         }
     }
 
@@ -128,15 +182,17 @@ public class MusicBoxPuzzle : MonoBehaviour
 
     void ButtonPressed(int index)
     {
+        if (currentMode != InputMode.Mouse) return;
+        ProcessButtonPress(index);
+    }
+
+    private void ProcessButtonPress(int index)
+    {
         audioSource.PlayOneShot(buttonSounds[index]);
-
-        inputSequence += numberButtons[index].ToString()[3];
-        Debug.Log(inputSequence);
-
+        inputSequence += numberButtons[index].name[numberButtons[index].name.Length - 1];
         if (buttonClickParticles != null)
             buttonClickParticles.Play();
 
-        // check if puzzle completed
         if (inputSequence.Length >= correctSequence.Length)
         {
             if (inputSequence.Contains(correctSequence))
@@ -153,7 +209,6 @@ public class MusicBoxPuzzle : MonoBehaviour
 
     void PuzzleCompleted()
     {
-        Debug.Log("Puzzle Completed!");
         var FPC = FindFirstObjectByType<FPController>();
         if (FPC != null) FPC.PlaySuccessParticles();
         HidePuzzle();
@@ -167,40 +222,41 @@ public class MusicBoxPuzzle : MonoBehaviour
         Destroy(this);
     }
 
-    // ---------------- CONTROLLER INPUT ----------------
-
     public void OnNavigate(InputAction.CallbackContext ctx)
     {
         if (!puzzleActive || !ctx.performed) return;
+        if (currentMode != InputMode.Controller) return;
+        if (Time.time - lastNavTime < navCooldown) return;
 
         Vector2 nav = ctx.ReadValue<Vector2>();
 
         if (nav.y > 0.5f || nav.x < -0.5f)
         {
-            // move left/up
             selectedIndex = (selectedIndex - 1 + numberButtons.Count) % numberButtons.Count;
             MovePointerToButton(selectedIndex);
+            lastNavTime = Time.time;
         }
         else if (nav.y < -0.5f || nav.x > 0.5f)
         {
-            // move right/down
             selectedIndex = (selectedIndex + 1) % numberButtons.Count;
             MovePointerToButton(selectedIndex);
+            lastNavTime = Time.time;
         }
     }
 
     public void OnSubmit(InputAction.CallbackContext ctx)
     {
         if (!puzzleActive || !ctx.performed) return;
-
-        numberButtons[selectedIndex].onClick.Invoke();
+        if (currentMode != InputMode.Controller) return;
+        ProcessButtonPress(selectedIndex);
     }
 
     private void MovePointerToButton(int index)
     {
         if (pointer != null && numberButtons.Count > 0)
         {
-            pointer.position = numberButtons[index].transform.position;
+            RectTransform btnRect = numberButtons[index].GetComponent<RectTransform>();
+            pointer.position = btnRect.position;
         }
     }
 }

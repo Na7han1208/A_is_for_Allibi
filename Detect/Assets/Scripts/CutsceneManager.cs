@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -28,44 +27,67 @@ public class CutsceneManager : MonoBehaviour
         videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
         videoPlayer.SetTargetAudioSource(0, audioSource);
 
+        // Avoid duplicate bindings
+        videoPlayer.prepareCompleted -= OnVideoPrepared;
+        videoPlayer.loopPointReached -= OnVideoFinished;
+
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.loopPointReached += OnVideoFinished;
 
-        videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.Prepare();
 
         FindFirstObjectByType<FPController>().isInspecting = true;
     }
 
-    private void OnVideoPrepared(VideoPlayer videoPlayer)
+    private void OnVideoPrepared(VideoPlayer vp)
     {
-        rawImage.texture = videoPlayer.texture;
-        videoPlayer.Play();
-        //audioSource.Play();
+        vp.time = 0; // always start at beginning
+        rawImage.texture = vp.texture;
+        vp.Play();
     }
 
-    private void OnVideoFinished(VideoPlayer videoPlayer)
+    private void OnVideoFinished(VideoPlayer vp)
     {
         if (videoFinished) return;
         rawImage.enabled = false;
         FindFirstObjectByType<FPController>().isInspecting = false;
 
         TutorialHelper tutorialHelper = FindFirstObjectByType<TutorialHelper>();
-        tutorialHelper.ToggleInteraction(tutorialHelper.pickedUp ? false : true);
-        FindFirstObjectByType<TutorialHelper>().DisplayMovement();
-        skipImage.SetActive(false);
+        tutorialHelper.ToggleInteraction(!tutorialHelper.pickedUp);
+        tutorialHelper.DisplayMovement();
 
+        skipImage.SetActive(false);
         SoundManager.Instance.PlayComplex("NaproomMusic", transform);
+
+        CleanupVideo();
         videoFinished = true;
     }
 
     public void OnCutsceneSkip(InputAction.CallbackContext context)
     {
+        if (!context.performed) return;
+
         Debug.Log("SKIPPED");
 
-        videoPlayer.Stop();
-        audioSource.Stop();
-
+        videoPlayer.time = 0;
+        CleanupVideo();
         OnVideoFinished(videoPlayer);
+    }
+
+    private void CleanupVideo()
+    {
+        videoPlayer.Stop();
+        videoPlayer.clip = null;
+        audioSource.Stop();
+        rawImage.texture = null;
+    }
+
+    private void OnDestroy()
+    {
+        if (videoPlayer != null)
+        {
+            videoPlayer.prepareCompleted -= OnVideoPrepared;
+            videoPlayer.loopPointReached -= OnVideoFinished;
+        }
     }
 }

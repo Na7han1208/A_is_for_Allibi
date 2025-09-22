@@ -20,10 +20,14 @@ public class TutorialHelper : MonoBehaviour
     public GameObject InspectTip;
     public GameObject Cursor;
 
+    public Vector2 cursorDefaultPosition;
+
     private FPController fPController;
 
     void Start()
     {
+        cursorDefaultPosition = Cursor.GetComponent<RectTransform>().anchoredPosition;
+
         Cursor.SetActive(false);
         fPController = FindFirstObjectByType<FPController>();
 
