@@ -10,6 +10,7 @@ public class TutorialHelper : MonoBehaviour
     public bool pickedUp = false;
     private bool crouched = false;
     private bool inspected = false;
+    private bool checkedOutSomething = false;
 
     public Canvas TutorialCanvas;
     public GameObject InteractTip;
@@ -18,6 +19,8 @@ public class TutorialHelper : MonoBehaviour
     public GameObject DrawTip;
     public GameObject ThrowTip;
     public GameObject InspectTip;
+    public GameObject CrouchTip;
+    public GameObject JumpTip;
     public GameObject Cursor;
 
     public Vector2 cursorDefaultPosition;
@@ -50,6 +53,24 @@ public class TutorialHelper : MonoBehaviour
         Cursor.SetActive(true);
     }
 
+    public void ToggleInspectThrowTip()
+    {
+        if (checkedOutSomething) return;
+        checkedOutSomething = true;
+        StartCoroutine(InspectCoroutine());
+    }
+
+    private IEnumerator InspectCoroutine()
+    {
+        yield return StartCoroutine(FadeImage(InspectTip.GetComponent<Image>(), 1f, 2f));
+        yield return StartCoroutine(FadeImage(ThrowTip.GetComponent<Image>(), 1f, 2f));
+
+        yield return new WaitForSeconds(3f);
+
+        yield return StartCoroutine(FadeImage(InspectTip.GetComponent<Image>(), 0f, 2f));
+        yield return StartCoroutine(FadeImage(ThrowTip.GetComponent<Image>(), 0f, 2f));
+    }
+
     public void ToggleDrawTip(bool active)
     {
         DrawTip.SetActive(active);
@@ -77,6 +98,16 @@ public class TutorialHelper : MonoBehaviour
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 0f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 0f, 2f));
+
+        yield return new WaitForSeconds(3f);
+
+        yield return StartCoroutine(FadeImage(CrouchTip.GetComponent<Image>(), 1f, 2f));
+        yield return StartCoroutine(FadeImage(JumpTip.GetComponent<Image>(), 1f, 2f));
+
+        yield return new WaitForSeconds(3f);
+
+        yield return StartCoroutine(FadeImage(CrouchTip.GetComponent<Image>(), 0f, 2f));
+        yield return StartCoroutine(FadeImage(JumpTip.GetComponent<Image>(), 0f, 2f));
     }
 
     private IEnumerator FadeImage(Image img, float targetAlpha, float duration)

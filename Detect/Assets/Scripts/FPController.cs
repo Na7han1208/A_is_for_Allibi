@@ -229,10 +229,9 @@ public class FPController : MonoBehaviour
                 }
 
                 // case: self help book
-                if (hit.collider.CompareTag("SelfHelpBook"))
+                if (hit.collider.CompareTag("SelfHelpBook") && !isInspecting)
                 {
                     SelfHelpCanvas.SetActive(true);
-                    SetPuzzleActive(true);
                     return;
                 }
 
@@ -252,12 +251,13 @@ public class FPController : MonoBehaviour
                     isHoldingObject = true;
 
                     HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    FindFirstObjectByType<TutorialHelper>().ToggleInspectThrowTip();
                 }
             }
             else if (isHoldingObject)
             {
-                SetPuzzleActive(false);
                 SelfHelpCanvas.SetActive(false);
+                SetPuzzleActive(false);
                 DropObject();
             }
         }
@@ -413,11 +413,6 @@ public class FPController : MonoBehaviour
         {
             velocity.y = (float)Math.Sqrt(jumpHeight * -2f * gravity);
         }
-    }
-
-    public void OnQuit(InputAction.CallbackContext context)
-    {
-        Application.Quit(0);
     }
 
     // ---------------- Logic ----------------

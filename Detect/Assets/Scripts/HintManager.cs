@@ -34,8 +34,18 @@ public class HintManager : MonoBehaviour
         {
             if (dialogueObjects[i] == pickedObject && !hasInteracted[i])
             {
-                hasInteracted[i] = true;
-
+                if (i >= 9 && i <= 14)
+                {
+                    for (int j = 9; j <= 14 && j < hasInteracted.Length; j++)
+                    {
+                        hasInteracted[j] = true;
+                    }
+                }
+                else
+                {
+                    hasInteracted[i] = true;
+                }
+                
                 if (dialogueClips.Length > i && dialogueClips[i] != null)
                 {
                     float volume = (dialogueVolumes.Length > i) ? dialogueVolumes[i] : 1f;
