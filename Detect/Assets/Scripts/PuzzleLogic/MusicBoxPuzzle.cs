@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System;
 
 public class MusicBoxPuzzle : MonoBehaviour
 {
@@ -144,7 +145,8 @@ public class MusicBoxPuzzle : MonoBehaviour
             }
             else if (inputSequence.Length > 10)
             {
-                // reset or do nothing
+                string temp = inputSequence.Substring(5);
+                inputSequence = temp;
             }
         }
     }

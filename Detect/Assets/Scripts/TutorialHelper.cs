@@ -16,6 +16,8 @@ public class TutorialHelper : MonoBehaviour
     public GameObject MovementTip;
     public GameObject LookTip;
     public GameObject DrawTip;
+    public GameObject ThrowTip;
+    public GameObject InspectTip;
     public GameObject Cursor;
 
     private FPController fPController;

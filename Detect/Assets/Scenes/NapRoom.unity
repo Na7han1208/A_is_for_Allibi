@@ -21010,6 +21010,8 @@ MonoBehaviour:
   MovementTip: {fileID: 667747651}
   LookTip: {fileID: 1676889982}
   DrawTip: {fileID: 1805056346}
+  ThrowTip: {fileID: 0}
+  InspectTip: {fileID: 0}
   Cursor: {fileID: 2010974969}
 --- !u!4 &670902707
 Transform:
@@ -73084,11 +73086,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 994331896060761348, guid: efd8215942fc4df468cf87bb7457527d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5509999
+      value: -3.909
       objectReference: {fileID: 0}
     - target: {fileID: 994331896060761348, guid: efd8215942fc4df468cf87bb7457527d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 24.626001
+      value: 24.693
       objectReference: {fileID: 0}
     - target: {fileID: 994331896060761348, guid: efd8215942fc4df468cf87bb7457527d, type: 3}
       propertyPath: m_LocalRotation.w
