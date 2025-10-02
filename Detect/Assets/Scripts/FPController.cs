@@ -347,7 +347,7 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
-                // case: normal
+                // case: normal  
                 heldRb.isKinematic = false;
                 holdPoint.localPosition -= new Vector3(0f, 0f, 0.5f);
                 heldObject.transform.localScale /= inspectSizeMult;
