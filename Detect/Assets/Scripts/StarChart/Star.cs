@@ -1,36 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-public class Star : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Star : MonoBehaviour
 {
-    [Header("Settings")]
+    [Header("Star Setup")]
     public string starId;
-    public GameObject stickyNote;
+    public Sprite lockedSprite;
+    public Sprite unlockedSprite;
+
+    private Image starImage;
     public bool IsUnlocked { get; private set; }
 
     private void Start()
     {
-        gameObject.SetActive(false);
-        if (stickyNote != null)
-            stickyNote.SetActive(false);
+        starImage = GetComponent<Image>();
+        starImage.sprite = lockedSprite;
     }
 
     public void Unlock()
     {
         IsUnlocked = true;
-        gameObject.SetActive(true);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (IsUnlocked && stickyNote != null)
-            stickyNote.SetActive(true);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (stickyNote != null)
-            stickyNote.SetActive(false);
+        starImage.sprite = unlockedSprite;
     }
 }
