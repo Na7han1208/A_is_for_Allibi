@@ -93,6 +93,10 @@ public class FPController : MonoBehaviour
     private Dictionary<GameObject, Material[]> originalMaterials = new Dictionary<GameObject, Material[]>();
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
 
+    [Header("Animations")]
+    public Animator animator;
+    public float idleTimer = 0f;
+
     private bool puzzleActive = false;
     TutorialHelper tutorialHelper;
 
@@ -128,6 +132,14 @@ public class FPController : MonoBehaviour
         }
         HandleInspect();
         HandleHighlight();
+
+        // animations
+        float speed = new Vector3(controller.velocity.x, 0, controller.velocity.y).magnitude;
+        bool isGrounded = controller.isGrounded;
+
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("IsCrouching", )
+        if (speed) < 0.1f)
     }
 
     private void FixedUpdate()

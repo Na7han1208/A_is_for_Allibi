@@ -4,6 +4,8 @@ using System.Collections;
 
 public class SubtitleManager : MonoBehaviour
 {
+    public static SubtitleManager Instance { get; private set; }
+
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI subtitleText;
     [SerializeField] private TextMeshProUGUI speakerText;
@@ -15,6 +17,15 @@ public class SubtitleManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         if (subtitleText != null) subtitleText.text = "";
         if (speakerText != null) speakerText.text = "";
     }
@@ -37,20 +48,16 @@ public class SubtitleManager : MonoBehaviour
 
         foreach (var line in currentSequence.lines)
         {
-            // Wait until it's time to show this line
             yield return new WaitUntil(() => Time.time - startTime >= line.startTime);
 
-            // Update UI
             if (speakerText != null)
                 speakerText.text = line.speaker;
 
             if (subtitleText != null)
                 subtitleText.text = line.text;
 
-            // Keep the subtitle on screen for its duration
             yield return new WaitForSeconds(line.duration);
 
-            // Clear after each line
             if (subtitleText != null)
                 subtitleText.text = "";
             if (speakerText != null)

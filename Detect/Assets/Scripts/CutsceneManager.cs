@@ -15,10 +15,15 @@ public class CutsceneManager : MonoBehaviour
     public VideoClip videoClip;
     private bool videoFinished = false;
 
+    [Header("Subtitles")]
+    public SubtitleSequence introSequence;
+
     private void Start()
     {
         if (videoPlayer == null) videoPlayer = gameObject.AddComponent<VideoPlayer>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        
+        SubtitleManager.Instance.PlaySequence(introSequence);
 
         videoPlayer.renderMode = VideoRenderMode.APIOnly;
         videoPlayer.source = VideoSource.VideoClip;
