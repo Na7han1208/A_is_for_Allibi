@@ -21,7 +21,7 @@ public class TutorialHelper : MonoBehaviour
     public GameObject InspectTip;
     public GameObject CrouchTip;
     public GameObject JumpTip;
-    public GameObject Cursor;
+    public GameObject Crosshair;
 
     public Vector2 cursorDefaultPosition;
 
@@ -29,9 +29,9 @@ public class TutorialHelper : MonoBehaviour
 
     void Start()
     {
-        cursorDefaultPosition = Cursor.GetComponent<RectTransform>().anchoredPosition;
+        cursorDefaultPosition = Crosshair.GetComponent<RectTransform>().anchoredPosition;
 
-        Cursor.SetActive(false);
+        Crosshair.SetActive(false);
         fPController = FindFirstObjectByType<FPController>();
 
         fPController.SetPuzzleActive(true);
@@ -50,7 +50,7 @@ public class TutorialHelper : MonoBehaviour
             active ? 1f : 0f,
             2f
         ));
-        Cursor.SetActive(true);
+        Crosshair.SetActive(true);
     }
 
     public void ToggleInspectThrowTip()

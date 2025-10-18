@@ -3,28 +3,53 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(VideoPlayer), typeof(AudioSource))]
 public class CutsceneManager : MonoBehaviour
 {
     [Header("UI")]
-    public RawImage rawImage;
-    public AudioSource audioSource;
-    public GameObject skipImage;
+    [SerializeField] private RawImage rawImage;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private GameObject skipImage;
 
-    [Header("Video")]
-    public VideoPlayer videoPlayer;
-    public VideoClip videoClip;
-    private bool videoFinished = false;
+    [Header("Video Settings")]
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private VideoClip videoClip;
+    [SerializeField] private bool loopCutscene = false;
 
     [Header("Subtitles")]
-    public SubtitleSequence introSequence;
+    [SerializeField] private SubtitleSequence subtitleSequence;
+
+    private bool videoFinished = false;
+    private FPController fpController;
+    private TutorialHelper tutorialHelper;
 
     private void Start()
     {
-        if (videoPlayer == null) videoPlayer = gameObject.AddComponent<VideoPlayer>();
-        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-        
-        SubtitleManager.Instance.PlaySequence(introSequence);
+        InitializeReferences();
+        SetupVideoPlayer();
 
+        if (subtitleSequence != null)
+        {
+            SubtitleManager.Instance.PlaySequence(subtitleSequence);
+        }
+
+        fpController.isInspecting = true;
+        videoPlayer.Prepare();
+    }
+
+    private void InitializeReferences()
+    {
+        if (videoPlayer == null) videoPlayer = GetComponent<VideoPlayer>();
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        if (rawImage == null) rawImage = FindFirstObjectByType<RawImage>();
+        if (skipImage != null) skipImage.SetActive(true);
+
+        fpController = FindFirstObjectByType<FPController>();
+        tutorialHelper = FindFirstObjectByType<TutorialHelper>();
+    }
+
+    private void SetupVideoPlayer()
+    {
         videoPlayer.renderMode = VideoRenderMode.APIOnly;
         videoPlayer.source = VideoSource.VideoClip;
         videoPlayer.clip = videoClip;
@@ -32,59 +57,86 @@ public class CutsceneManager : MonoBehaviour
         videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
         videoPlayer.SetTargetAudioSource(0, audioSource);
 
-        // Avoid duplicate bindings
+        videoPlayer.isLooping = loopCutscene;
+
+        // Clean event bindings before re-adding
         videoPlayer.prepareCompleted -= OnVideoPrepared;
         videoPlayer.loopPointReached -= OnVideoFinished;
 
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.loopPointReached += OnVideoFinished;
-
-        videoPlayer.Prepare();
-
-        FindFirstObjectByType<FPController>().isInspecting = true;
     }
 
     private void OnVideoPrepared(VideoPlayer vp)
     {
-        vp.time = 0; // always start at beginning
+        vp.time = 0;
         rawImage.texture = vp.texture;
+        rawImage.enabled = true;
         vp.Play();
     }
 
     private void OnVideoFinished(VideoPlayer vp)
     {
+        if (loopCutscene)
+        {
+            vp.time = 0;
+            vp.Play();
+            return;
+        }
+
         if (videoFinished) return;
-        rawImage.enabled = false;
-        FindFirstObjectByType<FPController>().isInspecting = false;
-
-        TutorialHelper tutorialHelper = FindFirstObjectByType<TutorialHelper>();
-        tutorialHelper.ToggleInteraction(!tutorialHelper.pickedUp);
-        tutorialHelper.DisplayMovement();
-
-        skipImage.SetActive(false);
-        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
-
-        CleanupVideo();
         videoFinished = true;
+
+        EndCutscene();
     }
 
     public void OnCutsceneSkip(InputAction.CallbackContext context)
     {
-        if (!context.performed) return;
+        if (!context.performed || videoFinished) return;
 
-        Debug.Log("SKIPPED");
+        Debug.Log("Cutscene skipped by player.");
 
-        videoPlayer.time = 0;
+        if (subtitleSequence != null)
+            SubtitleManager.Instance.StopSubtitles();
+
         CleanupVideo();
-        OnVideoFinished(videoPlayer);
+        videoFinished = true;
+        EndCutscene();
+    }
+
+    private void EndCutscene()
+    {
+        rawImage.enabled = false;
+        skipImage?.SetActive(false);
+
+        if (fpController != null)
+            fpController.isInspecting = false;
+
+        if (tutorialHelper != null)
+        {
+            tutorialHelper.ToggleInteraction(!tutorialHelper.pickedUp);
+            tutorialHelper.DisplayMovement();
+        }
+
+        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
+        CleanupVideo();
     }
 
     private void CleanupVideo()
     {
-        videoPlayer.Stop();
-        videoPlayer.clip = null;
-        audioSource.Stop();
-        rawImage.texture = null;
+        if (videoPlayer != null)
+        {
+            videoPlayer.Stop();
+            videoPlayer.clip = null;
+        }
+
+        if (audioSource != null)
+            audioSource.Stop();
+
+        if (rawImage != null)
+            rawImage.texture = null;
+
+        videoFinished = true;
     }
 
     private void OnDestroy()

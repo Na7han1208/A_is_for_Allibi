@@ -11,9 +11,11 @@ public class PauseManager : MonoBehaviour
 
     private bool inMenu = false;
     public RectTransform cursor;
+    private MainMenuManager mainMenuManager;
 
     void Start()
     {
+        mainMenuManager = FindAnyObjectByType<MainMenuManager>();
         HideMenu();
     }
 
@@ -27,6 +29,7 @@ public class PauseManager : MonoBehaviour
 
     public void OnPausePressed(InputAction.CallbackContext context)
     {
+        if (mainMenuManager.InMainMenu) return;
         if (inMenu)
         {
             HideMenu();
