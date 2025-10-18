@@ -51,6 +51,7 @@ public class TutorialHelper : MonoBehaviour
             2f
         ));
         Crosshair.SetActive(true);
+        //CursorManager.Instance.ShowCursor(false);
     }
 
     public void ToggleInspectThrowTip()

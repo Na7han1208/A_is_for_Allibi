@@ -8,23 +8,15 @@ public class PauseManager : MonoBehaviour
     public GameObject QuitButton;
     public GameObject ControlsScreen;
     public GameObject BackButton;
+    public GameObject crosshair;
 
     private bool inMenu = false;
-    public RectTransform cursor;
     private MainMenuManager mainMenuManager;
 
     void Start()
     {
         mainMenuManager = FindAnyObjectByType<MainMenuManager>();
         HideMenu();
-    }
-
-    void Update()
-    {
-        if (inMenu)
-        {
-            cursor.position = Input.mousePosition;
-        }
     }
 
     public void OnPausePressed(InputAction.CallbackContext context)
@@ -49,9 +41,11 @@ public class PauseManager : MonoBehaviour
         BackButton.SetActive(false);
 
         inMenu = true;
+        crosshair.SetActive(false);
 
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
+        CursorManager.Instance.ShowCursor(true);
         FindFirstObjectByType<FPController>().SetPuzzleActive(true);
     }
 
@@ -64,11 +58,13 @@ public class PauseManager : MonoBehaviour
         BackButton.SetActive(false);
 
         inMenu = false;
+        crosshair.SetActive(true);
 
         Time.timeScale = 1f;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        CursorManager.Instance.ShowCursor(false);
         FindFirstObjectByType<FPController>().SetPuzzleActive(false);
-        cursor.position = new Vector2(Screen.width / 2f, Screen.height / 2f);
     }
 
     public void Resume()

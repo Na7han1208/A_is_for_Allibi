@@ -110,8 +110,6 @@ public class FPController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         tutorialHelper = FindFirstObjectByType<TutorialHelper>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false; //hides and locks cursor ^
 
         layerMask = LayerMask.GetMask("Pickupable");
     }

@@ -1,150 +1,245 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(VideoPlayer), typeof(AudioSource))]
+[Serializable]
+public class CutsceneData
+{
+    public string cutsceneName;
+    public VideoClip videoClip;
+    public SubtitleSequence subtitleSequence;
+    public bool loop;
+    public bool skippable;
+}
+
 public class CutsceneManager : MonoBehaviour
 {
+    public static CutsceneManager Instance { get; private set; }
+
     [Header("UI")]
     [SerializeField] private RawImage rawImage;
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private GameObject skipImage;
 
-    [Header("Video Settings")]
+    [Header("Audio/Video")]
     [SerializeField] private VideoPlayer videoPlayer;
-    [SerializeField] private VideoClip videoClip;
-    [SerializeField] private bool loopCutscene = false;
+    [SerializeField] private AudioSource audioSource;
 
-    [Header("Subtitles")]
-    [SerializeField] private SubtitleSequence subtitleSequence;
+    [Header("Library")]
+    [SerializeField] private CutsceneData[] cutscenes;
 
-    private bool videoFinished = false;
-    private FPController fpController;
-    private TutorialHelper tutorialHelper;
+    [Header("Options")]
+    [SerializeField] private bool dontDestroy = true;
+    [SerializeField] private float prepareTimeout = 5f;
 
-    private void Start()
+    private CutsceneData current;
+    private bool playing;
+    private bool prepared;
+    private bool allowSkip;
+    private bool pendingPrepare;
+    private float prepareTimer;
+
+    void Awake()
     {
-        InitializeReferences();
-        SetupVideoPlayer();
-
-        if (subtitleSequence != null)
+        if (Instance != null && Instance != this)
         {
-            SubtitleManager.Instance.PlaySequence(subtitleSequence);
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        if (dontDestroy) DontDestroyOnLoad(gameObject);
+
+        if (videoPlayer == null) videoPlayer = GetComponent<VideoPlayer>() ?? gameObject.AddComponent<VideoPlayer>();
+        if (audioSource == null) audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+        if (rawImage == null) rawImage = FindFirstObjectByType<RawImage>();
+
+        audioSource.playOnAwake = false;
+        audioSource.spatialBlend = 0f;
+        audioSource.loop = false;
+        audioSource.mute = false;
+        audioSource.volume = 1f;
+
+        videoPlayer.playOnAwake = false;
+        videoPlayer.renderMode = VideoRenderMode.APIOnly;
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        videoPlayer.SetTargetAudioSource(0, audioSource);
+        videoPlayer.prepareCompleted -= OnPrepared;
+        videoPlayer.loopPointReached -= OnEnded;
+        videoPlayer.prepareCompleted += OnPrepared;
+        videoPlayer.loopPointReached += OnEnded;
+
+        if (rawImage != null) rawImage.gameObject.SetActive(false);
+        if (skipImage != null) skipImage.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (!playing) return;
+
+        bool skipPressed = false;
+        if (Keyboard.current != null) skipPressed |= Keyboard.current.spaceKey.wasPressedThisFrame;
+        skipPressed |= Input.GetKeyDown(KeyCode.Space);
+
+        if (skipPressed && allowSkip) Skip();
+
+        if (pendingPrepare)
+        {
+            prepareTimer += Time.unscaledDeltaTime;
+            if (prepareTimer >= prepareTimeout)
+            {
+                pendingPrepare = false;
+                prepared = videoPlayer.isPrepared;
+                if (prepared) StartPlaybackAfterPrepare();
+                else StartPlaybackAfterPrepare();
+            }
         }
 
-        fpController.isInspecting = true;
+        if (prepared && rawImage != null && videoPlayer.texture != null)
+            rawImage.texture = videoPlayer.texture;
+    }
+
+    public void PlayCutscene(string name)
+    {
+        var data = Array.Find(cutscenes, c => c != null && c.cutsceneName == name);
+        if (data == null) return;
+        StartCutscene(data);
+    }
+
+    public void PlayCutscene(int index)
+    {
+        if (index < 0 || index >= cutscenes.Length) return;
+        StartCutscene(cutscenes[index]);
+    }
+
+    private void StartCutscene(CutsceneData data)
+    {
+        StopCurrentQuiet();
+
+        current = data;
+        playing = true;
+        prepared = false;
+        pendingPrepare = false;
+        prepareTimer = 0f;
+        allowSkip = data.skippable;
+        if (skipImage != null) skipImage.SetActive(allowSkip);
+
+        if (rawImage == null) rawImage = FindFirstObjectByType<RawImage>();
+        if (rawImage != null) rawImage.gameObject.SetActive(true);
+
+        videoPlayer.Stop();
+        audioSource.Stop();
+
+        videoPlayer.renderMode = VideoRenderMode.APIOnly;
+        videoPlayer.clip = data.videoClip;
+        videoPlayer.isLooping = data.loop;
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        videoPlayer.SetTargetAudioSource(0, audioSource);
+        if (videoPlayer.audioTrackCount > 0)
+        {
+            for (ushort i = 0; i < videoPlayer.audioTrackCount; i++)
+                videoPlayer.EnableAudioTrack(i, true);
+            videoPlayer.SetDirectAudioMute(0, false);
+            videoPlayer.SetDirectAudioVolume(0, 1f);
+        }
+        audioSource.spatialBlend = 0f;
+        audioSource.mute = false;
+        audioSource.volume = 1f;
+
+        if (data.subtitleSequence != null && SubtitleManager.Instance != null)
+            SubtitleManager.Instance.PlaySequence(data.subtitleSequence);
+
+        pendingPrepare = true;
+        prepareTimer = 0f;
         videoPlayer.Prepare();
     }
 
-    private void InitializeReferences()
+    private void OnPrepared(VideoPlayer vp)
     {
-        if (videoPlayer == null) videoPlayer = GetComponent<VideoPlayer>();
-        if (audioSource == null) audioSource = GetComponent<AudioSource>();
-        if (rawImage == null) rawImage = FindFirstObjectByType<RawImage>();
-        if (skipImage != null) skipImage.SetActive(true);
-
-        fpController = FindFirstObjectByType<FPController>();
-        tutorialHelper = FindFirstObjectByType<TutorialHelper>();
+        if (vp != videoPlayer) return;
+        prepared = true;
+        pendingPrepare = false;
+        if (rawImage != null && vp.texture != null)
+            rawImage.texture = vp.texture;
+        StartPlaybackAfterPrepare();
     }
 
-    private void SetupVideoPlayer()
+    private void StartPlaybackAfterPrepare()
     {
-        videoPlayer.renderMode = VideoRenderMode.APIOnly;
-        videoPlayer.source = VideoSource.VideoClip;
-        videoPlayer.clip = videoClip;
-
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-        videoPlayer.SetTargetAudioSource(0, audioSource);
-
-        videoPlayer.isLooping = loopCutscene;
-
-        // Clean event bindings before re-adding
-        videoPlayer.prepareCompleted -= OnVideoPrepared;
-        videoPlayer.loopPointReached -= OnVideoFinished;
-
-        videoPlayer.prepareCompleted += OnVideoPrepared;
-        videoPlayer.loopPointReached += OnVideoFinished;
+        if (!prepared && videoPlayer.isPrepared) prepared = true;
+        if (videoPlayer.clip == null) return;
+        videoPlayer.Play();
+        playing = true;
     }
 
-    private void OnVideoPrepared(VideoPlayer vp)
+    private void OnEnded(VideoPlayer vp)
     {
-        vp.time = 0;
-        rawImage.texture = vp.texture;
-        rawImage.enabled = true;
-        vp.Play();
-    }
-
-    private void OnVideoFinished(VideoPlayer vp)
-    {
-        if (loopCutscene)
-        {
-            vp.time = 0;
-            vp.Play();
-            return;
-        }
-
-        if (videoFinished) return;
-        videoFinished = true;
-
+        if (current != null && current.loop) return;
         EndCutscene();
     }
 
-    public void OnCutsceneSkip(InputAction.CallbackContext context)
+    public void Skip()
     {
-        if (!context.performed || videoFinished) return;
+        if (!playing || !allowSkip) return;
+        EndCutscene();
+    }
 
-        Debug.Log("Cutscene skipped by player.");
-
-        if (subtitleSequence != null)
-            SubtitleManager.Instance.StopSubtitles();
-
-        CleanupVideo();
-        videoFinished = true;
+    public void Stop()
+    {
+        if (!playing) return;
         EndCutscene();
     }
 
     private void EndCutscene()
     {
-        rawImage.enabled = false;
-        skipImage?.SetActive(false);
+        if (!playing) return;
 
-        if (fpController != null)
-            fpController.isInspecting = false;
+        playing = false;
+        prepared = false;
+        pendingPrepare = false;
+        prepareTimer = 0f;
 
-        if (tutorialHelper != null)
-        {
-            tutorialHelper.ToggleInteraction(!tutorialHelper.pickedUp);
-            tutorialHelper.DisplayMovement();
-        }
+        if (current != null && current.subtitleSequence != null && SubtitleManager.Instance != null)
+            SubtitleManager.Instance.StopSubtitles();
 
-        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
-        CleanupVideo();
+        videoPlayer.Stop();
+        audioSource.Stop();
+
+        if (rawImage != null) rawImage.gameObject.SetActive(false);
+        if (skipImage != null) skipImage.SetActive(false);
+
+        current = null;
     }
 
-    private void CleanupVideo()
+    private void StopCurrentQuiet()
     {
-        if (videoPlayer != null)
+        if (playing)
         {
             videoPlayer.Stop();
-            videoPlayer.clip = null;
-        }
-
-        if (audioSource != null)
             audioSource.Stop();
-
-        if (rawImage != null)
-            rawImage.texture = null;
-
-        videoFinished = true;
+            if (rawImage != null) rawImage.gameObject.SetActive(false);
+            if (skipImage != null) skipImage.SetActive(false);
+            playing = false;
+            prepared = false;
+            pendingPrepare = false;
+            prepareTimer = 0f;
+            if (current != null && current.subtitleSequence != null && SubtitleManager.Instance != null)
+                SubtitleManager.Instance.StopSubtitles();
+            current = null;
+        }
     }
 
-    private void OnDestroy()
+    void OnDisable()
     {
-        if (videoPlayer != null)
-        {
-            videoPlayer.prepareCompleted -= OnVideoPrepared;
-            videoPlayer.loopPointReached -= OnVideoFinished;
-        }
+        videoPlayer.prepareCompleted -= OnPrepared;
+        videoPlayer.loopPointReached -= OnEnded;
+    }
+
+    void OnEnable()
+    {
+        videoPlayer.prepareCompleted -= OnPrepared;
+        videoPlayer.loopPointReached -= OnEnded;
+        videoPlayer.prepareCompleted += OnPrepared;
+        videoPlayer.loopPointReached += OnEnded;
     }
 }
