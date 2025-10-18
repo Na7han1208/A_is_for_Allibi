@@ -141,14 +141,21 @@ public class FPController : MonoBehaviour
         lastPosition = transform.position;
 
         float speed = new Vector3(controllerVelocity.x, 0, controllerVelocity.z).magnitude;
-        bool isGrounded = controller.isGrounded;
+        float ySpeed = new Vector3(0, controllerVelocity.y, 0).magnitude;
+        if (ySpeed > 0)
+        {
+            animator.SetBool("IsGrounded", false);
+        }
+        else
+        {
+            animator.SetBool("IsGrounded", true);
+        }
 
         animator.SetFloat("Speed", speed);
         animator.SetBool("IsCrouching", isCrouching);
         animator.SetBool("IsHolding", isHoldingObject);
-        animator.SetBool("IsGrounded", isGrounded);
 
-        if (speed < 0.1f && !isHoldingObject && !isCrouching)
+        if (speed < 0.1f && !isHoldingObject && !isCrouching && ySpeed < 0.1f)
         {
             idleTimer += Time.deltaTime;
         }
@@ -402,7 +409,7 @@ public class FPController : MonoBehaviour
         { //Start crouching
             controller.height = 1f;
             controller.center = new Vector3(0, -0.5f, 0);
-            cameraTransform.position -= new Vector3(0, 0.5f, 0f);
+            cameraTransform.localPosition -= new Vector3(0, 1f, -0.1f);
 
             isCrouching = true;
             isSprinting = false;
@@ -414,7 +421,7 @@ public class FPController : MonoBehaviour
         { //Stop crouching
             controller.height = 2f;
             controller.center = new Vector3(0, 0, 0);
-            cameraTransform.position += new Vector3(0, 0.5f, 0f);
+            cameraTransform.localPosition += new Vector3(0, 1f, -0.1f);
 
             isCrouching = false;
 
