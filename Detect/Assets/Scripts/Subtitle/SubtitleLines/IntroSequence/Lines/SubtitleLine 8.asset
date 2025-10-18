@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker: Timmy
   text: "And that\u202Fsomeone\u2026\u202Fis\u202Fme!"
-  startTime: 1
-  duration: 8
+  startTime: 2.29
+  duration: 2.25

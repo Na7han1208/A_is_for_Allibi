@@ -48,7 +48,7 @@ public class SubtitleManager : MonoBehaviour
 
         foreach (var line in currentSequence.lines)
         {
-            yield return new WaitUntil(() => Time.time - startTime >= line.startTime);
+            yield return new WaitForSeconds(line.startTime);
 
             if (speakerText != null)
                 speakerText.text = line.speaker;
@@ -57,11 +57,6 @@ public class SubtitleManager : MonoBehaviour
                 subtitleText.text = line.text;
 
             yield return new WaitForSeconds(line.duration);
-
-            if (subtitleText != null)
-                subtitleText.text = "";
-            if (speakerText != null)
-                speakerText.text = "";
         }
 
         subtitleRoutine = null;

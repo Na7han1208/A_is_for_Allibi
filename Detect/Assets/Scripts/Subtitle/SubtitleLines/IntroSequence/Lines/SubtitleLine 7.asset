@@ -15,5 +15,5 @@ MonoBehaviour:
   speaker: Timmy
   text: Because when the blocks come crashing down, someone has to pick through the
     rubble.
-  startTime: 1
-  duration: 7
+  startTime: 0.76
+  duration: 3.64

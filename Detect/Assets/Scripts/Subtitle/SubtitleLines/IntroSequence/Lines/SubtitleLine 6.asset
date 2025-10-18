@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker: Timmy
   text: THEY ARE WRONG.
-  startTime: 1
-  duration: 6
+  startTime: 0.78
+  duration: 1.06

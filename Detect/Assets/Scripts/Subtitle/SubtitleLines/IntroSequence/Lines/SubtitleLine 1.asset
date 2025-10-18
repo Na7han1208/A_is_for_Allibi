@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker: Timmy
   text: Except during nap time.
-  startTime: 1
-  duration: 1
+  startTime: 3.44
+  duration: 0.95

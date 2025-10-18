@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker: Timmy
   text: They think I am just another kid in line for story time but
-  startTime: 1
-  duration: 5
+  startTime: 2.08
+  duration: 4.54
