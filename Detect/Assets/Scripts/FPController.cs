@@ -138,8 +138,20 @@ public class FPController : MonoBehaviour
         bool isGrounded = controller.isGrounded;
 
         animator.SetFloat("Speed", speed);
-        animator.SetBool("IsCrouching", )
-        if (speed) < 0.1f)
+        animator.SetBool("IsCrouching", isCrouching);
+        animator.SetBool("IsHolding", isHoldingObject);
+        animator.SetBool("IsGrounded", isGrounded);
+
+        if (speed < 0.1f && !isHoldingObject && !isCrouching)
+        {
+            idleTimer += Time.deltaTime;
+        }
+        else
+        {
+            idleTimer = 0f;
+        }
+
+        animator.SetFloat("IdleTimer", idleTimer);
     }
 
     private void FixedUpdate()
@@ -175,7 +187,7 @@ public class FPController : MonoBehaviour
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
             {
                 ClearHighlight();
-                
+
                 // case: combo lock
                 CombinationLock lockUI = hit.collider.GetComponentInChildren<CombinationLock>();
                 if (lockUI != null)
@@ -265,6 +277,14 @@ public class FPController : MonoBehaviour
                 SetPuzzleActive(false);
                 DropObject();
             }
+        }
+        if(heldObject!= null)
+        {
+            animator.SetBool("IsHolding", true);
+        }
+        else
+        {
+            animator.SetBool("IsHolding", false);
         }
     }
 
@@ -392,6 +412,7 @@ public class FPController : MonoBehaviour
             StartVignetteLerp(normalVignetteIntensity);
             //vignette.intensity.value = normalVignetteIntensity;
         }
+        animator.SetBool("IsCrouching", isCrouching);
     }
 
     private void StartVignetteLerp(float target)
@@ -438,6 +459,8 @@ public class FPController : MonoBehaviour
         {
             velocity.y = (float)Math.Sqrt(jumpHeight * -2f * gravity);
         }
+        animator.SetTrigger("Jump");
+        animator.SetBool("IsJumping", true);
     }
 
     // ---------------- Logic ----------------
