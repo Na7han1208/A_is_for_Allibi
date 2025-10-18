@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+//using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -96,6 +97,8 @@ public class FPController : MonoBehaviour
     [Header("Animations")]
     public Animator animator;
     public float idleTimer = 0f;
+    private Vector3 lastPosition;
+    public Vector3 controllerVelocity;
 
     private bool puzzleActive = false;
     TutorialHelper tutorialHelper;
@@ -134,7 +137,10 @@ public class FPController : MonoBehaviour
         HandleHighlight();
 
         // animations
-        float speed = new Vector3(controller.velocity.x, 0, controller.velocity.y).magnitude;
+        controllerVelocity = (transform.position - lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
+
+        float speed = new Vector3(controllerVelocity.x, 0, controllerVelocity.z).magnitude;
         bool isGrounded = controller.isGrounded;
 
         animator.SetFloat("Speed", speed);
@@ -394,8 +400,9 @@ public class FPController : MonoBehaviour
 
         if (context.performed)
         { //Start crouching
-            controller.height = crouchHeight;
-            playerTransform.localScale = currentScale;
+            controller.height = 1f;
+            controller.center = new Vector3(0, -0.5f, 0);
+            cameraTransform.position -= new Vector3(0, 0.5f, 0f);
 
             isCrouching = true;
             isSprinting = false;
@@ -405,8 +412,10 @@ public class FPController : MonoBehaviour
         }
         else if (context.canceled)
         { //Stop crouching
-            controller.height = playerHeight;
-            playerTransform.localScale = currentScale;
+            controller.height = 2f;
+            controller.center = new Vector3(0, 0, 0);
+            cameraTransform.position += new Vector3(0, 0.5f, 0f);
+
             isCrouching = false;
 
             StartVignetteLerp(normalVignetteIntensity);
