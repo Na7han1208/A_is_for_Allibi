@@ -9,6 +9,7 @@ public class NR_TracingPuzzle : MonoBehaviour
         if (tp.CheckCompletion())
         {
             StarChartManager.Instance.UnlockStar("GS2");
+            SoundManager.Instance.PlayComplex("StarUnlock", transform);
             Destroy(this);
         }
     }

@@ -9,6 +9,7 @@ public class NR_MusicBox : MonoBehaviour
         if (mbp.isCompleted)
         {
             StarChartManager.Instance.UnlockStar("GS3");
+            SoundManager.Instance.PlayComplex("StarUnlock", transform);
             Destroy(this);
         }
     }
