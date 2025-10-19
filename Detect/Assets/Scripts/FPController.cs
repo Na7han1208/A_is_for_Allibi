@@ -124,8 +124,6 @@ public class FPController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(FindFirstObjectByType<PlayerInput>().currentActionMap);
-
         if (!isInspecting && !puzzleActive)
         {
             HandleMovement();
@@ -560,6 +558,8 @@ public class FPController : MonoBehaviour
 
     public void HandleHighlight()
     {
+        if (isHoldingObject) return;
+        
         RaycastHit hit;
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
         {
@@ -571,13 +571,17 @@ public class FPController : MonoBehaviour
                 ClearHighlight();
                 currentHighlighted = target;
 
+                Renderer rend = currentHighlighted.GetComponent<Renderer>();
+
+                if (rend == null)
+                {
+                    rend = currentHighlighted.GetComponentInParent<Renderer>();
+                    if (rend == null) return; // anti-crash
+                    currentHighlighted = rend.gameObject;
+                }
+
                 if (!originalMaterials.ContainsKey(currentHighlighted)) // store the original materials
                     originalMaterials[currentHighlighted] = currentHighlighted.GetComponent<Renderer>().materials;
-
-                //if (!originalScales.ContainsKey(currentHighlighted)) // store the original sizes
-                //    originalScales[currentHighlighted] = currentHighlighted.transform.localScale;
-
-                //currentHighlighted.transform.localScale = originalScales[currentHighlighted] * 0.92f;
 
                 // apply outline material
                 var mats = new Material[originalMaterials[currentHighlighted].Length + 1];
@@ -599,11 +603,11 @@ public class FPController : MonoBehaviour
     {
         if (currentHighlighted != null)
         {
+            Renderer rend = currentHighlighted.GetComponent<Renderer>();
+            if (rend == null) return;
+
             if (originalMaterials != null && originalMaterials.ContainsKey(currentHighlighted)) // restore materials
                 currentHighlighted.GetComponent<Renderer>().materials = originalMaterials[currentHighlighted];
-
-            //if (originalScales != null && originalScales.ContainsKey(currentHighlighted)) // restore scale
-            //    currentHighlighted.transform.localScale = originalScales[currentHighlighted];
 
             currentHighlighted = null;
         }
