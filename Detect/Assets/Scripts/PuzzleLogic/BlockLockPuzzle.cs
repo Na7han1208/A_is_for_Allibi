@@ -37,13 +37,13 @@ public class BlockLockPuzzle : MonoBehaviour
                 Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, Quaternion.identity);
                 Blocks[i].GetComponent<Rigidbody>().isKinematic = true;
                 Blocks[i].gameObject.layer = 0;
-                Blocks[i].layer = 0;
-
+                
                 FPController player = FindFirstObjectByType<FPController>();
                 if (player != null && player.heldObject == Blocks[i])
                 {
                     player.DropObject();
                 }
+                Blocks[i].layer = 0;
             }
         }
 
