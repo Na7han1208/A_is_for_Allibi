@@ -30,7 +30,10 @@ public class MainMenuManager : MonoBehaviour
     private IEnumerator FadeInUI()
     {
         CursorManager.Instance.ShowCursor(true);
+        yield return new WaitForSeconds(0.1f);
+        CursorManager.Instance.ShowCursor(true);
         yield return new WaitForSeconds(delayBeforeFade);
+        CursorManager.Instance.ShowCursor(true);
         PlayButton.SetActive(true);
         float elapsed = 0f;
         while (elapsed < fadeDuration)
@@ -76,11 +79,11 @@ public class MainMenuManager : MonoBehaviour
             case 2: SoundManager.Instance.PlayComplex("G2", button.transform); break;
             case 3: SoundManager.Instance.PlayComplex("G3", button.transform); break;
         }
-        button.transform.localScale *= 1.05f;
+        button.transform.localScale *= 1.2f;
     }
 
     public void OnButtonHoverExit(GameObject button)
     {
-        button.transform.localScale /= 1.05f;
+        button.transform.localScale /= 1.2f;
     }
 }
