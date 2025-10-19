@@ -329,6 +329,7 @@ public class FPController : MonoBehaviour
         heldRb = null;
         isHoldingObject = false;
         isInspecting = false;
+        CursorManager.Instance.ShowCursor(true);
     }
 
     public void OnThrow(InputAction.CallbackContext context)
@@ -349,10 +350,12 @@ public class FPController : MonoBehaviour
             heldRb = null;
             isHoldingObject = false;
         }
+        CursorManager.Instance.ShowCursor(true);
     }
 
     public void OnInspect(InputAction.CallbackContext context)
     {
+        CursorManager.Instance.ShowCursor(false);
         if (context.performed && isHoldingObject)
         {
             isInspecting = !isInspecting;
@@ -504,7 +507,7 @@ public class FPController : MonoBehaviour
 
     public void HandleLook()
     {
-        if (puzzleActive) return;
+        if (puzzleActive || StarChartManager.Instance.chartUI.activeSelf) return;
 
         float sensitivity = usingGamepad ? controllerSensitivity*50f : mouseSensitivity;
 

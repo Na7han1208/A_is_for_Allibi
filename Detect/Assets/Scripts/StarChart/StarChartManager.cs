@@ -51,8 +51,6 @@ public class StarChartManager : MonoBehaviour
                 return;
             }
         }
-
-        Debug.LogWarning($"Star ID '{starId}' not found!");
     }
 
     private void CheckGoldCompletion()
@@ -61,8 +59,6 @@ public class StarChartManager : MonoBehaviour
         {
             if (!star.IsUnlocked) return;
         }
-
         OnAllGoldUnlocked?.Invoke();
-        Debug.Log("All gold stars unlocked!");
     }
 }

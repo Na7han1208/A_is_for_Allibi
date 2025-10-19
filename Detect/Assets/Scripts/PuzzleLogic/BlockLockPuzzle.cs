@@ -10,7 +10,7 @@ public class BlockLockPuzzle : MonoBehaviour
     [SerializeField] private  GameObject[] LockPos;
 
     private bool[] isLocked;
-    private bool puzzleSolved = false;
+    public bool puzzleSolved = false;
 
     void Start()
     {
@@ -60,7 +60,7 @@ public class BlockLockPuzzle : MonoBehaviour
         if (allLocked && !puzzleSolved)
         {
             puzzleSolved = true;
-            SoundManager.Instance.PlayComplex("Unlock", this.transform);
+            SoundManager.Instance.PlayComplex("StarUnlock", this.transform);
             SoundManager.Instance.PlayComplex("BlockLockSolve", this.transform);
 
             FindFirstObjectByType<FPController>().PlaySuccessParticles();       

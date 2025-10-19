@@ -1478,6 +1478,7 @@ GameObject:
   - component: {fileID: 72577103}
   - component: {fileID: 72577102}
   - component: {fileID: 72577104}
+  - component: {fileID: 72577105}
   m_Layer: 5
   m_Name: GoldStar2
   m_TagString: Untagged
@@ -1494,14 +1495,14 @@ RectTransform:
   m_GameObject: {fileID: 72577100}
   m_LocalRotation: {x: -0, y: -0, z: 0.11612385, w: 0.99323475}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.11702128, y: 0.11702128, z: 0.11702128}
+  m_LocalScale: {x: 0.055, y: 0.055, z: 0.055000007}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 485760696}
+  m_Father: {fileID: 1926816234}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 13.337}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -23.404291, y: -240.42557}
+  m_AnchoredPosition: {x: -11.000004, y: -113.00004}
   m_SizeDelta: {x: 4096, y: 4096}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &72577102
@@ -1555,8 +1556,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starId: GS2
+  IsUnlocked: 0
+  starImage: {fileID: 0}
   lockedSprite: {fileID: 21300000, guid: 924fa7f113f80c441a066601b74d2784, type: 3}
   unlockedSprite: {fileID: 21300000, guid: b96daffd07030ad4192e9d611a8efa67, type: 3}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
+--- !u!114 &72577105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72577100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f808639704edbd43a9ee51e776a4323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starId: 
+  IsUnlocked: 0
+  starImage: {fileID: 0}
+  lockedSprite: {fileID: 0}
+  unlockedSprite: {fileID: 0}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
 --- !u!1 &75557193
 GameObject:
   m_ObjectHideFlags: 0
@@ -4762,14 +4786,14 @@ RectTransform:
   m_GameObject: {fileID: 268742558}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.11702128, y: 0.11702128, z: 0.11702128}
+  m_LocalScale: {x: 0.055000007, y: 0.055000007, z: 0.055000007}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 485760696}
+  m_Father: {fileID: 1926816234}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -695.7446, y: 74.46806}
+  m_AnchoredPosition: {x: -326.99997, y: 34.99997}
   m_SizeDelta: {x: 4096, y: 4096}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &268742560
@@ -4823,8 +4847,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starId: GS1
+  IsUnlocked: 0
+  starImage: {fileID: 268742560}
   lockedSprite: {fileID: 21300000, guid: 018b8719ad982c847bcab4e4727a367c, type: 3}
   unlockedSprite: {fileID: 21300000, guid: b96daffd07030ad4192e9d611a8efa67, type: 3}
+  hoverSprite: {fileID: 21300000, guid: 39639d522d7ebdb4eb17587b0a1efb57, type: 3}
+  hoverSpriteAlt: {fileID: 21300000, guid: 4203a4563acabec42861276c2cef0fde, type: 3}
 --- !u!1001 &299045264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6157,8 +6185,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starId: SS3
+  IsUnlocked: 0
+  starImage: {fileID: 0}
   lockedSprite: {fileID: 21300000, guid: 31d17dc5ada97114183b8d58e6305e77, type: 3}
   unlockedSprite: {fileID: 21300000, guid: df3f112be4f868742a6768b388201d73, type: 3}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
 --- !u!1 &363901412
 GameObject:
   m_ObjectHideFlags: 0
@@ -7242,15 +7274,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135448611733525768, guid: 2e1dab766d4704342998ffd3e61c02ba, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.9493358
+      value: 0.120000005
       objectReference: {fileID: 0}
     - target: {fileID: 8135448611733525768, guid: 2e1dab766d4704342998ffd3e61c02ba, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.94933605
+      value: 0.120000005
       objectReference: {fileID: 0}
     - target: {fileID: 8135448611733525768, guid: 2e1dab766d4704342998ffd3e61c02ba, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.9493357
+      value: 0.120000005
       objectReference: {fileID: 0}
     - target: {fileID: 8135448611733525768, guid: 2e1dab766d4704342998ffd3e61c02ba, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10301,9 +10333,6 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1926816234}
-  - {fileID: 268742559}
-  - {fileID: 72577101}
-  - {fileID: 1851062442}
   - {fileID: 1152307416}
   m_Father: {fileID: 1928272114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -16227,8 +16256,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starId: SS1
+  IsUnlocked: 0
+  starImage: {fileID: 0}
   lockedSprite: {fileID: 21300000, guid: fc8966d45831e2544ab83772fe3793ad, type: 3}
   unlockedSprite: {fileID: 21300000, guid: df3f112be4f868742a6768b388201d73, type: 3}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
 --- !u!1001 &855720894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19698,6 +19731,18 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: UIHover3
     clip: {fileID: 8300000, guid: 761bdbb98bb808d4983d0521a2f33eb4, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: StarUnlock
+    clip: {fileID: 8300000, guid: 5359ba2c4b250104f9847a14a7b88daf, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: StarHover
+    clip: {fileID: 8300000, guid: c5911aebefba4cd4186dfb69207c3f17, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -31653,8 +31698,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starId: SS2
+  IsUnlocked: 0
+  starImage: {fileID: 0}
   lockedSprite: {fileID: 21300000, guid: 6863513a877f8fd42933f0784aceac36, type: 3}
   unlockedSprite: {fileID: 21300000, guid: df3f112be4f868742a6768b388201d73, type: 3}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
 --- !u!1 &1549217730
 GameObject:
   m_ObjectHideFlags: 0
@@ -44749,6 +44798,7 @@ GameObject:
   - component: {fileID: 1851062444}
   - component: {fileID: 1851062443}
   - component: {fileID: 1851062445}
+  - component: {fileID: 1851062446}
   m_Layer: 5
   m_Name: GoldStar3
   m_TagString: Untagged
@@ -44765,14 +44815,14 @@ RectTransform:
   m_GameObject: {fileID: 1851062441}
   m_LocalRotation: {x: -0, y: -0, z: 0.2698008, w: 0.9629162}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.11702128, y: 0.11702128, z: 0.11702128}
+  m_LocalScale: {x: 0.055, y: 0.055, z: 0.055000007}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 485760696}
+  m_Father: {fileID: 1926816234}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 31.305}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 578.7235, y: 106.38298}
+  m_AnchoredPosition: {x: 272.00006, y: 50.000042}
   m_SizeDelta: {x: 4096, y: 4096}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1851062443
@@ -44826,8 +44876,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   starId: GS3
+  IsUnlocked: 0
+  starImage: {fileID: 0}
   lockedSprite: {fileID: 21300000, guid: f07346458dcc1b0499611b1c8b477187, type: 3}
   unlockedSprite: {fileID: 21300000, guid: b96daffd07030ad4192e9d611a8efa67, type: 3}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
+--- !u!114 &1851062446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851062441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f808639704edbd43a9ee51e776a4323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  starId: 
+  IsUnlocked: 0
+  starImage: {fileID: 0}
+  lockedSprite: {fileID: 0}
+  unlockedSprite: {fileID: 0}
+  hoverSprite: {fileID: 0}
+  hoverSpriteAlt: {fileID: 0}
 --- !u!43 &1856702607
 Mesh:
   m_ObjectHideFlags: 0
@@ -46278,7 +46351,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.1276596, y: 2.1276596, z: 2.1276596}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 268742559}
+  - {fileID: 72577101}
+  - {fileID: 1851062442}
   m_Father: {fileID: 485760696}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -46300,7 +46376,7 @@ GameObject:
   - component: {fileID: 1928272111}
   - component: {fileID: 1928272115}
   m_Layer: 5
-  m_Name: StarChart
+  m_Name: NapRoom StarChart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49841,6 +49917,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2000456837}
   - component: {fileID: 2000456838}
+  - component: {fileID: 2000456839}
   m_Layer: 0
   m_Name: RED_BlockLockPuzzle
   m_TagString: Untagged
@@ -49886,6 +49963,20 @@ MonoBehaviour:
   - {fileID: 86563160}
   - {fileID: 2097074908}
   - {fileID: 794018382}
+  puzzleSolved: 0
+--- !u!114 &2000456839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2000456836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f046c0af4a0834c82906b211a255e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blp: {fileID: 2000456838}
 --- !u!1 &2006799102 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7643334187067399435, guid: 4961546affc731449bd3f7491c69e439, type: 3}
@@ -62126,22 +62217,22 @@ CharacterJoint:
     spring: 0
     damper: 0
   m_LowTwistLimit:
-    limit: 72.65691
+    limit: 27.433535
     bounciness: 0
     contactDistance: 0
   m_HighTwistLimit:
-    limit: 153.61278
+    limit: 156.57979
     bounciness: 0
     contactDistance: 0
   m_SwingLimitSpring:
     spring: 0
     damper: 0
   m_Swing1Limit:
-    limit: 40
+    limit: 60.278282
     bounciness: 0
     contactDistance: 0
   m_Swing2Limit:
-    limit: 40
+    limit: 50.619987
     bounciness: 0
     contactDistance: 0
   m_EnableProjection: 0
