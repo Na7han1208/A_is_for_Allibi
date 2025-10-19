@@ -58,5 +58,29 @@ public class MainMenuManager : MonoBehaviour
         InMainMenu = false;
 
         CutsceneManager.Instance.PlayCutscene("Intro");
+        SoundManager.Instance.PlayComplex("G1", transform);
+        SoundManager.Instance.PlayComplex("G2", transform);
+        SoundManager.Instance.PlayComplex("G3", transform);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    public void OnButtonHoverEnter(GameObject button)
+    {
+        switch (Random.Range(1, 4))
+        {
+            case 1: SoundManager.Instance.PlayComplex("G1", button.transform); break;
+            case 2: SoundManager.Instance.PlayComplex("G2", button.transform); break;
+            case 3: SoundManager.Instance.PlayComplex("G3", button.transform); break;
+        }
+        button.transform.localScale *= 1.05f;
+    }
+
+    public void OnButtonHoverExit(GameObject button)
+    {
+        button.transform.localScale /= 1.05f;
     }
 }
