@@ -800,8 +800,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayButton: {fileID: 1750679470}
-  InMainMenu: 0
-  delayBeforeFade: 2
+  ExitButton: {fileID: 755220520}
+  delayBeforeFade: 5
   fadeDuration: 1.5
 --- !u!1 &42241790 stripped
 GameObject:
@@ -19744,6 +19744,12 @@ MonoBehaviour:
   - name: StarHover
     clip: {fileID: 8300000, guid: c5911aebefba4cd4186dfb69207c3f17, type: 3}
     volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MainMenuAmbience
+    clip: {fileID: 8300000, guid: ac49f5c9f9119984faee74c06446e0e2, type: 3}
+    volume: 0.8
     pitch: 1
     loop: 0
     source: {fileID: 0}

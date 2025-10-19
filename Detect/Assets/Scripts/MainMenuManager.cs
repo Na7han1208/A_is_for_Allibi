@@ -4,47 +4,60 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("UI Elements")]
     public GameObject PlayButton;
+    public GameObject ExitButton;
 
-    public bool InMainMenu;
-
-    public float delayBeforeFade = 4f;
+    [Header("Settings")]
+    public float delayBeforeFade = 6f;
     public float fadeDuration = 1.5f;
 
+    public bool InMainMenu { get; private set; }
+
     private CanvasGroup playButtonGroup;
+    private CanvasGroup exitButtonGroup;
 
     void Start()
     {
         CutsceneManager.Instance.PlayCutscene("MainMenu");
-        playButtonGroup = GetOrAddCanvasGroup(PlayButton);
-
-        playButtonGroup.alpha = 0f;
-        PlayButton.SetActive(false);
         InMainMenu = true;
 
-        StartCoroutine(FadeInUI());
+        playButtonGroup = GetOrAddCanvasGroup(PlayButton);
+        exitButtonGroup = GetOrAddCanvasGroup(ExitButton);
+
+        playButtonGroup.alpha = 0f;
+        exitButtonGroup.alpha = 0f;
+        PlayButton.SetActive(false);
+        ExitButton.SetActive(false);
 
         CursorManager.Instance.ShowCursor(true);
+        SoundManager.Instance.PlayComplex("MainMenuAmbience", transform);
+
+        StartCoroutine(FadeInUI());
     }
 
     private IEnumerator FadeInUI()
     {
-        CursorManager.Instance.ShowCursor(true);
         yield return new WaitForSeconds(0.1f);
         CursorManager.Instance.ShowCursor(true);
+        // wait before fade starts
         yield return new WaitForSeconds(delayBeforeFade);
-        CursorManager.Instance.ShowCursor(true);
+
         PlayButton.SetActive(true);
+        ExitButton.SetActive(true);
+
         float elapsed = 0f;
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / fadeDuration);
             playButtonGroup.alpha = t;
+            exitButtonGroup.alpha = t;
             yield return null;
         }
+
         playButtonGroup.alpha = 1f;
-        CursorManager.Instance.ShowCursor(true);
+        exitButtonGroup.alpha = 1f;
     }
 
     private CanvasGroup GetOrAddCanvasGroup(GameObject go)
@@ -57,9 +70,10 @@ public class MainMenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        this.gameObject.SetActive(false);
+        gameObject.SetActive(false);
         InMainMenu = false;
 
+        SoundManager.Instance.StopAll();
         CutsceneManager.Instance.PlayCutscene("Intro");
         SoundManager.Instance.PlayComplex("G1", transform);
         SoundManager.Instance.PlayComplex("G2", transform);
