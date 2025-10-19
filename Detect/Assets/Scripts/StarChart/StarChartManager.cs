@@ -29,6 +29,7 @@ public class StarChartManager : MonoBehaviour
         if (chartUI == null) return;
         isOpen = !isOpen;
         chartUI.SetActive(isOpen);
+        CursorManager.Instance.ShowCursor(isOpen);
     }
 
     public void UnlockStar(string starId)

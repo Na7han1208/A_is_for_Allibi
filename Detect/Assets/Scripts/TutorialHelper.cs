@@ -12,6 +12,7 @@ public class TutorialHelper : MonoBehaviour
     private bool inspected = false;
     private bool checkedOutSomething = false;
 
+    public GameObject foxy;
     public Canvas TutorialCanvas;
     public GameObject InteractTip;
     public GameObject MovementTip;
@@ -29,6 +30,7 @@ public class TutorialHelper : MonoBehaviour
 
     void Start()
     {
+        RagdollToggler.Instance.SetRagdoll(foxy, false);
         cursorDefaultPosition = Crosshair.GetComponent<RectTransform>().anchoredPosition;
 
         Crosshair.SetActive(false);
@@ -51,7 +53,7 @@ public class TutorialHelper : MonoBehaviour
             2f
         ));
         Crosshair.SetActive(true);
-        //CursorManager.Instance.ShowCursor(false);
+        CursorManager.Instance.ShowCursor(false);
     }
 
     public void ToggleInspectThrowTip()
@@ -91,6 +93,7 @@ public class TutorialHelper : MonoBehaviour
 
         fPController.SetPuzzleActive(false);
         Debug.Log("Okie you can move now");
+        // RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
@@ -140,5 +143,11 @@ public class TutorialHelper : MonoBehaviour
         {
             img.gameObject.SetActive(false);
         }
+    }
+
+    public void NaproomEnter()
+    {
+        ToggleInteraction(true);
+        SoundManager.Instance.PlayComplex("Naproom", transform);
     }
 }

@@ -21,34 +21,38 @@ public class CursorManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (cursorImage != null)
-            cursorImage.gameObject.SetActive(true);
-
         Cursor.visible = false;
+        if (cursorImage != null)
+            cursorImage.gameObject.SetActive(isVisible);
     }
 
     private void Update()
     {
-        cursorImage.position = Input.mousePosition;
+        if (cursorImage != null && isVisible)
+            cursorImage.position = Input.mousePosition;
     }
 
     public void ShowCursor(bool show)
     {
         isVisible = show;
-        if (cursorImage != null)
-            cursorImage.gameObject.SetActive(show);
+        ApplyVisibility();
     }
 
     public void ToggleCursor()
     {
         isVisible = !isVisible;
-        if (cursorImage != null)
-            cursorImage.gameObject.SetActive(isVisible);
+        ApplyVisibility();
     }
 
     public void SetCursor(Sprite newSprite)
     {
         if (cursorImage != null && cursorImage.TryGetComponent(out Image img))
             img.sprite = newSprite;
+    }
+
+    private void ApplyVisibility()
+    {
+        if (cursorImage != null)
+            cursorImage.gameObject.SetActive(isVisible);
     }
 }

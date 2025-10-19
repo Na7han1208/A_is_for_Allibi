@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [Serializable]
@@ -12,6 +13,10 @@ public class CutsceneData
     public SubtitleSequence subtitleSequence;
     public bool loop;
     public bool skippable;
+
+    [Header("Events")]
+    public UnityEvent onBeforeCutscene;
+    public UnityEvent onAfterCutscene;
 }
 
 public class CutsceneManager : MonoBehaviour
@@ -90,8 +95,7 @@ public class CutsceneManager : MonoBehaviour
             {
                 pendingPrepare = false;
                 prepared = videoPlayer.isPrepared;
-                if (prepared) StartPlaybackAfterPrepare();
-                else StartPlaybackAfterPrepare();
+                StartPlaybackAfterPrepare();
             }
         }
 
@@ -148,6 +152,8 @@ public class CutsceneManager : MonoBehaviour
 
         if (data.subtitleSequence != null && SubtitleManager.Instance != null)
             SubtitleManager.Instance.PlaySequence(data.subtitleSequence);
+
+        data.onBeforeCutscene?.Invoke();
 
         pendingPrepare = true;
         prepareTimer = 0f;
@@ -208,6 +214,7 @@ public class CutsceneManager : MonoBehaviour
         if (rawImage != null) rawImage.gameObject.SetActive(false);
         if (skipImage != null) skipImage.SetActive(false);
 
+        current?.onAfterCutscene?.Invoke();
         current = null;
     }
 

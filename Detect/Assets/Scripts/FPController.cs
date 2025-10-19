@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
 using Unity.VisualScripting;
@@ -254,6 +255,7 @@ public class FPController : MonoBehaviour
 
                     FindFirstObjectByType<TutorialHelper>().pickedUp = true;
                     FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);
+                    FindFirstObjectByType<TutorialHelper>().DisplayMovement();
 
                     hit.collider.gameObject.layer = 0;
                     heldObject = null;
@@ -329,7 +331,7 @@ public class FPController : MonoBehaviour
         heldRb = null;
         isHoldingObject = false;
         isInspecting = false;
-        CursorManager.Instance.ShowCursor(true);
+        //CursorManager.Instance.ShowCursor(true);
     }
 
     public void OnThrow(InputAction.CallbackContext context)
@@ -350,7 +352,7 @@ public class FPController : MonoBehaviour
             heldRb = null;
             isHoldingObject = false;
         }
-        CursorManager.Instance.ShowCursor(true);
+        //CursorManager.Instance.ShowCursor(true);
     }
 
     public void OnInspect(InputAction.CallbackContext context)

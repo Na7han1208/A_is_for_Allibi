@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System;
 
 public class TracingPuzzle : MonoBehaviour
 {
@@ -240,9 +241,9 @@ public class TracingPuzzle : MonoBehaviour
         dirty = true;
     }
 
-    private void CheckCompletion()
+    public Boolean CheckCompletion()
     {
-        if (maskPixels == null) return;
+        if (maskPixels == null) return false;
 
         int sampleTarget = Mathf.Clamp(maskTex.width / 4, 16, 256);
         int step = Mathf.Max(1, maskTex.width / sampleTarget);
@@ -264,7 +265,9 @@ public class TracingPuzzle : MonoBehaviour
         {
             finishedCalled = true;
             Finished();
+            return true;
         }
+        return false;
     }
 
     private void Finished()
@@ -332,6 +335,7 @@ public class TracingPuzzle : MonoBehaviour
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
+        CursorManager.Instance.ShowCursor(false);
 
         bool drawHeld = false;
         var gp = Gamepad.current;
@@ -350,6 +354,7 @@ public class TracingPuzzle : MonoBehaviour
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
+        CursorManager.Instance.ShowCursor(false);
         ignoreUntilReleased = false;
 
         if (playerInput != null) playerInput.SwitchCurrentActionMap("Player");

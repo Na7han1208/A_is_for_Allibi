@@ -11,6 +11,7 @@ public class MusicBoxPuzzle : MonoBehaviour
     public List<AudioClip> buttonSounds;
     public AudioSource audioSource;
     public ParticleSystem buttonClickParticles;
+    public bool isCompleted = false;
 
     private Camera mainCamera;
     private Vector3 originalCamPos;
@@ -154,6 +155,7 @@ public class MusicBoxPuzzle : MonoBehaviour
 
     void PuzzleCompleted()
     {
+        isCompleted = true;
         var FPC = FindFirstObjectByType<FPController>();
         if (FPC != null) FPC.PlaySuccessParticles();
         HidePuzzle();
