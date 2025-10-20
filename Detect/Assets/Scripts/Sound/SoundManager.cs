@@ -6,7 +6,6 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance;
     public Sound[] Sounds;
 
-    // keep track of dynamically spawned AudioSources
     private List<AudioSource> activeTempSources = new List<AudioSource>();
 
     void Awake()
@@ -22,7 +21,6 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        // prepare default sources for each sound
         foreach (Sound s in Sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
@@ -32,6 +30,8 @@ public class SoundManager : MonoBehaviour
             s.source.loop = s.loop;
             s.source.playOnAwake = false;
         }
+
+        UpdateVolumes();
     }
 
     public void PlayComplex(string name, Transform caller)
@@ -51,12 +51,11 @@ public class SoundManager : MonoBehaviour
                 AudioSource source = tempGameObject.AddComponent<AudioSource>();
 
                 source.clip = s.clip;
-                source.volume = s.volume;
+                source.volume = s.volume * PlayerPrefs.GetFloat("SFXVolume", 1f);
                 source.pitch = s.pitch;
                 source.loop = s.loop;
 
-                // spatial audio config
-                source.spatialBlend = 0f; // i know its not 3d rn but that a later problem
+                source.spatialBlend = 0f;
                 source.minDistance = 1f;
                 source.maxDistance = 20f;
                 source.rolloffMode = AudioRolloffMode.Linear;
@@ -99,7 +98,6 @@ public class SoundManager : MonoBehaviour
             }
         }
 
-        // also stop matching temp sources
         for (int i = activeTempSources.Count - 1; i >= 0; i--)
         {
             if (activeTempSources[i] == null)
@@ -119,13 +117,11 @@ public class SoundManager : MonoBehaviour
 
     public void StopAll()
     {
-        // stop static sounds
         foreach (Sound s in Sounds)
         {
             s.source.Stop();
         }
 
-        // dtop and destroy temp sounds
         for (int i = activeTempSources.Count - 1; i >= 0; i--)
         {
             if (activeTempSources[i] == null)
@@ -138,5 +134,50 @@ public class SoundManager : MonoBehaviour
             Destroy(activeTempSources[i].gameObject);
             activeTempSources.RemoveAt(i);
         }
+    }
+
+    public void UpdateVolumes()
+    {
+        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+
+        foreach (Sound s in Sounds)
+        {
+            if (s.source == null) continue;
+
+            // We never use the current AudioSource.volume here
+            // We always start from the base Sound.volume
+            if (s.loop)
+                s.source.volume = s.volume * musicVolume;
+            else
+                s.source.volume = s.volume * sfxVolume;
+        }
+
+        for (int i = activeTempSources.Count - 1; i >= 0; i--)
+        {
+            AudioSource tempSource = activeTempSources[i];
+            if (tempSource == null)
+            {
+                activeTempSources.RemoveAt(i);
+                continue;
+            }
+
+            if (tempSource.loop)
+                tempSource.volume = GetBaseVolume(tempSource) * musicVolume;
+            else
+                tempSource.volume = GetBaseVolume(tempSource) * sfxVolume;
+        }
+    }
+
+    private float GetBaseVolume(AudioSource src)
+    {
+        foreach (Sound s in Sounds)
+        {
+            if (s.clip == src.clip)
+            {
+                return s.volume;
+            }
+        }
+        return src.volume;
     }
 }

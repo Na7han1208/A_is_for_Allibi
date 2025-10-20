@@ -121,6 +121,8 @@ public class FPController : MonoBehaviour
         postProcessVolume.profile.TryGet(out vignette);
         postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
         SelfHelpCanvas.SetActive(false);
+
+        UpdateSensitivity();
     }
 
     private void Update()
@@ -162,6 +164,12 @@ public class FPController : MonoBehaviour
         }
 
         animator.SetFloat("IdleTimer", idleTimer);
+    }
+
+    public void UpdateSensitivity()
+    {
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+        controllerSensitivity = PlayerPrefs.GetFloat("ContorllerSensitivity", 2f);
     }
 
     private void FixedUpdate()

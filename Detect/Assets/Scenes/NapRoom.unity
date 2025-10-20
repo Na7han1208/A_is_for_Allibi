@@ -1669,10 +1669,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1970977121}
   m_HandleRect: {fileID: 1667807113}
   m_Direction: 0
-  m_MinValue: 0.5
-  m_MaxValue: 1.5
+  m_MinValue: 0.1
+  m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1.163
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4938,10 +4938,10 @@ MonoBehaviour:
   m_FillRect: {fileID: 1606838585}
   m_HandleRect: {fileID: 973467167}
   m_Direction: 0
-  m_MinValue: 0.5
-  m_MaxValue: 1.5
+  m_MinValue: 2
+  m_MaxValue: 5
   m_WholeNumbers: 0
-  m_Value: 0.979
+  m_Value: 2
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -18079,108 +18079,126 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: MainMusic
     clip: {fileID: 8300000, guid: 02fd6ec639cc13b48a3514ff10f98742, type: 3}
     volume: 0.728
     pitch: 1
     loop: 1
+    type: 0
     source: {fileID: 0}
   - name: PaperTraceSolve
     clip: {fileID: 8300000, guid: 3589fa322a66aa043a3a463c14cec92a, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: FoxyDialogue
     clip: {fileID: 8300000, guid: 72c57b077bfa1214ba9013c82ff05178, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: BlockLockSolve
     clip: {fileID: 8300000, guid: 94b6857b6bd70134481a843f4ec9cf1b, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: G1
     clip: {fileID: 8300000, guid: 2d4eccc299e907140a55aeb616b431df, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: G2
     clip: {fileID: 8300000, guid: 4a77e6c63266e094290168c515c9e754, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: G3
     clip: {fileID: 8300000, guid: 039ab47a031ea7b428fa28efa239c112, type: 3}
     volume: 0.728
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: NaproomMusic
     clip: {fileID: 8300000, guid: 8d76c041d20d71c4682b2b0d64d08c23, type: 3}
     volume: 0.166
     pitch: 1
     loop: 1
+    type: 1
     source: {fileID: 0}
   - name: TimmyMissingPoster
     clip: {fileID: 8300000, guid: b28a8a2738d00934db63a0d3e3cb4b70, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: NaproomEndingDialogue
     clip: {fileID: 8300000, guid: 0a98f8631fd194742a43216280ff3038, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: UIHover1
     clip: {fileID: 8300000, guid: 2581f516e2c055d4e8469c14079ac865, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: UIHover2
     clip: {fileID: 8300000, guid: 517228a84ee225d43b43db7f0b6fe244, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: UIHover3
     clip: {fileID: 8300000, guid: 761bdbb98bb808d4983d0521a2f33eb4, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: StarUnlock
     clip: {fileID: 8300000, guid: 5359ba2c4b250104f9847a14a7b88daf, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: StarHover
     clip: {fileID: 8300000, guid: c5911aebefba4cd4186dfb69207c3f17, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
   - name: MainMenuAmbience
     clip: {fileID: 8300000, guid: ac49f5c9f9119984faee74c06446e0e2, type: 3}
     volume: 0.8
     pitch: 1
     loop: 0
+    type: 1
     source: {fileID: 0}
   - name: Jumpscare
     clip: {fileID: 8300000, guid: 685ac42d9b9cbd043bf6fd6dd4e71e9c, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    type: 0
     source: {fileID: 0}
 --- !u!4 &970166058
 Transform:
@@ -35481,7 +35499,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.47899997
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -48153,7 +48171,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.663
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0

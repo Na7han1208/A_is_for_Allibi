@@ -77,23 +77,27 @@ public class SettingsManager : MonoBehaviour
     {
         PlayerPrefs.SetFloat("MusicVolume", value);
         PlayerPrefs.Save();
+        SoundManager.Instance?.UpdateVolumes();
     }
 
     private void SetSFXVolume(float value)
     {
         PlayerPrefs.SetFloat("SFXVolume", value);
         PlayerPrefs.Save();
+        SoundManager.Instance?.UpdateVolumes();
     }
 
     private void SetMouseSensitivity(float value)
     {
         PlayerPrefs.SetFloat("MouseSensitivity", value);
         PlayerPrefs.Save();
+        FindFirstObjectByType<FPController>().UpdateSensitivity();
     }
 
     private void SetControllerSensitivity(float value)
     {
         PlayerPrefs.SetFloat("ControllerSensitivity", value);
         PlayerPrefs.Save();
+        FindFirstObjectByType<FPController>().UpdateSensitivity();
     }
 }
