@@ -57,6 +57,7 @@ public class FPController : MonoBehaviour
 
     public GameObject Foxy;
     private bool FoxyDialogueDone = false;
+    public SubtitleSequence FoxyDialogue;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -260,6 +261,7 @@ public class FPController : MonoBehaviour
                 {
                     Debug.Log("FOXY TALKS");
                     SoundManager.Instance.PlayComplex("FoxyDialogue", Foxy.transform);
+                    SubtitleManager.Instance.PlaySequence(FoxyDialogue);
 
                     FindFirstObjectByType<TutorialHelper>().pickedUp = true;
                     FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);

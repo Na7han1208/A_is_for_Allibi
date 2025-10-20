@@ -3,6 +3,7 @@ using UnityEngine;
 public class NR_BlockLock : MonoBehaviour
 {
     public BlockLockPuzzle blp;
+    public SubtitleSequence BlockLockSolve;
     
     void Start()
     {
@@ -17,6 +18,9 @@ public class NR_BlockLock : MonoBehaviour
             StarChartManager.Instance.UnlockStar("GS1");
             FindAnyObjectByType<TutorialHelper>().StarChartHint();
             Destroy(this);
+
+            SoundManager.Instance.PlayComplex("BlockLockSolve", this.transform);
+            SubtitleManager.Instance.PlaySequence(BlockLockSolve);
         }
     }
 }

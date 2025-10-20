@@ -61,8 +61,6 @@ public class BlockLockPuzzle : MonoBehaviour
         {
             puzzleSolved = true;
             SoundManager.Instance.PlayComplex("StarUnlock", this.transform);
-            SoundManager.Instance.PlayComplex("BlockLockSolve", this.transform);
-
             FindFirstObjectByType<FPController>().PlaySuccessParticles();       
         }
     }

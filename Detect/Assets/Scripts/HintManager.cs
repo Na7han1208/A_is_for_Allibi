@@ -8,6 +8,7 @@ public class HintManager : MonoBehaviour
     [Header("Dialogue Data")]
     public GameObject[] dialogueObjects;
     public AudioClip[] dialogueClips;
+    public SubtitleSequence[] subtitleSequences;
     public bool[] hasInteracted;
     [Range(0f, 2f)] public float[] dialogueVolumes;
 
@@ -55,8 +56,19 @@ public class HintManager : MonoBehaviour
                 int copy = Math.Min(onInspect.Length, len);
                 for (int i = 0; i < copy; i++) newOn[i] = onInspect[i];
             }
-            for (int i = 0; i < len; i++) { } // remaining default false
+            for (int i = 0; i < len; i++) { }
             onInspect = newOn;
+        }
+
+        if (subtitleSequences == null || subtitleSequences.Length != len)
+        {
+            SubtitleSequence[] newSubs = new SubtitleSequence[len];
+            if (subtitleSequences != null)
+            {
+                int copy = Math.Min(subtitleSequences.Length, len);
+                for (int i = 0; i < copy; i++) newSubs[i] = subtitleSequences[i];
+            }
+            subtitleSequences = newSubs;
         }
     }
 
@@ -119,7 +131,14 @@ public class HintManager : MonoBehaviour
                     audioSource.Stop();
                     audioSource.PlayOneShot(dialogueClips[i], volume);
                 }
+
                 Debug.Log($"[HintManager] Played {(isInspect ? "Inspect" : "Pickup")} dialogue for '{dialogObj.name}' at volume {volume}");
+
+                if (SubtitleManager.Instance != null && subtitleSequences != null && i < subtitleSequences.Length && subtitleSequences[i] != null)
+                {
+                    Debug.Log($"[HintManager] Triggering subtitles for index {i}");
+                    SubtitleManager.Instance.PlaySequence(subtitleSequences[i]);
+                }
             }
             else
             {
