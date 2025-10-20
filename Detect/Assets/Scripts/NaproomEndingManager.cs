@@ -16,22 +16,20 @@ public class NaproomEndingManager : MonoBehaviour
     {
         if (cutsceneShown) return;
         cutsceneShown = true;
-        CutsceneCanvas.SetActive(true);
+        //CutsceneCanvas.SetActive(true);
         FindFirstObjectByType<FPController>().SetPuzzleActive(true);
-        if (SoundManager.Instance == null) Debug.Log("wtf why am i null");
         SoundManager.Instance.StopAll();
-        SoundManager.Instance.PlayComplex("NaproomEndingDialogue", transform);
+        CutsceneManager.Instance.PlayCutscene("RedStain");
         SoundManager.Instance.PlayComplex("Credits", transform);
 
         Camera playerCam = FindFirstObjectByType<FPController>().GetComponentInChildren<Camera>();
         playerCam.transform.LookAt(Door.transform.position);
 
-        StartCoroutine(WaitThenOpenDoor());
+        OpenDoor();
     }
 
-    private IEnumerator WaitThenOpenDoor()
+    public void OpenDoor()
     {
-        yield return new WaitForSeconds(38);
         SoundManager.Instance.PlayComplex("Unlock", transform);
         Door.SetActive(false);
         CutsceneCanvas.SetActive(false);

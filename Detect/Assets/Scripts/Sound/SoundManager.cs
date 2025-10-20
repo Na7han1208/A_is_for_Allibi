@@ -89,29 +89,40 @@ public class SoundManager : MonoBehaviour
 
     public void Stop(string name)
     {
+        bool stopped = false;
+
+        // Stop any persistent (non-temp) AudioSources
         foreach (Sound s in Sounds)
         {
-            if (s.name == name)
+            if (s.name == name && s.source != null && s.source.isPlaying)
             {
                 s.source.Stop();
-                return;
+                stopped = true;
             }
         }
 
+        // Stop and clean up any temporary sources (spawned by PlayComplex)
         for (int i = activeTempSources.Count - 1; i >= 0; i--)
         {
-            if (activeTempSources[i] == null)
+            AudioSource src = activeTempSources[i];
+            if (src == null)
             {
                 activeTempSources.RemoveAt(i);
                 continue;
             }
 
-            if (activeTempSources[i].clip != null && activeTempSources[i].clip.name == name)
+            if (src.clip != null && (src.clip.name == name || src.gameObject.name.Contains(name)))
             {
-                activeTempSources[i].Stop();
-                Destroy(activeTempSources[i].gameObject);
+                src.Stop();
+                Destroy(src.gameObject);
                 activeTempSources.RemoveAt(i);
+                stopped = true;
             }
+        }
+
+        if (!stopped)
+        {
+            Debug.LogWarning($"[SoundManager] Tried to stop '{name}' but it was not playing or not found.");
         }
     }
 

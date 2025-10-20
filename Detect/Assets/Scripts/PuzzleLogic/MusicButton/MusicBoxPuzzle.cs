@@ -28,10 +28,13 @@ public class MusicBoxPuzzle : MonoBehaviour
     private float lastNavTime = 0f;
     private int selectedIndex = 0;
 
+    private MainMenuManager mainMenuManager;
+
     void Start()
     {
         mainCamera = Camera.main;
         playerInput = FindFirstObjectByType<PlayerInput>();
+        mainMenuManager = FindFirstObjectByType<MainMenuManager>();
     }
 
     void Update()
@@ -121,6 +124,7 @@ public class MusicBoxPuzzle : MonoBehaviour
         Cursor.visible = true;
         canvas.SetActive(true);
         GetComponent<Collider>().enabled = false;
+        //mainMenuManager.ToggleInMainMenu();
     }
 
     public void HidePuzzle()
@@ -138,7 +142,7 @@ public class MusicBoxPuzzle : MonoBehaviour
         Cursor.visible = false;
         canvas.SetActive(false);
         GetComponent<Collider>().enabled = true;
-
+        //mainMenuManager.ToggleInMainMenu();
     }
 
     IEnumerator MoveCameraToTarget(Vector3 targetPos, Quaternion targetRot)

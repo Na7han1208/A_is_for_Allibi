@@ -97,7 +97,7 @@ public class TutorialHelper : MonoBehaviour
         fPController.SetPuzzleActive(false);
         Debug.Log("Okie you can move now");
         FindAnyObjectByType<MainMenuManager>().ToggleInMainMenu();
-         RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
+        RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
@@ -116,6 +116,18 @@ public class TutorialHelper : MonoBehaviour
 
         yield return StartCoroutine(FadeImage(CrouchTip.GetComponent<Image>(), 0f, 2f));
         yield return StartCoroutine(FadeImage(JumpTip.GetComponent<Image>(), 0f, 2f));
+    }
+
+    public IEnumerator StarChartHint()
+    {      
+            Debug.Log("PRE SHOW THE STAR");
+            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 1f, 2f));
+            Debug.Log("AFTER SHOW THE STAR");
+            yield return new WaitForSeconds(3f);
+            Debug.Log("PRE HIDE THE STAR");
+            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 0f, 2f));
+            Debug.Log("AFTER HIDE THE STAR");
+            //StarChartTip.SetActive(false);
     }
 
     private IEnumerator FadeImage(Image img, float targetAlpha, float duration)
@@ -153,18 +165,5 @@ public class TutorialHelper : MonoBehaviour
     {
         ToggleInteraction(true);
         SoundManager.Instance.PlayComplex("NaproomMusic", transform);
-    }
-
-    public IEnumerator StarChartHint()
-    {
-        if (!hasSeenStarChartHint)
-        {
-            hasSeenStarChartHint = true;
-
-            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 1f, 2f));
-            yield return new WaitForSeconds(3);
-            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 2f, 0f));
-        }
-
     }
 }
