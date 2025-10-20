@@ -11,6 +11,7 @@ public class TutorialHelper : MonoBehaviour
     private bool crouched = false;
     private bool inspected = false;
     private bool checkedOutSomething = false;
+    private bool hasSeenStarChartHint;
 
     public GameObject foxy;
     public Canvas TutorialCanvas;
@@ -22,7 +23,9 @@ public class TutorialHelper : MonoBehaviour
     public GameObject InspectTip;
     public GameObject CrouchTip;
     public GameObject JumpTip;
+    public GameObject StarChartTip;
     public GameObject Crosshair;
+
 
     public Vector2 cursorDefaultPosition;
 
@@ -93,7 +96,7 @@ public class TutorialHelper : MonoBehaviour
 
         fPController.SetPuzzleActive(false);
         Debug.Log("Okie you can move now");
-        // RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
+         RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
@@ -148,6 +151,19 @@ public class TutorialHelper : MonoBehaviour
     public void NaproomEnter()
     {
         ToggleInteraction(true);
-        SoundManager.Instance.PlayComplex("Naproom", transform);
+        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
+    }
+
+    public IEnumerator StarChartHint()
+    {
+        if (!hasSeenStarChartHint)
+        {
+            hasSeenStarChartHint = true;
+
+            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 1f, 2f));
+            yield return new WaitForSeconds(3);
+            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 2f, 0f));
+        }
+
     }
 }

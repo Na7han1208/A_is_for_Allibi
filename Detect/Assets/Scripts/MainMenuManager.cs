@@ -93,11 +93,11 @@ public class MainMenuManager : MonoBehaviour
             case 2: SoundManager.Instance.PlayComplex("G2", button.transform); break;
             case 3: SoundManager.Instance.PlayComplex("G3", button.transform); break;
         }
-        button.transform.localScale *= 1.2f;
+        //button.transform.localScale *= 1.2f;
     }
 
     public void OnButtonHoverExit(GameObject button)
     {
-        button.transform.localScale /= 1.2f;
+        //button.transform.localScale /= 1.2f;
     }
 }

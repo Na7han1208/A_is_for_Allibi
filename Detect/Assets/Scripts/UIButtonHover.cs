@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class UIButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public MainMenuManager menuManager; // link your MainMenuManager here
+    public MainMenuManager menuManager;
 
     public void OnPointerEnter(PointerEventData eventData)
     {

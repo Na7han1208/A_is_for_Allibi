@@ -336,6 +336,7 @@ public class TracingPuzzle : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         CursorManager.Instance.ShowCursor(false);
+        FindFirstObjectByType<TutorialHelper>().Crosshair.SetActive(false);
 
         bool drawHeld = false;
         var gp = Gamepad.current;
@@ -355,6 +356,7 @@ public class TracingPuzzle : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         CursorManager.Instance.ShowCursor(false);
+        FindFirstObjectByType<TutorialHelper>().Crosshair.SetActive(true);
         ignoreUntilReleased = false;
 
         if (playerInput != null) playerInput.SwitchCurrentActionMap("Player");

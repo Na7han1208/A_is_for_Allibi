@@ -38,6 +38,8 @@ public class CutsceneManager : MonoBehaviour
     [SerializeField] private bool dontDestroy = true;
     [SerializeField] private float prepareTimeout = 5f;
 
+    public bool IsInCutscene { get; private set; }
+
     private CutsceneData current;
     private bool playing;
     private bool prepared;
@@ -76,6 +78,8 @@ public class CutsceneManager : MonoBehaviour
 
         if (rawImage != null) rawImage.gameObject.SetActive(false);
         if (skipImage != null) skipImage.SetActive(false);
+
+        IsInCutscene = false;
     }
 
     void Update()
@@ -122,6 +126,7 @@ public class CutsceneManager : MonoBehaviour
 
         current = data;
         playing = true;
+        IsInCutscene = true;
         prepared = false;
         pendingPrepare = false;
         prepareTimer = 0f;
@@ -201,6 +206,7 @@ public class CutsceneManager : MonoBehaviour
         if (!playing) return;
 
         playing = false;
+        IsInCutscene = false;
         prepared = false;
         pendingPrepare = false;
         prepareTimer = 0f;
@@ -227,6 +233,7 @@ public class CutsceneManager : MonoBehaviour
             if (rawImage != null) rawImage.gameObject.SetActive(false);
             if (skipImage != null) skipImage.SetActive(false);
             playing = false;
+            IsInCutscene = false;
             prepared = false;
             pendingPrepare = false;
             prepareTimer = 0f;

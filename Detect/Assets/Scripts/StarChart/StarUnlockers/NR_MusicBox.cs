@@ -10,6 +10,7 @@ public class NR_MusicBox : MonoBehaviour
         {
             StarChartManager.Instance.UnlockStar("GS3");
             SoundManager.Instance.PlayComplex("StarUnlock", transform);
+            FindAnyObjectByType<TutorialHelper>().StarChartHint();
             Destroy(this);
         }
     }

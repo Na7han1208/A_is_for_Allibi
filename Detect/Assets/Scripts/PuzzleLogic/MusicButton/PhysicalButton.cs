@@ -45,27 +45,32 @@ public class PhysicalButton : MonoBehaviour
 
     IEnumerator PressAnimation()
     {
-        Vector3 startPos = startLocalPos;
-        Vector3 pressedPos = startPos + Vector3.down * pressDepth;
-        float t = 0f;
-        while (t < 1f)
+        if (rend == null)
+            yield break;
+
+        Transform t = rend.transform;
+        Vector3 startPos = t.localPosition;
+        Vector3 pressedPos = startPos + t.InverseTransformDirection(-t.forward) * pressDepth;
+
+        float t1 = 0f;
+        while (t1 < 1f)
         {
-            t += Time.deltaTime * pressSpeed;
-            transform.localPosition = Vector3.Lerp(startPos, pressedPos, t);
+            t1 += Time.deltaTime * pressSpeed;
+            t.localPosition = Vector3.Lerp(startPos, pressedPos, t1);
             yield return null;
         }
 
         yield return new WaitForSeconds(0.05f);
 
-        t = 0f;
-        while (t < 1f)
+        t1 = 0f;
+        while (t1 < 1f)
         {
-            t += Time.deltaTime * pressSpeed;
-            transform.localPosition = Vector3.Lerp(pressedPos, startPos, t);
+            t1 += Time.deltaTime * pressSpeed;
+            t.localPosition = Vector3.Lerp(pressedPos, startPos, t1);
             yield return null;
         }
 
-        transform.localPosition = startPos;
+        t.localPosition = startPos;
         pressRoutine = null;
     }
 

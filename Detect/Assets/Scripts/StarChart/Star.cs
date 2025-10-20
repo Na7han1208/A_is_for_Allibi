@@ -53,7 +53,7 @@ public class Star : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (IsUnlocked && starImage != null)
         {
             starImage.sprite = unlockedSprite;
-            SoundManager.Instance.Stop("StarHover");            
+            //SoundManager.Instance.Stop("StarHover");            
         }
     }
 

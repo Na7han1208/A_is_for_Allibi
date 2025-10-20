@@ -15,6 +15,7 @@ public class NR_BlockLock : MonoBehaviour
         if (blp.puzzleSolved)
         {
             StarChartManager.Instance.UnlockStar("GS1");
+            FindAnyObjectByType<TutorialHelper>().StarChartHint();
             Destroy(this);
         }
     }
