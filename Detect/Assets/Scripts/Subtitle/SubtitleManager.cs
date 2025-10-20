@@ -41,6 +41,7 @@ public class SubtitleManager : MonoBehaviour
 
     private IEnumerator PlaySubtitles()
     {
+        if (PlayerPrefs.GetInt("UseSubtitles") == 0) yield break;
         if (currentSequence == null || currentSequence.lines.Length == 0)
             yield break;
 
