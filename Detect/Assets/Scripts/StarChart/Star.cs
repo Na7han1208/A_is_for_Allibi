@@ -38,8 +38,8 @@ public class Star : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             if (hoverRoutine != null) StopCoroutine(hoverRoutine);
             hoverRoutine = StartCoroutine(HoverBlink());
-            if (!SoundManager.Instance.IsPlaying("StarHover"))
-                SoundManager.Instance.PlayComplex("StarHover", transform);
+            //if (!SoundManager.Instance.IsPlaying("StarHover"))
+            //    SoundManager.Instance.PlayComplex("StarHover", transform);
         }
     }
 

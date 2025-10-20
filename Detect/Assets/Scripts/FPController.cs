@@ -215,8 +215,8 @@ public class FPController : MonoBehaviour
                 if (tracingPuzzle != null)
                 {
                     tracingPuzzle.ShowPuzzle();
-                    moveInput = Vector2.zero;
-                    lookInput = Vector2.zero;
+                    //moveInput = Vector2.zero;
+                    //lookInput = Vector2.zero;
                     if (!pickedUpMissingPoster)
                     {
                         SoundManager.Instance.PlayComplex("TimmyMissingPoster", transform);
