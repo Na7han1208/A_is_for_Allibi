@@ -18505,7 +18505,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: TimmyMissingPoster
     clip: {fileID: 8300000, guid: b28a8a2738d00934db63a0d3e3cb4b70, type: 3}
-    volume: 1
+    volume: 2
     pitch: 1
     loop: 0
     type: 0
@@ -66808,6 +66808,7 @@ MonoBehaviour:
   SelfHelpCanvas: {fileID: 1136368294}
   Foxy: {fileID: 919132147517964892}
   FoxyDialogue: {fileID: 11400000, guid: 32f1f5aed93c83749909f5d29991d93b, type: 2}
+  MissingPoster: {fileID: 11400000, guid: c3de1e6a8b72b2c49a2991dddec612c8, type: 2}
   outlineWidth: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   dartPrefab: {fileID: 550747888352737358, guid: 1a789604d1890bc439040262f506c363, type: 3}

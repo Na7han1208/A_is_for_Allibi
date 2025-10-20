@@ -58,6 +58,7 @@ public class FPController : MonoBehaviour
     public GameObject Foxy;
     private bool FoxyDialogueDone = false;
     public SubtitleSequence FoxyDialogue;
+    public SubtitleSequence MissingPoster;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -229,6 +230,7 @@ public class FPController : MonoBehaviour
                     if (!pickedUpMissingPoster)
                     {
                         SoundManager.Instance.PlayComplex("TimmyMissingPoster", transform);
+                        SubtitleManager.Instance.PlaySequence(MissingPoster);
                     }
 
                     pickedUpMissingPoster = true;
