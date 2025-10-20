@@ -401,6 +401,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""230c4f2b-711b-43b6-b628-81362e54ca27"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""2a663034-5dce-4245-8346-fb415a5f39d0"",
                     ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",

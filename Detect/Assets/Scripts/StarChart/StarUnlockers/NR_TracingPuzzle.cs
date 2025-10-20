@@ -11,7 +11,7 @@ public class NR_TracingPuzzle : MonoBehaviour
         {
             StarChartManager.Instance.UnlockStar("GS2");
             SoundManager.Instance.PlayComplex("StarUnlock", transform);
-            FindAnyObjectByType<TutorialHelper>().StarChartHint();
+            StartCoroutine(FindAnyObjectByType<TutorialHelper>().StarChartHint());
             SubtitleManager.Instance.PlaySequence(subs);
             Destroy(this);
         }

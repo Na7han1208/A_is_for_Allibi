@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("UI Elements")]
     public GameObject PlayButton;
     public GameObject ExitButton;
+    public GameObject canvas;
 
     [Header("Settings")]
     public float delayBeforeFade = 6f;
@@ -70,14 +71,19 @@ public class MainMenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        gameObject.SetActive(false);
-        InMainMenu = false;
+        canvas.SetActive(false);
+        //InMainMenu = false;
 
         SoundManager.Instance.StopAll();
         CutsceneManager.Instance.PlayCutscene("Intro");
         SoundManager.Instance.PlayComplex("G1", transform);
         SoundManager.Instance.PlayComplex("G2", transform);
         SoundManager.Instance.PlayComplex("G3", transform);
+    }
+
+    public void ToggleInMainMenu()
+    {
+        InMainMenu = !InMainMenu;
     }
 
     public void ExitGame()

@@ -11,7 +11,7 @@ public class TutorialHelper : MonoBehaviour
     private bool crouched = false;
     private bool inspected = false;
     private bool checkedOutSomething = false;
-    private bool hasSeenStarChartHint;
+    private bool hasSeenStarChartHint = false;
 
     public GameObject foxy;
     public Canvas TutorialCanvas;
@@ -96,6 +96,7 @@ public class TutorialHelper : MonoBehaviour
 
         fPController.SetPuzzleActive(false);
         Debug.Log("Okie you can move now");
+        FindAnyObjectByType<MainMenuManager>().ToggleInMainMenu();
          RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));

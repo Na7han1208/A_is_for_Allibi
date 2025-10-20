@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SubtitleLine
   m_EditorClassIdentifier: 
   speaker: Timmy
-  text: That was a serious turf war, and Eddy and I were stuck right in the middle.
+  text: Eddy said it smelled funny but he wanted to try some.
   startTime: 0
-  duration: 6
+  duration: 4

@@ -11,6 +11,7 @@ public class PauseManager : MonoBehaviour
     public GameObject ControlsScreen;
     public GameObject BackButton;
     public GameObject crosshair;
+    public GameObject background;
 
     private bool inMenu = false;
     private MainMenuManager mainMenuManager;
@@ -45,6 +46,7 @@ public class PauseManager : MonoBehaviour
         SettingsButton.SetActive(true);
         BackButton.SetActive(false);
         settingsManager.ShowUI(false);
+        background.SetActive(true);
 
         inMenu = true;
         crosshair.SetActive(false);
@@ -63,6 +65,7 @@ public class PauseManager : MonoBehaviour
         ControlsScreen.SetActive(false);
         BackButton.SetActive(false);
         SettingsButton.SetActive(false);
+        background.SetActive(false);
 
         inMenu = false;
         crosshair.SetActive(true);
@@ -92,6 +95,7 @@ public class PauseManager : MonoBehaviour
     {
         settingsManager.ShowUI(true);
         BackButton.SetActive(true);
+        background.SetActive(false);
     }
 
     public void Back()

@@ -32,6 +32,7 @@ public class NaproomEndingManager : MonoBehaviour
     private IEnumerator WaitThenOpenDoor()
     {
         yield return new WaitForSeconds(38);
+        SoundManager.Instance.PlayComplex("Unlock", transform);
         Door.SetActive(false);
         CutsceneCanvas.SetActive(false);
         FindFirstObjectByType<FPController>().SetPuzzleActive(false);

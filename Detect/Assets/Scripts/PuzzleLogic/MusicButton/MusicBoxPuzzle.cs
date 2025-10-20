@@ -12,6 +12,7 @@ public class MusicBoxPuzzle : MonoBehaviour
     public AudioSource audioSource;
     public ParticleSystem buttonClickParticles;
     public bool isCompleted = false;
+    public GameObject canvas;
 
     private Camera mainCamera;
     private Vector3 originalCamPos;
@@ -108,7 +109,6 @@ public class MusicBoxPuzzle : MonoBehaviour
 
     public void ShowPuzzle()
     {
-        
         if (puzzleActive) return;
         puzzleActive = true;
         originalCamPos = mainCamera.transform.position;
@@ -119,6 +119,7 @@ public class MusicBoxPuzzle : MonoBehaviour
         StartCoroutine(MoveCameraToTarget(cameraTarget.position, Quaternion.Euler(90f, -35f, 0f)));
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        canvas.SetActive(true);
         GetComponent<Collider>().enabled = false;
     }
 
@@ -135,6 +136,7 @@ public class MusicBoxPuzzle : MonoBehaviour
         for (int i = 0; i < physicalButtons.Count; i++) physicalButtons[i].SetHover(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        canvas.SetActive(false);
         GetComponent<Collider>().enabled = true;
 
     }

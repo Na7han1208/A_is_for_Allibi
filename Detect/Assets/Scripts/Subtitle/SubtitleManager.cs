@@ -59,7 +59,10 @@ public class SubtitleManager : MonoBehaviour
 
             yield return new WaitForSeconds(line.duration);
         }
-
+        if (subtitleText != null)
+            subtitleText.text = "";
+        if (speakerText != null)
+            speakerText.text = "";
         subtitleRoutine = null;
     }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 7
   m_EditorClassIdentifier: 
-  speaker: Timmy
+  speaker: 
   text: Because when the blocks come crashing down, someone has to pick through the
     rubble.
   startTime: 0.76

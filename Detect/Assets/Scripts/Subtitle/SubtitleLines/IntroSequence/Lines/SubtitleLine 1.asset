@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 1
   m_EditorClassIdentifier: 
-  speaker: Timmy
+  speaker: 
   text: Except during nap time.
   startTime: 3.44
   duration: 0.95

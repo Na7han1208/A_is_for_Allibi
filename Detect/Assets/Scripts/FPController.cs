@@ -250,12 +250,6 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
-                // case: case of the red stain
-                if (hit.collider.CompareTag("Case3"))
-                {
-                    FindFirstObjectByType<NaproomEndingManager>().StartEnding();
-                }
-
                 // case: foxy
                 if (hit.collider.CompareTag("Foxy") && !FoxyDialogueDone)
                 {
@@ -381,6 +375,12 @@ public class FPController : MonoBehaviour
                 {
                     SelfHelpCanvas.SetActive(true);
                     return;
+                }
+
+                // case: case of the red stain
+                if (heldObject.CompareTag("Case3"))
+                {
+                    FindFirstObjectByType<NaproomEndingManager>().StartEnding();
                 }
 
                 // case: normal
