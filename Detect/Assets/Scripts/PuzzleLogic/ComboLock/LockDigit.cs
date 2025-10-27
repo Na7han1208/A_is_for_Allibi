@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class LockDigit : MonoBehaviour
 {
@@ -61,22 +62,7 @@ public class LockDigit : MonoBehaviour
     void Update()
     {
         HandleHover();
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (hoveredButton == incButton)
-            {
-                Increment();
-                clickedButton = incButton;
-                clickTimer = clickFlashTime;
-            }
-            else if (hoveredButton == decButton)
-            {
-                Decrement();
-                clickedButton = decButton;
-                clickTimer = clickFlashTime;
-            }
-        }
+        HandleInteractionInput();
 
         if (clickTimer > 0f)
         {
@@ -88,13 +74,42 @@ public class LockDigit : MonoBehaviour
 
     void HandleHover()
     {
-        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+        Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+        Ray ray = mainCam.ScreenPointToRay(screenCenter);
+
         if (Physics.Raycast(ray, out RaycastHit hit, 3f))
             hoveredButton = hit.transform == incButton || hit.transform == decButton ? hit.transform : null;
         else
             hoveredButton = null;
 
         UpdateButtonVisuals();
+    }
+
+    void HandleInteractionInput()
+    {
+        bool interactPressed = false;
+
+        if (Keyboard.current != null && (Keyboard.current.eKey.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame))
+            interactPressed = true;
+
+        if (Gamepad.current != null && (Gamepad.current.buttonWest.wasPressedThisFrame || Gamepad.current.rightTrigger.wasPressedThisFrame))
+            interactPressed = true;
+
+        if (interactPressed && hoveredButton != null)
+        {
+            if (hoveredButton == incButton)
+            {
+                Increment();
+                clickedButton = incButton;
+            }
+            else if (hoveredButton == decButton)
+            {
+                Decrement();
+                clickedButton = decButton;
+            }
+
+            clickTimer = clickFlashTime;
+        }
     }
 
     void UpdateButtonVisuals()
@@ -131,6 +146,7 @@ public class LockDigit : MonoBehaviour
     void UpdateDisplay()
     {
         numDisplay.text = currentValue.ToString();
+        GetComponentInParent<LockController>()?.CheckCode();
     }
 
     public int GetValue()

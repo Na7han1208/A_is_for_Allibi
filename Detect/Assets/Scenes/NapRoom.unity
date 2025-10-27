@@ -12569,6 +12569,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3b3ab48e556d909438ca501659b80c43, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1199565501}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3b3ab48e556d909438ca501659b80c43, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1199565503}
   m_SourcePrefab: {fileID: 100100000, guid: 3b3ab48e556d909438ca501659b80c43, type: 3}
 --- !u!4 &657827773 stripped
 Transform:
@@ -24760,6 +24763,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.09981349, y: 0.007816496, z: 0.07204394}
   m_Center: {x: 0, y: -0.0005241969, z: 0.00000011175871}
+--- !u!114 &1199565503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199565498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6e621c4787dca44fbfc750c71ccd80a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObjects:
+  - {fileID: 1827579818}
+  activationDistance: 1
 --- !u!43 &1200133423
 Mesh:
   m_ObjectHideFlags: 0
@@ -28510,6 +28528,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 0ba220c459abb84498209b641f6b991d, type: 2}
+    - target: {fileID: 4442595981646242188, guid: 293b4c48e957f6b4bb1c79fada77f65d, type: 3}
+      propertyPath: correctCode
+      value: 001008
+      objectReference: {fileID: 0}
     - target: {fileID: 4716176157914714814, guid: 293b4c48e957f6b4bb1c79fada77f65d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -37688,6 +37710,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
       propertyPath: m_Name
       value: Classroom 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1738134501323276394, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1738134501323276394, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.26
       objectReference: {fileID: 0}
     - target: {fileID: 3896294155803048942, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
