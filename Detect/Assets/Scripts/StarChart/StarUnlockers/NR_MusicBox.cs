@@ -15,6 +15,7 @@ public class NR_MusicBox : MonoBehaviour
             StartCoroutine(FindAnyObjectByType<TutorialHelper>().StarChartHint());
             //Destroy(this);
             isSolved = true;
+            enabled = false;
         }
     }
 }

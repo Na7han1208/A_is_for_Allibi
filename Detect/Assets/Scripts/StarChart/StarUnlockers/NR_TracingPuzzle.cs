@@ -16,6 +16,7 @@ public class NR_TracingPuzzle : MonoBehaviour
             StartCoroutine(FindAnyObjectByType<TutorialHelper>().StarChartHint());
             SubtitleManager.Instance.PlaySequence(subs);
             isSolved = true;
+            enabled = false;
         }
     }
 }

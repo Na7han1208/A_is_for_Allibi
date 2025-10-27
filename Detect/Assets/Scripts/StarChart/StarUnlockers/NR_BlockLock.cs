@@ -17,6 +17,7 @@ public class NR_BlockLock : MonoBehaviour
             SoundManager.Instance.PlayComplex("BlockLockSolve", this.transform);
             SubtitleManager.Instance.PlaySequence(BlockLockSolve);
             isSolved = true;
+            enabled = false;
         }
     }
 }
