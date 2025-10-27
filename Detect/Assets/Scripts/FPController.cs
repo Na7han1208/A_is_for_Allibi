@@ -284,6 +284,7 @@ public class FPController : MonoBehaviour
 
                     isHoldingObject = true;
                     HintManager.Instance.TriggerDialogue(heldObject, false);
+                    heldRb.isKinematic = false;
 
                     FindFirstObjectByType<TutorialHelper>().ToggleInspectThrowTip();
                 }
