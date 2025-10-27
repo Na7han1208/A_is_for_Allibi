@@ -6,10 +6,13 @@ public class ProximityKinematicTrigger : MonoBehaviour
     [SerializeField] private Rigidbody[] targetObjects;
 
     [Header("Detection Settings")]
-    [SerializeField] private float activationDistance = 1f;
+    [SerializeField] private float activationDistance = 2f;
+
+    private bool hasUnlocked = false;
 
     void Update()
     {
+        if (hasUnlocked) return;
         foreach (Rigidbody rb in targetObjects)
         {
             if (rb == null) continue;
@@ -18,8 +21,9 @@ public class ProximityKinematicTrigger : MonoBehaviour
 
             if (distance <= activationDistance)
             {
-                if (rb.isKinematic)
-                    rb.isKinematic = false;
+                this.gameObject.layer = 7;
+                Debug.Log("Vent Unlocked");
+                hasUnlocked = true;   
             }
         }
     }
