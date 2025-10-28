@@ -29,5 +29,6 @@ public class LockController : MonoBehaviour
     public void CompletePuzzle()
     {
         Debug.Log("Lock SOLVED");
+        SoundManager.Instance.PlayComplex("Unlock", transform);
     }
 }
