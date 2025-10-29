@@ -7,7 +7,8 @@ public class BlockLockPuzzle : MonoBehaviour
     [SerializeField] private GameObject[] Blocks;
 
     [Header("Lock Positions")]
-    [SerializeField] private  GameObject[] LockPos;
+    [SerializeField] private GameObject[] LockPos;
+    [SerializeField] private Vector3 offset;
 
     private bool[] isLocked;
     public bool puzzleSolved = false;
@@ -34,7 +35,8 @@ public class BlockLockPuzzle : MonoBehaviour
                     case 2: SoundManager.Instance.PlayComplex("G3", transform); break;
                 }
                 isLocked[i] = true;
-                Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, Quaternion.identity);
+                Vector3 offset = new Vector3(0, 3, 0);
+                Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, LockPos[i].transform.rotation);
                 Blocks[i].GetComponent<Rigidbody>().isKinematic = true;
                 Blocks[i].gameObject.layer = 0;
                 
