@@ -33,6 +33,8 @@ public class BlockLockPuzzle : MonoBehaviour
                     case 0: SoundManager.Instance.PlayComplex("G1", transform); break;
                     case 1: SoundManager.Instance.PlayComplex("G2", transform); break;
                     case 2: SoundManager.Instance.PlayComplex("G3", transform); break;
+                    case 3: SoundManager.Instance.PlayComplex("G4", transform); break;
+                    case 4: SoundManager.Instance.PlayComplex("G5", transform); break;
                 }
                 isLocked[i] = true;
                 Vector3 offset = new Vector3(0, 3, 0);
