@@ -269,6 +269,13 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: combo lock
+                if (hit.collider.CompareTag("ComboLock"))
+                {
+                    FindFirstObjectByType<LockController>().ShowPuzzle();
+                    return;
+                }
+
                 // case: normal pickup
                 if (!isHoldingObject && hit.rigidbody != null)
                 {
@@ -654,6 +661,11 @@ public class FPController : MonoBehaviour
     public void SetPuzzleActive(bool active)
     {
         puzzleActive = active;
+    }
+
+    public void SetInvisible(bool invisible)
+    {
+        foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>()) renderer.enabled = !invisible;
     }
 }
 

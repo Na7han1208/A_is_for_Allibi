@@ -74,8 +74,10 @@ public class LockDigit : MonoBehaviour
 
     void HandleHover()
     {
-        Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
-        Ray ray = mainCam.ScreenPointToRay(screenCenter);
+        if (Mouse.current == null) return;
+
+        Vector3 mousePos = Mouse.current.position.ReadValue();
+        Ray ray = mainCam.ScreenPointToRay(mousePos);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 3f))
             hoveredButton = hit.transform == incButton || hit.transform == decButton ? hit.transform : null;
