@@ -529,7 +529,7 @@ public class FPController : MonoBehaviour
 
     public void HandleLook()
     {
-        if (puzzleActive || StarChartManager.Instance.chartUI.activeSelf) return;
+        if (puzzleActive || StarChartManager.Instance.AnyChartOpen()) return;
 
         float sensitivity = usingGamepad ? controllerSensitivity*50f : mouseSensitivity;
 
