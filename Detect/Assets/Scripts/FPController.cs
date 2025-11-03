@@ -253,6 +253,7 @@ public class FPController : MonoBehaviour
                 }
 
                 // case: foxy
+                /*
                 if (hit.collider.CompareTag("Foxy") && !FoxyDialogueDone)
                 {
                     Debug.Log("FOXY TALKS");
@@ -268,6 +269,7 @@ public class FPController : MonoBehaviour
                     FoxyDialogueDone = true;
                     return;
                 }
+                */
 
                 // case: combo lock
                 if (hit.collider.CompareTag("ComboLock"))

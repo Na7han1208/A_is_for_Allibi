@@ -26,6 +26,8 @@ public class TutorialHelper : MonoBehaviour
     public GameObject StarChartTip;
     public GameObject Crosshair;
 
+    public SubtitleSequence foxySubtitles;
+
 
     public Vector2 cursorDefaultPosition;
 
@@ -33,7 +35,7 @@ public class TutorialHelper : MonoBehaviour
 
     void Start()
     {
-        RagdollToggler.Instance.SetRagdoll(foxy, false);
+        //RagdollToggler.Instance.SetRagdoll(foxy, false);
         cursorDefaultPosition = Crosshair.GetComponent<RectTransform>().anchoredPosition;
 
         Crosshair.SetActive(false);
@@ -165,5 +167,13 @@ public class TutorialHelper : MonoBehaviour
     {
         ToggleInteraction(true);
         SoundManager.Instance.PlayComplex("NaproomMusic", transform);
+
+        Debug.Log("FOXY TALKS");
+        SoundManager.Instance.PlayComplex("FoxyDialogue", transform);
+        SubtitleManager.Instance.PlaySequence(foxySubtitles);
+
+        pickedUp = true;
+        ToggleInteraction(false);
+        DisplayMovement();
     }
 }

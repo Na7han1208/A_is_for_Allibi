@@ -42,6 +42,7 @@ public class ClassroomBlockLock : MonoBehaviour
             FPController player = FindFirstObjectByType<FPController>();
             if (player != null)
                 player.PlaySuccessParticles();
+            StarChartManager.Instance.UnlockStar("CR1");
         }
     }
 

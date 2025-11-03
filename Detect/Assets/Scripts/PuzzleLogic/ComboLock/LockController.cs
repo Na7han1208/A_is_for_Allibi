@@ -143,6 +143,13 @@ public class LockController : MonoBehaviour
         var rb = GetComponentInParent<Rigidbody>();
         if (rb != null) rb.isKinematic = false;
         StartCoroutine(MoveDoor());
+
+        SoundManager.Instance.PlayComplex("StarUnlock", transform);
+
+        FPController player = FindFirstObjectByType<FPController>();
+        if (player != null)
+            player.PlaySuccessParticles();
+        StarChartManager.Instance.UnlockStar("CR3");
     }
 
 
