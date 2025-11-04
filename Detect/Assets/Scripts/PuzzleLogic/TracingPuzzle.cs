@@ -38,7 +38,7 @@ public class TracingPuzzle : MonoBehaviour
     private int brushHorig;
     private Color32[] blockBuffer;
 
-    private bool finishedCalled;
+    public bool finishedCalled;
     private float checkTimer;
     private bool dirty;
     private bool ignoreUntilReleased;
@@ -115,7 +115,7 @@ public class TracingPuzzle : MonoBehaviour
             isDrawing = false;
     }
 
-    private void InitMask()
+    protected virtual void InitMask()
     {
         Texture src = (maskImage != null) ? maskImage.texture : null;
         int w = fallbackTextureSize;

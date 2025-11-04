@@ -11053,6 +11053,7 @@ MonoBehaviour:
   controllerCursorSpeed: 400
   deadzone: 0
   playerInput: {fileID: 8166268571884104683}
+  finishedCalled: 0
   virtualCursorPos: {x: 0, y: 0}
   isDrawing: 0
 --- !u!65 &472569272
@@ -31747,10 +31748,10 @@ RectTransform:
   m_Children:
   - {fileID: 2045489566}
   - {fileID: 574528356}
-  - {fileID: 6503990}
-  - {fileID: 162631315}
-  - {fileID: 1221079676}
   - {fileID: 1970692039}
+  - {fileID: 1221079676}
+  - {fileID: 162631315}
+  - {fileID: 6503990}
   - {fileID: 1174032243}
   m_Father: {fileID: 1770936642}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50245,7 +50246,6 @@ GameObject:
   - component: {fileID: 1770936648}
   - component: {fileID: 1770936647}
   - component: {fileID: 1770936646}
-  - component: {fileID: 1770936645}
   - component: {fileID: 1770936652}
   - component: {fileID: 1770936653}
   m_Layer: 7
@@ -50275,18 +50275,6 @@ RectTransform:
   m_AnchoredPosition: {x: -1074.37, y: -90.45}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1770936645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1770936641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb85a27c6feadb646ab58b3903834a2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1770936646
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50436,6 +50424,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puzzleCanvas: {fileID: 1305308734}
+  maskImage: {fileID: 1524313035}
+  teddyDisplay: {fileID: 485739505}
+  cursorImage: {fileID: 1174032244}
+  cursorOffset: {x: 10, y: -10}
+  eddyHat: {fileID: 0}
+  teddyBearSprite: {fileID: 0}
+  brushTexture: {fileID: 2800000, guid: dfb958de7822fdc4eb49e67d6608a7c0, type: 3}
+  fallbackTextureSize: 512
+  completionThreshold: 0.25
+  checkInterval: 0.5
+  useAbsoluteBrush: 1
+  brushPixelSize: 100
+  brushScale: 5
+  controllerCursorSpeed: 400
+  deadzone: 0.12
+  playerInput: {fileID: 8166268571884104683}
+  finishedCalled: 0
+  virtualCursorPos: {x: 0, y: 0}
+  isDrawing: 0
   maskImages:
   - {fileID: 1524313035}
   - {fileID: 252169421}
@@ -50446,26 +50453,17 @@ MonoBehaviour:
   - {fileID: 1058580985}
   - {fileID: 86406971}
   - {fileID: 1981245058}
-  cursorImage: {fileID: 0}
-  cursorOffset: {x: 10, y: -10}
-  crayonColors: []
+  crayonColors:
+  - {fileID: 21300000, guid: e80ca6a20948c3945879962b5c760f84, type: 3}
+  - {fileID: 21300000, guid: 3c9df9f4072c99149bd0c414572d2d5d, type: 3}
+  - {fileID: 21300000, guid: 5a5ceadcd4d17424991ec96c5f1ddb7c, type: 3}
+  - {fileID: 21300000, guid: 88b38fb20359002479fe74a605a34a78, type: 3}
   crayonCursor: {fileID: 1174032244}
   yellowButton: {fileID: 22433501}
   redButton: {fileID: 1796243704}
   blueButton: {fileID: 1514468645}
   blackButton: {fileID: 288177933}
-  brushTexture: {fileID: 2800000, guid: dfb958de7822fdc4eb49e67d6608a7c0, type: 3}
-  fallbackTextureSize: 512
-  completionThreshold: 0.5
-  checkInterval: 0.5
-  useAbsoluteBrush: 1
-  brushPixelSize: 100
-  brushScale: 5
-  controllerCursorSpeed: 400
-  deadzone: 0.12
-  playerInput: {fileID: 8166268571884104683}
   transitionDelay: 3
-  eddyHat: {fileID: 0}
 --- !u!65 &1770936653
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -76279,8 +76277,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1770936652}
-        m_TargetAssemblyTypeName: MultiColourTracingPuzzle, Assembly-CSharp
-        m_MethodName: OnDraw
+        m_TargetAssemblyTypeName: TracingPuzzle, Assembly-CSharp
+        m_MethodName: OnExit
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -76339,7 +76337,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1770936652}
-        m_TargetAssemblyTypeName: MultiColourTracingPuzzle, Assembly-CSharp
+        m_TargetAssemblyTypeName: TracingPuzzle, Assembly-CSharp
         m_MethodName: OnDraw
         m_Mode: 0
         m_Arguments:
@@ -76367,7 +76365,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1770936652}
-        m_TargetAssemblyTypeName: MultiColourTracingPuzzle, Assembly-CSharp
+        m_TargetAssemblyTypeName: TracingPuzzle, Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
         m_Arguments:

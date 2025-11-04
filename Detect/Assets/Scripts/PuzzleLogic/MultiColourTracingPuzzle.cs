@@ -1,18 +1,15 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
 
-public class MultiColourTracingPuzzle : MonoBehaviour
+public class MultiColourTracingPuzzle : TracingPuzzle
 {
     [Header("Multi Colour Puzzle Settings")]
-    [SerializeField] private TracingPuzzle tracingPuzzle;
     [SerializeField] private RawImage[] maskImages;
     [SerializeField] private RawImage[] suspectDisplays;
-    [SerializeField] private Color[] crayonColors;
+    [SerializeField] private Sprite[] crayonColors;
     [SerializeField] private Image crayonCursor;
     [SerializeField] private Button yellowButton;
     [SerializeField] private Button redButton;
@@ -21,13 +18,15 @@ public class MultiColourTracingPuzzle : MonoBehaviour
     [SerializeField] private float transitionDelay = 3f;
 
     private int currentDrawingIndex = 0;
-    private int selectedCrayonIndex = -1; // 0=yellow, 1=red, 2=blue, 3=black
+    private int selectedCrayonIndex = -1;
     private bool transitioning = false;
 
-    private void Start()
+    protected override void Start()
     {
-        if (tracingPuzzle == null)
-            tracingPuzzle = GetComponent<TracingPuzzle>();
+        if (maskImages != null && maskImages.Length > 0)
+            maskImage = maskImages[0];
+
+        base.Start();
 
         if (yellowButton != null) yellowButton.onClick.AddListener(() => SelectCrayon(0));
         if (redButton != null) redButton.onClick.AddListener(() => SelectCrayon(1));
@@ -36,29 +35,15 @@ public class MultiColourTracingPuzzle : MonoBehaviour
 
         for (int i = 0; i < maskImages.Length; i++)
         {
-            if (maskImages[i] != null) maskImages[i].gameObject.SetActive(i == 0);
+            if (maskImages[i] != null)
+                maskImages[i].gameObject.SetActive(i == 0);
+
             if (suspectDisplays != null && i < suspectDisplays.Length && suspectDisplays[i] != null)
                 suspectDisplays[i].gameObject.SetActive(i == 0);
         }
 
         currentDrawingIndex = 0;
-        selectedCrayonIndex = -1; 
-
-
-        if (tracingPuzzle != null && maskImages.Length > 0)
-        {
-            tracingPuzzle.maskImage = maskImages[0];
-        }
-    }
-
-    private void Update()
-    {
-        if (transitioning || tracingPuzzle == null) return;
-
-        if (tracingPuzzle.CheckCompletion() && !transitioning)
-        {
-            StartCoroutine(HandleDrawingComplete());
-        }
+        selectedCrayonIndex = -1;
     }
 
     private void SelectCrayon(int index)
@@ -66,52 +51,39 @@ public class MultiColourTracingPuzzle : MonoBehaviour
         selectedCrayonIndex = index;
 
         if (crayonCursor != null && index >= 0 && index < crayonColors.Length)
-            crayonCursor.color = crayonColors[index];
+            crayonCursor.sprite = crayonColors[index];
+    }
+
+    protected override void TryStamp()
+    {
+        if (!CanDrawOnCurrent())
+            return;
+
+        base.TryStamp();
     }
 
     private bool CanDrawOnCurrent()
     {
-        if (selectedCrayonIndex == -1) return false;
+        if (selectedCrayonIndex == -1)
+            return false;
+
         return selectedCrayonIndex == currentDrawingIndex;
     }
 
-    public void OnDraw(InputAction.CallbackContext ctx)
+    public override bool CheckCompletion()
     {
-        if (tracingPuzzle == null || transitioning) return;
+        if (transitioning)
+            return false;
 
-        if (ctx.performed)
+        bool completed = base.CheckCompletion();
+        if (completed)
         {
-            if (CanDrawOnCurrent())
-                tracingPuzzle.isDrawing = true;
+            StopAllCoroutines();
+            StartCoroutine(HandleDrawingComplete());
+            finishedCalled = false;
         }
-        else if (ctx.canceled)
-        {
-            tracingPuzzle.isDrawing = false;
-        }
-    }
 
-    public void OnMove(InputAction.CallbackContext ctx)
-    {
-        if (tracingPuzzle != null)
-            tracingPuzzle.OnMove(ctx);
-    }
-
-    public void OnExit(InputAction.CallbackContext ctx)
-    {
-        if (tracingPuzzle != null)
-            tracingPuzzle.OnExit(ctx);
-    }
-
-    public void ShowPuzzle()
-    {
-        if (tracingPuzzle != null)
-            tracingPuzzle.ShowPuzzle();
-    }
-
-    public void HidePuzzle()
-    {
-        if (tracingPuzzle != null)
-            tracingPuzzle.HidePuzzle();
+        return completed;
     }
 
     private IEnumerator HandleDrawingComplete()
@@ -139,15 +111,17 @@ public class MultiColourTracingPuzzle : MonoBehaviour
         for (int i = 0; i < maskImages.Length; i++)
         {
             bool active = (i == currentDrawingIndex);
-            if (maskImages[i] != null) maskImages[i].gameObject.SetActive(active);
+
+            if (maskImages[i] != null)
+                maskImages[i].gameObject.SetActive(active);
+
             if (suspectDisplays != null && i < suspectDisplays.Length && suspectDisplays[i] != null)
                 suspectDisplays[i].gameObject.SetActive(active);
         }
 
-        tracingPuzzle.maskImage = maskImages[currentDrawingIndex];
-
-        tracingPuzzle.ResetMask();
-
+        maskImage = maskImages[currentDrawingIndex];
+        if (maskImage != null) maskImage.enabled = true;
+        InitMask();
         selectedCrayonIndex = -1;
         transitioning = false;
     }
@@ -155,7 +129,6 @@ public class MultiColourTracingPuzzle : MonoBehaviour
     private void OnYellowComplete()
     {
         Debug.Log("Yellow suspect traced!");
-
     }
 
     private void OnRedComplete()
@@ -176,6 +149,5 @@ public class MultiColourTracingPuzzle : MonoBehaviour
     private void OnAllDrawingsComplete()
     {
         Debug.Log("All suspects traced!");
-        HidePuzzle();
     }
 }
