@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class NR_TracingPuzzle : MonoBehaviour
@@ -8,6 +9,7 @@ public class NR_TracingPuzzle : MonoBehaviour
 
     void Update()
     {
+        if (tp.IsUnityNull()) return;
         if (tp.CheckCompletion())
         {
             if (isSolved) return;

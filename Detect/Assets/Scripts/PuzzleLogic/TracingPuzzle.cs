@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System;
+using Unity.Services.Analytics;
 
 public class TracingPuzzle : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private Canvas puzzleCanvas;
-    [SerializeField] private RawImage maskImage;
+    public RawImage maskImage;
     [SerializeField] private RawImage teddyDisplay;
     [SerializeField] private Image cursorImage;
     [SerializeField] private Vector2 cursorOffset = new Vector2(10f, -10f);
@@ -41,16 +42,16 @@ public class TracingPuzzle : MonoBehaviour
     private float checkTimer;
     private bool dirty;
     private bool ignoreUntilReleased;
-    private Vector2 virtualCursorPos;
+    public Vector2 virtualCursorPos;
     private Vector2 moveInput;
-    private bool isDrawing;
+    public bool isDrawing;
 
     private void Awake()
     {
         if (puzzleCanvas != null) puzzleCanvas.gameObject.SetActive(false);
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         if (teddyDisplay != null && teddyBearSprite != null) teddyDisplay.texture = teddyBearSprite.texture;
         if (cursorImage != null) cursorImage.raycastTarget = false;
@@ -154,7 +155,7 @@ public class TracingPuzzle : MonoBehaviour
         }
     }
 
-    private void TryStamp()
+    protected virtual void TryStamp()
     {
         Camera cam = null;
         if (puzzleCanvas != null && puzzleCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
@@ -241,7 +242,7 @@ public class TracingPuzzle : MonoBehaviour
         dirty = true;
     }
 
-    public Boolean CheckCompletion()
+    public virtual Boolean CheckCompletion()
     {
         if (maskPixels == null) return false;
 
@@ -378,7 +379,7 @@ public class TracingPuzzle : MonoBehaviour
         finishedCalled = false;
     }
 
-    private Vector2 ConstrainToScreen(Vector2 pos)
+    protected Vector2 ConstrainToScreen(Vector2 pos)
     {
         pos.x = Mathf.Clamp(pos.x, 0f, Screen.width);
         pos.y = Mathf.Clamp(pos.y, 0f, Screen.height);

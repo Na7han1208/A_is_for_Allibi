@@ -237,6 +237,16 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: multi tracing puzzle
+                MultiColourTracingPuzzle multiColourTracingPuzzle = hit.collider.GetComponent<MultiColourTracingPuzzle>();
+                if (multiColourTracingPuzzle != null)
+                {
+                    multiColourTracingPuzzle.ShowPuzzle();
+                    //moveInput = Vector2.zero;
+                    //lookInput = Vector2.zero;
+                    return;
+                }
+
                 // case: music box puzzle
                 MusicBoxPuzzle musicBoxPuzzle = hit.collider.GetComponentInChildren<MusicBoxPuzzle>();
                 if (musicBoxPuzzle != null)
