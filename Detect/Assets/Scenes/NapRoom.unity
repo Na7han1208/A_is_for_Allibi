@@ -50464,6 +50464,9 @@ MonoBehaviour:
   blueButton: {fileID: 1514468645}
   blackButton: {fileID: 288177933}
   transitionDelay: 3
+  puzzleCanvas: {fileID: 1305308734}
+  virtualCursor: {fileID: 0}
+  uiCamera: {fileID: 0}
 --- !u!65 &1770936653
 BoxCollider:
   m_ObjectHideFlags: 0
