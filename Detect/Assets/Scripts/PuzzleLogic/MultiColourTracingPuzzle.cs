@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using System;
 
 public class MultiColourTracingPuzzle : TracingPuzzle
@@ -16,10 +18,19 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     [SerializeField] private Button blueButton;
     [SerializeField] private Button blackButton;
     [SerializeField] private float transitionDelay = 3f;
+    [SerializeField] private RectTransform virtualCursor;
+
+    [Header("Per-Stage Completion Thresholds (0-1)")]
+    [SerializeField] private float[] completionThresholds;
 
     private int currentDrawingIndex = 0;
     private int selectedCrayonIndex = -1;
     private bool transitioning = false;
+
+    private GraphicRaycaster raycaster;
+    private PointerEventData pointerData;
+    private EventSystem eventSystem;
+    private GameObject currentHover;
 
     protected override void Start()
     {
@@ -44,6 +55,42 @@ public class MultiColourTracingPuzzle : TracingPuzzle
 
         currentDrawingIndex = 0;
         selectedCrayonIndex = -1;
+
+        raycaster = GetComponentInChildren<GraphicRaycaster>(true);
+        eventSystem = EventSystem.current;
+    }
+
+    private void LateUpdate()
+    {
+        if (virtualCursor == null || raycaster == null || eventSystem == null)
+            return;
+
+        Vector2 cursorPosition = virtualCursor.position;
+        pointerData = new PointerEventData(eventSystem)
+        {
+            position = cursorPosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        raycaster.Raycast(pointerData, results);
+
+        GameObject hitObject = results.Count > 0 ? results[0].gameObject : null;
+
+        if (hitObject != currentHover)
+        {
+            if (currentHover != null)
+                ExecuteEvents.Execute(currentHover, pointerData, ExecuteEvents.pointerExitHandler);
+
+            if (hitObject != null)
+                ExecuteEvents.Execute(hitObject, pointerData, ExecuteEvents.pointerEnterHandler);
+
+            currentHover = hitObject;
+        }
+
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame && hitObject != null)
+        {
+            ExecuteEvents.Execute(hitObject, pointerData, ExecuteEvents.pointerClickHandler);
+        }
     }
 
     private void SelectCrayon(int index)
@@ -75,7 +122,15 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         if (transitioning)
             return false;
 
-        bool completed = base.CheckCompletion();
+        float required = 1f;
+
+        if (completionThresholds != null && currentDrawingIndex < completionThresholds.Length)
+            required = Mathf.Clamp01(completionThresholds[currentDrawingIndex]);
+
+        float current = GetCurrentCompletion();
+
+        bool completed = current >= required;
+
         if (completed)
         {
             StopAllCoroutines();
@@ -84,6 +139,65 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         }
 
         return completed;
+    }
+
+    private float GetCurrentCompletion()
+    {
+        if (maskImage == null || maskImage.texture == null)
+            return 0f;
+
+        Texture src = maskImage.texture;
+        int w = 512;
+        int h = 512;
+
+        if (src != null && src.width > 0 && src.height > 0)
+        {
+            w = src.width;
+            h = src.height;
+        }
+
+        RenderTexture rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
+        Graphics.Blit(src, rt);
+        RenderTexture prev = RenderTexture.active;
+        RenderTexture.active = rt;
+
+        Texture2D tmp = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        tmp.ReadPixels(new Rect(0, 0, w, h), 0, 0);
+        tmp.Apply(false);
+
+        RenderTexture.active = prev;
+        RenderTexture.ReleaseTemporary(rt);
+
+        Color32[] pixels;
+        try
+        {
+            pixels = tmp.GetPixels32();
+        }
+        catch
+        {
+            UnityEngine.Object.DestroyImmediate(tmp);
+            return 0f;
+        }
+
+        int sampleTarget = Mathf.Clamp(w / 4, 16, 256);
+        int step = Mathf.Max(1, w / sampleTarget);
+        int transparent = 0;
+        int total = 0;
+
+        for (int y = 0; y < h; y += step)
+        {
+            int baseIdx = y * w;
+            for (int x = 0; x < w; x += step)
+            {
+                total++;
+                if (pixels[baseIdx + x].a < 51) transparent++;
+            }
+        }
+
+        UnityEngine.Object.DestroyImmediate(tmp);
+
+        if (total == 0) return 0f;
+        return (float)transparent / total;
     }
 
     private IEnumerator HandleDrawingComplete()
