@@ -17,6 +17,7 @@ public class ClassroomBlockLock : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float lockRange = 0.5f;
     [SerializeField] private float unlockRange = 0.7f;
+    public GameObject OutOfSugarTimeline;
 
     void Start()
     {
@@ -100,6 +101,7 @@ public class ClassroomBlockLock : MonoBehaviour
             if (!b) return false;
 
         CutsceneManager.Instance.PlayCutscene("Addiction");
+        OutOfSugarTimeline.SetActive(true);
         return true;
     }
 }
