@@ -59,6 +59,7 @@ public class FPController : MonoBehaviour
     private bool FoxyDialogueDone = false;
     public SubtitleSequence FoxyDialogue;
     public SubtitleSequence MissingPoster;
+    private bool hasPickedUpSuspectSketch = false;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -220,6 +221,16 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: multi colour tracing puzzle
+                MultiColourTracingPuzzle multiColourTracingPuzzle = hit.collider.GetComponent<MultiColourTracingPuzzle>();
+                if (multiColourTracingPuzzle != null)
+                {
+                    if (!hasPickedUpSuspectSketch) SoundManager.Instance.PlayComplex("Suspect1", transform);
+                    multiColourTracingPuzzle.ShowPuzzle();
+                    hasPickedUpSuspectSketch = true;
+                    return;
+                }
+
                 // case: tracing puzzle
                 TracingPuzzle tracingPuzzle = hit.collider.GetComponent<TracingPuzzle>();
                 if (tracingPuzzle != null)
@@ -234,16 +245,6 @@ public class FPController : MonoBehaviour
                     }
 
                     pickedUpMissingPoster = true;
-                    return;
-                }
-
-                // case: multi tracing puzzle
-                MultiColourTracingPuzzle multiColourTracingPuzzle = hit.collider.GetComponent<MultiColourTracingPuzzle>();
-                if (multiColourTracingPuzzle != null)
-                {
-                    multiColourTracingPuzzle.ShowPuzzle();
-                    //moveInput = Vector2.zero;
-                    //lookInput = Vector2.zero;
                     return;
                 }
 

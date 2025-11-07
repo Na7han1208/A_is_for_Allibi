@@ -32,6 +32,15 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     private EventSystem eventSystem;
     private GameObject currentHover;
 
+    private bool prevIsDrawing = false;
+
+    private RenderTexture stableBuffer;
+    private Texture2D readTexture;
+
+    [Header("Timelines")]
+    public GameObject NiceDayTimeline;
+    public GameObject EddyKitchentimeline;
+
     protected override void Start()
     {
         if (maskImages != null && maskImages.Length > 0)
@@ -58,6 +67,43 @@ public class MultiColourTracingPuzzle : TracingPuzzle
 
         raycaster = GetComponentInChildren<GraphicRaycaster>(true);
         eventSystem = EventSystem.current;
+        prevIsDrawing = false;
+        InitStableBuffer();
+    }
+
+    private void InitStableBuffer()
+    {
+        ReleaseStableBuffer();
+        if (maskImage != null && maskImage.texture != null)
+        {
+            int w = Mathf.Max(1, maskImage.texture.width);
+            int h = Mathf.Max(1, maskImage.texture.height);
+            stableBuffer = new RenderTexture(w, h, 0, RenderTextureFormat.ARGB32);
+            stableBuffer.Create();
+            Graphics.Blit(maskImage.texture, stableBuffer);
+            if (readTexture != null && (readTexture.width != w || readTexture.height != h))
+            {
+                UnityEngine.Object.DestroyImmediate(readTexture);
+                readTexture = null;
+            }
+            if (readTexture == null)
+                readTexture = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        }
+    }
+
+    private void ReleaseStableBuffer()
+    {
+        if (stableBuffer != null)
+        {
+            stableBuffer.Release();
+            UnityEngine.Object.DestroyImmediate(stableBuffer);
+            stableBuffer = null;
+        }
+        if (readTexture != null)
+        {
+            UnityEngine.Object.DestroyImmediate(readTexture);
+            readTexture = null;
+        }
     }
 
     private void LateUpdate()
@@ -66,10 +112,7 @@ public class MultiColourTracingPuzzle : TracingPuzzle
             return;
 
         Vector2 cursorPosition = virtualCursor.position;
-        pointerData = new PointerEventData(eventSystem)
-        {
-            position = cursorPosition
-        };
+        pointerData = new PointerEventData(eventSystem) { position = cursorPosition };
 
         List<RaycastResult> results = new List<RaycastResult>();
         raycaster.Raycast(pointerData, results);
@@ -87,16 +130,43 @@ public class MultiColourTracingPuzzle : TracingPuzzle
             currentHover = hitObject;
         }
 
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame && hitObject != null)
-        {
+        if (Mouse.current != null && Mouse.current.leftButton.isPressed && hitObject != null)
             ExecuteEvents.Execute(hitObject, pointerData, ExecuteEvents.pointerClickHandler);
+
+        bool nowDrawing = isDrawing;
+        if (nowDrawing != prevIsDrawing)
+        {
+            if (nowDrawing)
+            {
+                prevIsDrawing = true;
+            }
+            else
+            {
+                prevIsDrawing = false;
+                UpdateStableBufferFromMask();
+                CheckCompletion();
+            }
+        }
+    }
+
+    private void UpdateStableBufferFromMask()
+    {
+        if (maskImage == null || maskImage.texture == null) return;
+        if (stableBuffer == null || stableBuffer.width != maskImage.texture.width || stableBuffer.height != maskImage.texture.height)
+        {
+            InitStableBuffer();
+            if (stableBuffer == null) return;
+        }
+        Graphics.Blit(maskImage.texture, stableBuffer);
+        if (readTexture == null)
+        {
+            readTexture = new Texture2D(stableBuffer.width, stableBuffer.height, TextureFormat.RGBA32, false);
         }
     }
 
     private void SelectCrayon(int index)
     {
         selectedCrayonIndex = index;
-
         if (crayonCursor != null && index >= 0 && index < crayonColors.Length)
             crayonCursor.sprite = crayonColors[index];
     }
@@ -105,7 +175,6 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     {
         if (!CanDrawOnCurrent())
             return;
-
         base.TryStamp();
     }
 
@@ -113,7 +182,6 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     {
         if (selectedCrayonIndex == -1)
             return false;
-
         return selectedCrayonIndex == currentDrawingIndex;
     }
 
@@ -122,13 +190,14 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         if (transitioning)
             return false;
 
-        float required = 1f;
+        if (isDrawing)
+            return false;
 
+        float required = 1f;
         if (completionThresholds != null && currentDrawingIndex < completionThresholds.Length)
             required = Mathf.Clamp01(completionThresholds[currentDrawingIndex]);
 
         float current = GetCurrentCompletion();
-
         bool completed = current >= required;
 
         if (completed)
@@ -143,58 +212,53 @@ public class MultiColourTracingPuzzle : TracingPuzzle
 
     private float GetCurrentCompletion()
     {
-        if (maskImage == null || maskImage.texture == null)
+        if ((stableBuffer == null || readTexture == null) && (maskImage == null || maskImage.texture == null))
             return 0f;
 
-        Texture src = maskImage.texture;
-        int w = 512;
-        int h = 512;
-
-        if (src != null && src.width > 0 && src.height > 0)
+        RenderTexture source = stableBuffer != null ? stableBuffer : null;
+        if (source == null && maskImage != null && maskImage.texture != null)
         {
-            w = src.width;
-            h = src.height;
+            int w = maskImage.texture.width;
+            int h = maskImage.texture.height;
+            source = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
+            Graphics.Blit(maskImage.texture, source);
         }
 
-        RenderTexture rt = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
-        Graphics.Blit(src, rt);
         RenderTexture prev = RenderTexture.active;
-        RenderTexture.active = rt;
+        RenderTexture.active = source;
 
-        Texture2D tmp = new Texture2D(w, h, TextureFormat.RGBA32, false);
-        tmp.ReadPixels(new Rect(0, 0, w, h), 0, 0);
-        tmp.Apply(false);
+        if (readTexture == null || readTexture.width != source.width || readTexture.height != source.height)
+        {
+            if (readTexture != null) UnityEngine.Object.DestroyImmediate(readTexture);
+            readTexture = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
+        }
+
+        readTexture.ReadPixels(new Rect(0, 0, source.width, source.height), 0, 0);
+        readTexture.Apply(false);
 
         RenderTexture.active = prev;
-        RenderTexture.ReleaseTemporary(rt);
 
-        Color32[] pixels;
-        try
-        {
-            pixels = tmp.GetPixels32();
-        }
-        catch
-        {
-            UnityEngine.Object.DestroyImmediate(tmp);
-            return 0f;
-        }
+        Color32[] pixels = readTexture.GetPixels32();
 
-        int sampleTarget = Mathf.Clamp(w / 4, 16, 256);
-        int step = Mathf.Max(1, w / sampleTarget);
+        if (source != stableBuffer)
+            RenderTexture.ReleaseTemporary(source);
+
+        int w2 = readTexture.width;
+        int h2 = readTexture.height;
+        int sampleTarget = Mathf.Clamp(w2 / 4, 16, 256);
+        int step = Mathf.Max(1, w2 / sampleTarget);
         int transparent = 0;
         int total = 0;
 
-        for (int y = 0; y < h; y += step)
+        for (int y = 0; y < h2; y += step)
         {
-            int baseIdx = y * w;
-            for (int x = 0; x < w; x += step)
+            int baseIdx = y * w2;
+            for (int x = 0; x < w2; x += step)
             {
                 total++;
                 if (pixels[baseIdx + x].a < 51) transparent++;
             }
         }
-
-        UnityEngine.Object.DestroyImmediate(tmp);
 
         if (total == 0) return 0f;
         return (float)transparent / total;
@@ -236,18 +300,47 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         maskImage = maskImages[currentDrawingIndex];
         if (maskImage != null) maskImage.enabled = true;
         InitMask();
+        InitStableBuffer();
         selectedCrayonIndex = -1;
         transitioning = false;
     }
 
-    private void OnYellowComplete() { Debug.Log("Yellow suspect traced!"); }
-    private void OnRedComplete() { Debug.Log("Red suspect traced!"); }
-    private void OnBlueComplete() { Debug.Log("Blue suspect traced!"); }
-    private void OnBlackComplete() { Debug.Log("Black suspect traced!"); }
-    private void OnAllDrawingsComplete() { Debug.Log("All suspects traced!"); }
-
-    public void TriggerDialogueOnOpen()
+    private void OnYellowComplete()
     {
-        SoundManager.Instance.PlayComplex("Suspect1", transform);
+        SoundManager.Instance.PlayComplex("Suspect2", transform);
+    }
+
+    private void OnRedComplete()
+    {
+        SoundManager.Instance.PlayComplex("Suspect3", transform);
+    }
+
+    private void OnBlueComplete()
+    {
+        SoundManager.Instance.PlayComplex("Suspect4", transform);
+    }
+
+    private void OnBlackComplete()
+    {
+        StartCoroutine(FinishedDrawing());
+    }
+
+    private void OnAllDrawingsComplete()
+    {
+    }
+
+    private IEnumerator FinishedDrawing()
+    {
+        SoundManager.Instance.PlayComplex("Suspect5", transform);
+        yield return new WaitForSeconds(8f);
+        SoundManager.Instance.PlayComplex("SuspectSketchSolve", transform);
+        this.enabled = false;
+        NiceDayTimeline.SetActive(true);
+        EddyKitchentimeline.SetActive(true);
+    }
+
+    private void OnDestroy()
+    {
+        ReleaseStableBuffer();
     }
 }

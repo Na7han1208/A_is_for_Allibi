@@ -12,6 +12,8 @@ TagManager:
   - Micheal
   - Howard
   - HowardInterrogation
+  - Classroom
+  - Naproom
   layers:
   - Default
   - TransparentFX
