@@ -98,6 +98,8 @@ public class ClassroomBlockLock : MonoBehaviour
     {
         foreach (bool b in array)
             if (!b) return false;
+
+        CutsceneManager.Instance.PlayCutscene("Addiction");
         return true;
     }
 }
