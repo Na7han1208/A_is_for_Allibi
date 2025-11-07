@@ -21,6 +21,7 @@ public class MainMenuManager : MonoBehaviour
     void Start()
     {
         CutsceneManager.Instance.PlayCutscene("MainMenu");
+        
         InMainMenu = true;
 
         playButtonGroup = GetOrAddCanvasGroup(PlayButton);
@@ -32,7 +33,6 @@ public class MainMenuManager : MonoBehaviour
         ExitButton.SetActive(false);
 
         CursorManager.Instance.ShowCursor(true);
-        SoundManager.Instance.PlayComplex("MainMenuAmbience", transform);
 
         StartCoroutine(FadeInUI());
     }
@@ -40,6 +40,7 @@ public class MainMenuManager : MonoBehaviour
     private IEnumerator FadeInUI()
     {
         yield return new WaitForSeconds(0.1f);
+        SoundManager.Instance.PlayComplex("MainMenuAmbience", transform);
         CursorManager.Instance.ShowCursor(true);
         // wait before fade starts
         yield return new WaitForSeconds(delayBeforeFade);

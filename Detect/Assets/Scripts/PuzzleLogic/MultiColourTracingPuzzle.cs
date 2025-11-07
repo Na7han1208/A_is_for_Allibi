@@ -240,28 +240,14 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         transitioning = false;
     }
 
-    private void OnYellowComplete()
-    {
-        Debug.Log("Yellow suspect traced!");
-    }
+    private void OnYellowComplete() { Debug.Log("Yellow suspect traced!"); }
+    private void OnRedComplete() { Debug.Log("Red suspect traced!"); }
+    private void OnBlueComplete() { Debug.Log("Blue suspect traced!"); }
+    private void OnBlackComplete() { Debug.Log("Black suspect traced!"); }
+    private void OnAllDrawingsComplete() { Debug.Log("All suspects traced!"); }
 
-    private void OnRedComplete()
+    public void TriggerDialogueOnOpen()
     {
-        Debug.Log("Red suspect traced!");
-    }
-
-    private void OnBlueComplete()
-    {
-        Debug.Log("Blue suspect traced!");
-    }
-
-    private void OnBlackComplete()
-    {
-        Debug.Log("Black suspect traced!");
-    }
-
-    private void OnAllDrawingsComplete()
-    {
-        Debug.Log("All suspects traced!");
+        SoundManager.Instance.PlayComplex("Suspect1", transform);
     }
 }

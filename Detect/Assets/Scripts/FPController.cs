@@ -262,24 +262,24 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
-                // case: foxy
-                /*
-                if (hit.collider.CompareTag("Foxy") && !FoxyDialogueDone)
+                // case: howard
+                if (hit.collider.CompareTag("Howard"))
                 {
-                    Debug.Log("FOXY TALKS");
-                    SoundManager.Instance.PlayComplex("FoxyDialogue", Foxy.transform);
-                    SubtitleManager.Instance.PlaySequence(FoxyDialogue);
+                    heldObject = hit.collider.gameObject;
+                    heldRb = heldObject.GetComponent<Rigidbody>();
+                    heldRb.useGravity = false;
 
-                    FindFirstObjectByType<TutorialHelper>().pickedUp = true;
-                    FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);
-                    FindFirstObjectByType<TutorialHelper>().DisplayMovement();
+                    heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    heldRb.constraints = RigidbodyConstraints.FreezeRotation;
+                    heldRb.interpolation = RigidbodyInterpolation.Interpolate;
 
-                    hit.collider.gameObject.layer = 0;
-                    heldObject = null;
-                    FoxyDialogueDone = true;
-                    return;
+                    heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
+
+                    isHoldingObject = true;
+                    heldRb.isKinematic = false;
+
+                    heldObject.GetComponent<HowardManager>().PickUpLogic();
                 }
-                */
 
                 // case: combo lock
                 if (hit.collider.CompareTag("ComboLock"))
