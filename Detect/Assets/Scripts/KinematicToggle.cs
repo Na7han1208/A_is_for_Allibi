@@ -13,7 +13,7 @@ public class KinematicToggle : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (rb.isKinematic)
+        if (rb.isKinematic && collision.tag != "Naproom")
         {
             rb.isKinematic = false;
             cl.isTrigger = false;
