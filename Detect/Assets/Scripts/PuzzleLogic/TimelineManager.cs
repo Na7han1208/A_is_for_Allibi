@@ -27,7 +27,7 @@ public class TimeLineManager : MonoBehaviour
     {
         for (int i = 0; i < Blocks.Length; i++)
         {
-            if (Vector3.Distance(Blocks[i].transform.position, LockPos[i].transform.position) < 0.5f && !isLocked[i])
+            if (Vector3.Distance(Blocks[i].transform.position, LockPos[i].transform.position) < 0.9f && !isLocked[i])
             {
                 switch (i)
                 {

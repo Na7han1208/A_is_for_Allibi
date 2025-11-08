@@ -30,7 +30,6 @@ public class HowardManager : MonoBehaviour
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         yield return new WaitForSeconds(10.5f);
         StartCoroutine(LookAtMirrorCoroutine());
-        lampLight.GetComponent<Light>().enabled = true;
         yield return new WaitForSeconds(3.5f);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
     }
@@ -88,9 +87,25 @@ public class HowardManager : MonoBehaviour
         {
             if (cutscenePlayed) return;
             cutscenePlayed = true;
-            Debug.Log("PlayingCutscene");
-            FindFirstObjectByType<CutsceneManager>().PlayCutscene("HowardInterrogation");
+            StartCoroutine(CutsceneCoroutine());
         }
+    }
+
+    private IEnumerator CutsceneCoroutine()
+    {
+        Debug.Log("PlayingCutscene");
+        lampLight.GetComponent<Light>().enabled = true;
+        transform.position = cutsceneZone.transform.position;
+        transform.rotation = cutsceneZone.transform.rotation;
+        this.GetComponent<Rigidbody>().isKinematic = true;
+        FindFirstObjectByType<FPController>().DropObject();
+
+        yield return new WaitForSeconds(3f);
+        
+        FindFirstObjectByType<CutsceneManager>().PlayCutscene("HowardInterrogation");
+        transform.position = cutsceneZone.transform.position + new Vector3(0,0,-2f);
+        transform.rotation = new Quaternion(0, 20f, 0, 0);
+        GetComponent<Rigidbody>().isKinematic = false;
     }
     
     public void ShowDrawing()
