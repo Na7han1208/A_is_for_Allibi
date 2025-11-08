@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3412922722406838444, guid: da7f3ffc3a2e731488354434e185beb2, type: 3}
       propertyPath: m_Convex
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6849009724671749448, guid: da7f3ffc3a2e731488354434e185beb2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

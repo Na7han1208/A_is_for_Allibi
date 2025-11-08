@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+//using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -34,7 +36,7 @@ public class FPController : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 lookInput;
     private Vector3 velocity;
-    private float verticalRotation = 0f;
+    public float verticalRotation = 0f;
 
     [Header("Pickup System")]
     public Transform holdPoint;
@@ -50,9 +52,14 @@ public class FPController : MonoBehaviour
 
     public float throwForce = 7f;
     private bool isColliding;
+    private bool pickedUpMissingPoster = false;
+    public GameObject SelfHelpCanvas;
 
     public GameObject Foxy;
     private bool FoxyDialogueDone = false;
+    public SubtitleSequence FoxyDialogue;
+    public SubtitleSequence MissingPoster;
+    private bool hasPickedUpSuspectSketch = false;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -91,7 +98,14 @@ public class FPController : MonoBehaviour
     private Dictionary<GameObject, Material[]> originalMaterials = new Dictionary<GameObject, Material[]>();
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
 
+    [Header("Animations")]
+    public Animator animator;
+    public float idleTimer = 0f;
+    private Vector3 lastPosition;
+    public Vector3 controllerVelocity;
+
     private bool puzzleActive = false;
+    TutorialHelper tutorialHelper;
 
 
     //---------------- Unity Events ----------------
@@ -99,8 +113,7 @@ public class FPController : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false; //hides and locks cursor ^
+        tutorialHelper = FindFirstObjectByType<TutorialHelper>();
 
         layerMask = LayerMask.GetMask("Pickupable");
     }
@@ -110,6 +123,9 @@ public class FPController : MonoBehaviour
         //SoundManager.Instance.PlayComplex("MainMusic", this.transform);
         postProcessVolume.profile.TryGet(out vignette);
         postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
+        SelfHelpCanvas.SetActive(false);
+
+        UpdateSensitivity();
     }
 
     private void Update()
@@ -121,6 +137,42 @@ public class FPController : MonoBehaviour
         }
         HandleInspect();
         HandleHighlight();
+
+        // animations
+        controllerVelocity = (transform.position - lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
+
+        float speed = new Vector3(controllerVelocity.x, 0, controllerVelocity.z).magnitude;
+        float ySpeed = new Vector3(0, controllerVelocity.y, 0).magnitude;
+        if (ySpeed > 0)
+        {
+            animator.SetBool("IsGrounded", false);
+        }
+        else
+        {
+            animator.SetBool("IsGrounded", true);
+        }
+
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("IsCrouching", isCrouching);
+        animator.SetBool("IsHolding", isHoldingObject);
+
+        if (speed < 0.1f && !isHoldingObject && !isCrouching && ySpeed < 0.1f)
+        {
+            idleTimer += Time.deltaTime;
+        }
+        else
+        {
+            idleTimer = 0f;
+        }
+
+        animator.SetFloat("IdleTimer", idleTimer);
+    }
+
+    public void UpdateSensitivity()
+    {
+        mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 1f);
+        controllerSensitivity = PlayerPrefs.GetFloat("ContorllerSensitivity", 2f);
     }
 
     private void FixedUpdate()
@@ -156,7 +208,7 @@ public class FPController : MonoBehaviour
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
             {
                 ClearHighlight();
-                
+
                 // case: combo lock
                 CombinationLock lockUI = hit.collider.GetComponentInChildren<CombinationLock>();
                 if (lockUI != null)
@@ -169,13 +221,30 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: multi colour tracing puzzle
+                MultiColourTracingPuzzle multiColourTracingPuzzle = hit.collider.GetComponent<MultiColourTracingPuzzle>();
+                if (multiColourTracingPuzzle != null)
+                {
+                    if (!hasPickedUpSuspectSketch) SoundManager.Instance.PlayComplex("Suspect1", transform);
+                    multiColourTracingPuzzle.ShowPuzzle();
+                    hasPickedUpSuspectSketch = true;
+                    return;
+                }
+
                 // case: tracing puzzle
                 TracingPuzzle tracingPuzzle = hit.collider.GetComponent<TracingPuzzle>();
                 if (tracingPuzzle != null)
                 {
                     tracingPuzzle.ShowPuzzle();
-                    moveInput = Vector2.zero;
-                    lookInput = Vector2.zero;
+                    //moveInput = Vector2.zero;
+                    //lookInput = Vector2.zero;
+                    if (!pickedUpMissingPoster)
+                    {
+                        SoundManager.Instance.PlayComplex("TimmyMissingPoster", transform);
+                        SubtitleManager.Instance.PlaySequence(MissingPoster);
+                    }
+
+                    pickedUpMissingPoster = true;
                     return;
                 }
 
@@ -188,24 +257,35 @@ public class FPController : MonoBehaviour
                     lookInput = Vector2.zero;
 
                     heldObject = musicBoxPuzzle.transform.parent.gameObject;
-                    HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    HintManager.Instance.TriggerDialogue(heldObject, false);
                     heldObject = null;
 
                     return;
                 }
 
-                // case: foxy
-                if (hit.collider.CompareTag("Foxy") && !FoxyDialogueDone)
+                // case: howard
+                if (hit.collider.CompareTag("Howard"))
                 {
-                    Debug.Log("FOXY TALKS");
-                    SoundManager.Instance.PlayComplex("FoxyDialogue", Foxy.transform);
+                    heldObject = hit.collider.gameObject;
+                    heldRb = heldObject.GetComponent<Rigidbody>();
+                    heldRb.useGravity = false;
 
-                    FindFirstObjectByType<TutorialHelper>().pickedUp = true;
-                    FindFirstObjectByType<TutorialHelper>().ToggleInteraction(false);
+                    heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    heldRb.constraints = RigidbodyConstraints.FreezeRotation;
+                    heldRb.interpolation = RigidbodyInterpolation.Interpolate;
 
-                    hit.collider.gameObject.layer = 0;
-                    heldObject = null;
-                    FoxyDialogueDone = true;
+                    heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
+
+                    isHoldingObject = true;
+                    heldRb.isKinematic = false;
+
+                    heldObject.GetComponent<HowardManager>().PickUpLogic();
+                }
+
+                // case: combo lock
+                if (hit.collider.CompareTag("ComboLock"))
+                {
+                    FindFirstObjectByType<LockController>().ShowPuzzle();
                     return;
                 }
 
@@ -223,14 +303,26 @@ public class FPController : MonoBehaviour
                     heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
 
                     isHoldingObject = true;
+                    HintManager.Instance.TriggerDialogue(heldObject, false);
+                    heldRb.isKinematic = false;
 
-                    HintManager.Instance.TriggerPickupDialogue(heldObject);
+                    FindFirstObjectByType<TutorialHelper>().ToggleInspectThrowTip();
                 }
             }
             else if (isHoldingObject)
             {
+                SelfHelpCanvas.SetActive(false);
+                SetPuzzleActive(false);
                 DropObject();
             }
+        }
+        if(heldObject!= null)
+        {
+            animator.SetBool("IsHolding", true);
+        }
+        else
+        {
+            animator.SetBool("IsHolding", false);
         }
     }
 
@@ -266,6 +358,7 @@ public class FPController : MonoBehaviour
         heldRb = null;
         isHoldingObject = false;
         isInspecting = false;
+        //CursorManager.Instance.ShowCursor(true);
     }
 
     public void OnThrow(InputAction.CallbackContext context)
@@ -286,16 +379,34 @@ public class FPController : MonoBehaviour
             heldRb = null;
             isHoldingObject = false;
         }
+        //CursorManager.Instance.ShowCursor(true);
     }
 
     public void OnInspect(InputAction.CallbackContext context)
     {
+        CursorManager.Instance.ShowCursor(false);
         if (context.performed && isHoldingObject)
         {
             isInspecting = !isInspecting;
 
+
+
             if (isInspecting)
             {
+                // case: self help book
+                if (heldObject.CompareTag("SelfHelpBook"))
+                {
+                    SelfHelpCanvas.SetActive(true);
+                    return;
+                }
+
+                // case: case of the red stain
+                if (heldObject.CompareTag("Case3"))
+                {
+                    FindFirstObjectByType<NaproomEndingManager>().StartEnding();
+                }
+
+                // case: normal
                 holdPoint.localPosition += new Vector3(0f, 0f, 0.5f);
                 heldObject.transform.localScale *= inspectSizeMult;
 
@@ -303,9 +414,19 @@ public class FPController : MonoBehaviour
 
                 moveInput = Vector2.zero;
                 lookInput = Vector2.zero;
+                HintManager.Instance.TriggerDialogue(heldObject, true);
+
             }
             else
             {
+                // case: self help book
+                if (heldObject.CompareTag("SelfHelpBook"))
+                {
+                    SelfHelpCanvas.SetActive(false);
+                    return;
+                }
+
+                // case: normal  
                 heldRb.isKinematic = false;
                 holdPoint.localPosition -= new Vector3(0f, 0f, 0.5f);
                 heldObject.transform.localScale /= inspectSizeMult;
@@ -320,8 +441,9 @@ public class FPController : MonoBehaviour
 
         if (context.performed)
         { //Start crouching
-            controller.height = crouchHeight;
-            playerTransform.localScale = currentScale;
+            controller.height = 1f;
+            controller.center = new Vector3(0, -0.5f, 0);
+            cameraTransform.localPosition -= new Vector3(0, 1f, -0.1f);
 
             isCrouching = true;
             isSprinting = false;
@@ -331,13 +453,16 @@ public class FPController : MonoBehaviour
         }
         else if (context.canceled)
         { //Stop crouching
-            controller.height = playerHeight;
-            playerTransform.localScale = currentScale;
+            controller.height = 2f;
+            controller.center = new Vector3(0, 0, 0);
+            cameraTransform.localPosition += new Vector3(0, 1f, -0.1f);
+
             isCrouching = false;
 
             StartVignetteLerp(normalVignetteIntensity);
             //vignette.intensity.value = normalVignetteIntensity;
         }
+        animator.SetBool("IsCrouching", isCrouching);
     }
 
     private void StartVignetteLerp(float target)
@@ -384,11 +509,8 @@ public class FPController : MonoBehaviour
         {
             velocity.y = (float)Math.Sqrt(jumpHeight * -2f * gravity);
         }
-    }
-
-    public void OnQuit(InputAction.CallbackContext context)
-    {
-        Application.Quit(0);
+        animator.SetTrigger("Jump");
+        animator.SetBool("IsJumping", true);
     }
 
     // ---------------- Logic ----------------
@@ -420,12 +542,23 @@ public class FPController : MonoBehaviour
 
     public void HandleLook()
     {
-        if (puzzleActive) return;
+        if (puzzleActive || StarChartManager.Instance.AnyChartOpen()) return;
 
-        float sensitivity = usingGamepad ? controllerSensitivity : mouseSensitivity;
+        float sensitivity = usingGamepad ? controllerSensitivity*50f : mouseSensitivity;
 
-        float mouseX = lookInput.x * sensitivity * Time.deltaTime * 100f;
-        float mouseY = lookInput.y * sensitivity * Time.deltaTime * 100f;
+        float mouseX;
+        float mouseY;
+
+        if (usingGamepad)
+        {
+            mouseX = lookInput.x * sensitivity * Time.deltaTime;
+            mouseY = lookInput.y * sensitivity * Time.deltaTime;
+        }
+        else
+        {
+            mouseX = lookInput.x * sensitivity; // no deltaTime for mouse
+            mouseY = lookInput.y * sensitivity;
+        }
 
         verticalRotation -= mouseY;
         verticalRotation = Mathf.Clamp(verticalRotation, -verticalLookLimit, verticalLookLimit);
@@ -463,6 +596,8 @@ public class FPController : MonoBehaviour
 
     public void HandleHighlight()
     {
+        if (isHoldingObject) return;
+        
         RaycastHit hit;
         if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, pickupRange, layerMask))
         {
@@ -474,13 +609,17 @@ public class FPController : MonoBehaviour
                 ClearHighlight();
                 currentHighlighted = target;
 
+                Renderer rend = currentHighlighted.GetComponent<Renderer>();
+
+                if (rend == null)
+                {
+                    rend = currentHighlighted.GetComponentInParent<Renderer>();
+                    if (rend == null) return; // anti-crash
+                    currentHighlighted = rend.gameObject;
+                }
+
                 if (!originalMaterials.ContainsKey(currentHighlighted)) // store the original materials
                     originalMaterials[currentHighlighted] = currentHighlighted.GetComponent<Renderer>().materials;
-
-                if (!originalScales.ContainsKey(currentHighlighted)) // store the original sizes
-                    originalScales[currentHighlighted] = currentHighlighted.transform.localScale;
-
-                currentHighlighted.transform.localScale = originalScales[currentHighlighted] * 0.92f;
 
                 // apply outline material
                 var mats = new Material[originalMaterials[currentHighlighted].Length + 1];
@@ -502,11 +641,11 @@ public class FPController : MonoBehaviour
     {
         if (currentHighlighted != null)
         {
+            Renderer rend = currentHighlighted.GetComponent<Renderer>();
+            if (rend == null) return;
+
             if (originalMaterials != null && originalMaterials.ContainsKey(currentHighlighted)) // restore materials
                 currentHighlighted.GetComponent<Renderer>().materials = originalMaterials[currentHighlighted];
-
-            if (originalScales != null && originalScales.ContainsKey(currentHighlighted)) // restore scale
-                currentHighlighted.transform.localScale = originalScales[currentHighlighted];
 
             currentHighlighted = null;
         }
@@ -535,6 +674,11 @@ public class FPController : MonoBehaviour
     public void SetPuzzleActive(bool active)
     {
         puzzleActive = active;
+    }
+
+    public void SetInvisible(bool invisible)
+    {
+        foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>()) renderer.enabled = !invisible;
     }
 }
 

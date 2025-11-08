@@ -10,17 +10,35 @@ public class TutorialHelper : MonoBehaviour
     public bool pickedUp = false;
     private bool crouched = false;
     private bool inspected = false;
+    private bool checkedOutSomething = false;
+    private bool hasSeenStarChartHint = false;
 
+    public GameObject foxy;
     public Canvas TutorialCanvas;
     public GameObject InteractTip;
     public GameObject MovementTip;
     public GameObject LookTip;
     public GameObject DrawTip;
+    public GameObject ThrowTip;
+    public GameObject InspectTip;
+    public GameObject CrouchTip;
+    public GameObject JumpTip;
+    public GameObject StarChartTip;
+    public GameObject Crosshair;
+
+    public SubtitleSequence foxySubtitles;
+
+
+    public Vector2 cursorDefaultPosition;
 
     private FPController fPController;
 
     void Start()
     {
+        //RagdollToggler.Instance.SetRagdoll(foxy, false);
+        cursorDefaultPosition = Crosshair.GetComponent<RectTransform>().anchoredPosition;
+
+        Crosshair.SetActive(false);
         fPController = FindFirstObjectByType<FPController>();
 
         fPController.SetPuzzleActive(true);
@@ -29,6 +47,7 @@ public class TutorialHelper : MonoBehaviour
         InteractTip.SetActive(false);
         MovementTip.SetActive(false);
         LookTip.SetActive(false);
+        DrawTip.SetActive(false);
     }
 
     public void ToggleInteraction(bool active)
@@ -38,6 +57,26 @@ public class TutorialHelper : MonoBehaviour
             active ? 1f : 0f,
             2f
         ));
+        Crosshair.SetActive(true);
+        CursorManager.Instance.ShowCursor(false);
+    }
+
+    public void ToggleInspectThrowTip()
+    {
+        if (checkedOutSomething) return;
+        checkedOutSomething = true;
+        StartCoroutine(InspectCoroutine());
+    }
+
+    private IEnumerator InspectCoroutine()
+    {
+        yield return StartCoroutine(FadeImage(InspectTip.GetComponent<Image>(), 1f, 2f));
+        yield return StartCoroutine(FadeImage(ThrowTip.GetComponent<Image>(), 1f, 2f));
+
+        yield return new WaitForSeconds(3f);
+
+        yield return StartCoroutine(FadeImage(InspectTip.GetComponent<Image>(), 0f, 2f));
+        yield return StartCoroutine(FadeImage(ThrowTip.GetComponent<Image>(), 0f, 2f));
     }
 
     public void ToggleDrawTip(bool active)
@@ -47,16 +86,20 @@ public class TutorialHelper : MonoBehaviour
 
     public void DisplayMovement()
     {
+        if (moved) return;
         StartCoroutine(MovementCoroutine());
     }
 
     private IEnumerator MovementCoroutine()
     {
+        moved = true;
         // wait before showing tips
         yield return new WaitForSeconds(16f);
 
         fPController.SetPuzzleActive(false);
         Debug.Log("Okie you can move now");
+        FindAnyObjectByType<MainMenuManager>().ToggleInMainMenu();
+        RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
@@ -65,6 +108,28 @@ public class TutorialHelper : MonoBehaviour
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 0f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 0f, 2f));
+
+        yield return new WaitForSeconds(3f);
+
+        yield return StartCoroutine(FadeImage(CrouchTip.GetComponent<Image>(), 1f, 2f));
+        yield return StartCoroutine(FadeImage(JumpTip.GetComponent<Image>(), 1f, 2f));
+
+        yield return new WaitForSeconds(3f);
+
+        yield return StartCoroutine(FadeImage(CrouchTip.GetComponent<Image>(), 0f, 2f));
+        yield return StartCoroutine(FadeImage(JumpTip.GetComponent<Image>(), 0f, 2f));
+    }
+
+    public IEnumerator StarChartHint()
+    {      
+            Debug.Log("PRE SHOW THE STAR");
+            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 1f, 2f));
+            Debug.Log("AFTER SHOW THE STAR");
+            yield return new WaitForSeconds(3f);
+            Debug.Log("PRE HIDE THE STAR");
+            yield return StartCoroutine(FadeImage(StarChartTip.GetComponent<Image>(), 0f, 2f));
+            Debug.Log("AFTER HIDE THE STAR");
+            //StarChartTip.SetActive(false);
     }
 
     private IEnumerator FadeImage(Image img, float targetAlpha, float duration)
@@ -96,5 +161,19 @@ public class TutorialHelper : MonoBehaviour
         {
             img.gameObject.SetActive(false);
         }
+    }
+
+    public void NaproomEnter()
+    {
+        ToggleInteraction(true);
+        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
+
+        Debug.Log("FOXY TALKS");
+        SoundManager.Instance.PlayComplex("FoxyDialogue", transform);
+        SubtitleManager.Instance.PlaySequence(foxySubtitles);
+
+        pickedUp = true;
+        ToggleInteraction(false);
+        DisplayMovement();
     }
 }

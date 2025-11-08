@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9548f73f0391b084d87619d5f1a842a0, type: 3}
+  m_Name: IntroSequence
+  m_EditorClassIdentifier: 
+  lines:
+  - {fileID: 11400000, guid: af51b705d779d424da6b04bfd5057c34, type: 2}
+  - {fileID: 11400000, guid: 24c8e55b696382140922ec99dff54dab, type: 2}
+  - {fileID: 11400000, guid: 5a7d683d113307a45a1b6fa88fa5e803, type: 2}
+  - {fileID: 11400000, guid: 3e5a076263cc68a42b3b112c4b32f264, type: 2}
+  - {fileID: 11400000, guid: 9f9fa7942da10be46ba7a9fcd493fe37, type: 2}
+  - {fileID: 11400000, guid: 47b4359e4393c1a478aa37b65d8f30ea, type: 2}
+  - {fileID: 11400000, guid: 0fe1ec4b6c828e34cb6c063449b55149, type: 2}
+  - {fileID: 11400000, guid: 7ef7e3b1b8a609147aff37ca22df3c4a, type: 2}
+  - {fileID: 11400000, guid: 396e021412d0cbd42bae29b4edd243ba, type: 2}

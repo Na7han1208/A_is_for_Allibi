@@ -6,6 +6,14 @@ TagManager:
   tags:
   - TracingPuzzle
   - Foxy
+  - Case3
+  - SelfHelpBook
+  - ComboLock
+  - Micheal
+  - Howard
+  - HowardInterrogation
+  - Classroom
+  - Naproom
   layers:
   - Default
   - TransparentFX
@@ -17,8 +25,8 @@ TagManager:
   - Pickupable
   - Player
   - HeldObject
-  - 
-  - 
+  - Mirror
+  - PlayerShadow
   - 
   - 
   - 
@@ -42,6 +50,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Cursors
+    uniqueID: 3688830203
     locked: 0
   m_RenderingLayers:
   - Default
