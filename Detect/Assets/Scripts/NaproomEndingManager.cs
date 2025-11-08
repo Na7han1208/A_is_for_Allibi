@@ -24,8 +24,6 @@ public class NaproomEndingManager : MonoBehaviour
 
         Camera playerCam = FindFirstObjectByType<FPController>().GetComponentInChildren<Camera>();
         playerCam.transform.LookAt(Door.transform.position);
-
-        OpenDoor();
     }
 
     public void OpenDoor()
@@ -34,5 +32,7 @@ public class NaproomEndingManager : MonoBehaviour
         Door.SetActive(false);
         CutsceneCanvas.SetActive(false);
         FindFirstObjectByType<FPController>().SetPuzzleActive(false);
+        FindFirstObjectByType<FPController>().isInspecting = false;
+        FindFirstObjectByType<FPController>().DropObject();
     }
 }
