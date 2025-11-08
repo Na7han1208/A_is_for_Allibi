@@ -11090,7 +11090,6 @@ MonoBehaviour:
   useAbsoluteBrush: 1
   brushPixelSize: 100
   brushScale: 5
-  controllerCursorSpeed: 400
   deadzone: 0
   playerInput: {fileID: 8166268571884104683}
   finishedCalled: 0
@@ -22600,6 +22599,20 @@ MonoBehaviour:
   - name: G3
     clip: {fileID: 8300000, guid: 039ab47a031ea7b428fa28efa239c112, type: 3}
     volume: 0.728
+    pitch: 1
+    loop: 0
+    type: 0
+    source: {fileID: 0}
+  - name: G4
+    clip: {fileID: 8300000, guid: 7744efddaf6e9ec4d9f3ff9082f89bfa, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    type: 0
+    source: {fileID: 0}
+  - name: G5
+    clip: {fileID: 8300000, guid: d27ef54fd86c47949b319131d26e9a10, type: 3}
+    volume: 1
     pitch: 1
     loop: 0
     type: 0
@@ -51033,7 +51046,6 @@ MonoBehaviour:
   useAbsoluteBrush: 1
   brushPixelSize: 100
   brushScale: 5
-  controllerCursorSpeed: 400
   deadzone: 0.12
   playerInput: {fileID: 8166268571884104683}
   finishedCalled: 0
@@ -80526,7 +80538,7 @@ Transform:
   m_GameObject: {fileID: 5209812841517440698}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00068121054, y: 0.90225166, z: -0.0012968567, w: -0.43120757}
-  m_LocalPosition: {x: -1093.98, y: -91.26, z: -973.61}
+  m_LocalPosition: {x: -1079.45, y: -91.26, z: -971.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
