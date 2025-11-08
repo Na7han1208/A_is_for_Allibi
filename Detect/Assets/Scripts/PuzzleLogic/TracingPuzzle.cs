@@ -26,7 +26,7 @@ public class TracingPuzzle : MonoBehaviour
     [SerializeField] private float brushScale = 0.3f;
 
     [Header("Controller")]
-    [SerializeField] private float controllerCursorSpeed = 400f;
+    private float controllerCursorSpeed = 200f;
     [SerializeField] private float deadzone = 0.12f;
     [SerializeField] private PlayerInput playerInput;
 
