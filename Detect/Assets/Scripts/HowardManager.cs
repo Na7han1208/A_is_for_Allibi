@@ -101,15 +101,12 @@ public class HowardManager : MonoBehaviour
         FindFirstObjectByType<FPController>().DropObject();
 
         yield return new WaitForSeconds(3f);
-        
+
         FindFirstObjectByType<CutsceneManager>().PlayCutscene("HowardInterrogation");
+        
         transform.position = cutsceneZone.transform.position + new Vector3(0,0,-2f);
-        transform.rotation = new Quaternion(0, 20f, 0, 0);
+        transform.rotation = new Quaternion(0, 0f, 0, 0);
         GetComponent<Rigidbody>().isKinematic = false;
-    }
-    
-    public void ShowDrawing()
-    {
         suspectDrawing.SetActive(true);
     }
 }

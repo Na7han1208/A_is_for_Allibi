@@ -279,7 +279,7 @@ public class FPController : MonoBehaviour
                     isHoldingObject = true;
                     heldRb.isKinematic = false;
 
-                    heldObject.GetComponent<HowardManager>().PickUpLogic();
+                    FindFirstObjectByType<HowardManager>().PickUpLogic();
                 }
 
                 // case: combo lock

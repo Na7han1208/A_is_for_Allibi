@@ -337,6 +337,7 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         this.enabled = false;
         NiceDayTimeline.SetActive(true);
         EddyKitchentimeline.SetActive(true);
+        SoundManager.Instance.PlayComplex("TimelineUnlock", transform);
     }
 
     private void OnDestroy()

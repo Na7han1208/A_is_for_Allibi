@@ -107,6 +107,7 @@ public class ClassroomBlockLock : MonoBehaviour
 
         CutsceneManager.Instance.PlayCutscene("Addiction");
         OutOfSugarTimeline.SetActive(true);
+        SoundManager.Instance.PlayComplex("TimelineUnlock", transform);
         SweetContainer.SetActive(true);
         Door1.SetActive(false);
         Door2.SetActive(true);
