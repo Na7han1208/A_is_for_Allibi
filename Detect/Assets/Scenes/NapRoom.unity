@@ -22045,6 +22045,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b94b779164f929e41bf2f065cd2eafb3, type: 3}
   m_PrefabInstance: {fileID: 887292004}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &887292006 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b94b779164f929e41bf2f065cd2eafb3, type: 3}
+  m_PrefabInstance: {fileID: 887292004}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &892830515
 GameObject:
   m_ObjectHideFlags: 0
@@ -23277,7 +23282,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
-  - {fileID: 11400000, guid: cb425c34c67681348ba2f70532d5e2e1, type: 2}
+  - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
@@ -23288,7 +23293,7 @@ MonoBehaviour:
   - 0.63
   - 1
   - 1
-  - 2
+  - 4
   - 1
   - 1
   - 1
@@ -37841,11 +37846,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457921794}
   m_CullTransparentMesh: 1
---- !u!1 &1459111910 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 721144d126f083641a3012d36c4f9307, type: 3}
-  m_PrefabInstance: {fileID: 842842899}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1460199930
 GameObject:
   m_ObjectHideFlags: 0
@@ -83045,10 +83045,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d3dd2b6c1deec84684c24b9ca52a0c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mirror: {fileID: 1459111910}
+  mirror: {fileID: 1175816577}
   lampLight: {fileID: 92475951}
   cutsceneZone: {fileID: 885804237}
   suspectDrawing: {fileID: 1770936641}
+  LightBulb: {fileID: 887292006}
 --- !u!1 &3761395814576809285
 GameObject:
   m_ObjectHideFlags: 0

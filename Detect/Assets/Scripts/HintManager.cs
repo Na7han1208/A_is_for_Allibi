@@ -10,7 +10,7 @@ public class HintManager : MonoBehaviour
     public AudioClip[] dialogueClips;
     public SubtitleSequence[] subtitleSequences;
     public bool[] hasInteracted;
-    [Range(0f, 2f)] public float[] dialogueVolumes;
+    [Range(0f, 5f)] public float[] dialogueVolumes;
 
     [Header("Dialogue Conditions")]
     public bool[] onInspect;

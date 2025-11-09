@@ -8,6 +8,7 @@ public class HowardManager : MonoBehaviour
     [SerializeField] private GameObject lampLight;
     [SerializeField] private GameObject cutsceneZone;
     [SerializeField] private GameObject suspectDrawing;
+    [SerializeField] private GameObject LightBulb;
 
     private static bool beenPickedUp = false;
     private static bool cutscenePlayed = false;
@@ -15,6 +16,7 @@ public class HowardManager : MonoBehaviour
     void Start()
     {
         lampLight.GetComponent<Light>().enabled = false;
+        LightBulb.SetActive(false);
     }
 
     public void PickUpLogic()
@@ -30,8 +32,11 @@ public class HowardManager : MonoBehaviour
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         yield return new WaitForSeconds(10.5f);
         StartCoroutine(LookAtMirrorCoroutine());
+        LightBulb.SetActive(true);
         yield return new WaitForSeconds(3.5f);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
+        yield return new WaitForSeconds(1f);
+        LightBulb.SetActive(false);
     }
 
     private IEnumerator LookAtMirrorCoroutine()
