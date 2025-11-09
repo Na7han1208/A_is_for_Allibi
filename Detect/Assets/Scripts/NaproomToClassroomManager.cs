@@ -40,8 +40,8 @@ public class NaproomToClassroomManager : MonoBehaviour
     private IEnumerator ClassroomIntro()
     {
         SoundManager.Instance.PlayComplex("ClassroomIntro", transform);
-        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         yield return new WaitForSeconds(25f);
+        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         yield return StartCoroutine(LookAtBoard());
         yield return new WaitForSeconds(10f);
         BathroomTimeline.SetActive(true);

@@ -118,6 +118,10 @@ public class HintManager : MonoBehaviour
             {
                 for (int j = 9; j <= 14 && j < hasInteracted.Length; j++) hasInteracted[j] = true;
             }
+            else if (i >= 21 && i <= 27)
+            {
+                for (int j = 21; j <= 27 && j < hasInteracted.Length; j++) hasInteracted[j] = true;
+            }
             else
             {
                 if (hasInteracted != null && i < hasInteracted.Length) hasInteracted[i] = true;

@@ -14,6 +14,8 @@ public class CombinationLock : MonoBehaviour
     [SerializeField] private TMP_Text[] numDisplays;
     [SerializeField] private Button returnButton;
 
+    private bool timmySpoken = false;
+
     private PlayerInput playerInput;
     private int currentIndex = 0;
 
@@ -25,6 +27,8 @@ public class CombinationLock : MonoBehaviour
 
     public void ShowPuzzle()
     {
+        if (!timmySpoken) SoundManager.Instance.PlayComplex("Lock", transform);
+
         if (playerInput != null)
             playerInput.SwitchCurrentActionMap("Puzzle");
 

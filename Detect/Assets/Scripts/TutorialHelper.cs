@@ -52,11 +52,6 @@ public class TutorialHelper : MonoBehaviour
 
     public void ToggleInteraction(bool active)
     {
-        StartCoroutine(FadeImage(
-            InteractTip.GetComponent<Image>(),
-            active ? 1f : 0f,
-            2f
-        ));
         Crosshair.SetActive(true);
         CursorManager.Instance.ShowCursor(false);
     }
@@ -101,6 +96,7 @@ public class TutorialHelper : MonoBehaviour
         FindAnyObjectByType<MainMenuManager>().ToggleInMainMenu();
         RagdollToggler.Instance.SetRagdoll(foxy, true);  // Disabled rn because foxy's ragodll is somewhat fucked
 
+        yield return StartCoroutine(FadeImage(InteractTip.GetComponent <Image>(), 1f, 2f));
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 1f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 1f, 2f));
 
@@ -108,6 +104,7 @@ public class TutorialHelper : MonoBehaviour
 
         yield return StartCoroutine(FadeImage(MovementTip.GetComponent<Image>(), 0f, 2f));
         yield return StartCoroutine(FadeImage(LookTip.GetComponent<Image>(), 0f, 2f));
+        yield return StartCoroutine(FadeImage(InteractTip.GetComponent <Image>(), 0f, 2f));
 
         yield return new WaitForSeconds(3f);
 

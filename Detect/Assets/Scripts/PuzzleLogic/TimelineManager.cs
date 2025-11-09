@@ -14,6 +14,10 @@ public class TimeLineManager : MonoBehaviour
     private bool[] isLocked;
     public bool puzzleSolved = false;
 
+    [Header("Fog and Rain")]
+    public float FogDensity;
+    public ParticleSystem RainParticles;
+
     void Start()
     {
         isLocked = new bool[Blocks.Length];
@@ -21,6 +25,23 @@ public class TimeLineManager : MonoBehaviour
         {
             isLocked[i] = false;
         }
+
+        RainParticles.Stop();
+        RenderSettings.fog = false;
+
+        //debug
+        /*
+        RainParticles.Play();
+
+        RenderSettings.fog = true;
+        RenderSettings.fogColor = Color.gray;
+        RenderSettings.fogMode = FogMode.Exponential;
+        RenderSettings.fogDensity = FogDensity;
+
+        FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
+        SlidingDoor.transform.position += new Vector3(-2, 0, 0);
+        */
+        //debugend
     }
 
     void Update()
@@ -64,10 +85,24 @@ public class TimeLineManager : MonoBehaviour
 
         if (allLocked && !puzzleSolved)
         {
+            // success and open
             puzzleSolved = true;
             SoundManager.Instance.PlayComplex("StarUnlock", this.transform);
+            SoundManager.Instance.PlayComplex("ClassroomSolve", transform);
             FindFirstObjectByType<FPController>().PlaySuccessParticles();
-            SlidingDoor.transform.position += new Vector3(-2, 0, 0);    
+            SlidingDoor.transform.position += new Vector3(-2, 0, 0);
+
+            // eddy stuff
+
+
+            // fog and rain
+            RenderSettings.fog = true;
+            RenderSettings.fogColor = Color.gray;
+            RenderSettings.fogMode = FogMode.Exponential;
+            RenderSettings.fogDensity = FogDensity;
+
+            RainParticles.Play();
+            FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
         }
     }
 }

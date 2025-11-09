@@ -15,6 +15,7 @@ TagManager:
   - Classroom
   - Naproom
   - Oven
+  - Playground
   layers:
   - Default
   - TransparentFX

@@ -33,6 +33,7 @@ public class NaproomEndingManager : MonoBehaviour
         CutsceneCanvas.SetActive(false);
         FindFirstObjectByType<FPController>().SetPuzzleActive(false);
         FindFirstObjectByType<FPController>().isInspecting = false;
+        FindFirstObjectByType<FPController>().heldRb.isKinematic = false;
         FindFirstObjectByType<FPController>().DropObject();
     }
 }
