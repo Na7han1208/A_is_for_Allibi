@@ -107,10 +107,15 @@ public class HowardManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
 
         FindFirstObjectByType<CutsceneManager>().PlayCutscene("HowardInterrogation");
-        
-        transform.position = cutsceneZone.transform.position + new Vector3(0,0,-2f);
+
+        transform.position = cutsceneZone.transform.position + new Vector3(0, 0, -2f);
         transform.rotation = new Quaternion(0, 0f, 0, 0);
         GetComponent<Rigidbody>().isKinematic = false;
         suspectDrawing.SetActive(true);
+    }
+    
+    public void RestartMusic()
+    {
+        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
     }
 }

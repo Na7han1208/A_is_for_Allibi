@@ -1389,9 +1389,9 @@ MonoBehaviour:
     onAfterCutscene:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 3742407835962128587}
           m_TargetAssemblyTypeName: HowardManager, Assembly-CSharp
-          m_MethodName: ShowDrawing
+          m_MethodName: RestartMusic
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9511,7 +9511,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &392515416
 Transform:
   m_ObjectHideFlags: 0
@@ -29256,10 +29256,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Blocks:
   - {fileID: 7922626134809759529}
-  - {fileID: 600147839938706048}
   - {fileID: 2524471096931837680}
   - {fileID: 5969184395829620864}
   - {fileID: 5350028002684142030}
+  - {fileID: 600147839938706048}
   LockPos:
   - {fileID: 1180584937}
   - {fileID: 2082733735}
@@ -29267,7 +29267,7 @@ MonoBehaviour:
   - {fileID: 1879147376}
   - {fileID: 1739129317}
   offset: {x: 0, y: 0, z: 0}
-  SlidingDoor: {fileID: 0}
+  SlidingDoor: {fileID: 1629904837}
   puzzleSolved: 0
 --- !u!1 &1094767311 stripped
 GameObject:
