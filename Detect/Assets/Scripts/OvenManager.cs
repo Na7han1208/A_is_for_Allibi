@@ -16,10 +16,10 @@ public class OvenManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (hasEntered) return;
-        hasEntered = true;
         if (other.CompareTag("Oven") && FindFirstObjectByType<ClassroomBlockLock>().puzzleSolved)
         {
+            if (hasEntered) return;
+            hasEntered = true;
             StartCoroutine(OvenOpening());
         }
     }
@@ -49,9 +49,9 @@ public class OvenManager : MonoBehaviour
         }
 
         Door1.transform.rotation = targetRot;
-        yield return new WaitForSeconds(10f);
-        LookAt(Vent);
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(8f);
+        StartCoroutine(LookAt(Vent));
+        yield return new WaitForSeconds(8f);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
         OutOfSugarTimeline.SetActive(true);
     }

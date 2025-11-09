@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ClassroomBlockLock : MonoBehaviour
 {
@@ -118,9 +119,12 @@ public class ClassroomBlockLock : MonoBehaviour
 
     private IEnumerator CompletedCoroutine()
     {
+        SoundManager.Instance.PlayComplex("Sweets1", transform);
+        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         yield return new WaitForSeconds(3.4f);
         StartCoroutine(LookAtSweets());
-
+        yield return new WaitForSeconds(2.6f);
+        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
     }
 
     private IEnumerator LookAtSweets()
