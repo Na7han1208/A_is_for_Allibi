@@ -1402,7 +1402,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - cutsceneName: Addiction
-    videoClip: {fileID: 32900000, guid: 6d8a638005e2d1045a5ec1be75503e48, type: 3}
+    videoClip: {fileID: 32900000, guid: 1a0fd8e1b354a204fa3fd5f8e941582c, type: 3}
     subtitleSequence: {fileID: 0}
     loop: 0
     skippable: 1
@@ -1424,6 +1424,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 1
+  - cutsceneName: Micheal
+    videoClip: {fileID: 32900000, guid: a6c8d72346218484aa916396ff85f912, type: 3}
+    subtitleSequence: {fileID: 0}
+    loop: 0
+    skippable: 1
+    onBeforeCutscene:
+      m_PersistentCalls:
+        m_Calls: []
+    onAfterCutscene:
+      m_PersistentCalls:
+        m_Calls: []
   dontDestroy: 1
   prepareTimeout: 5
 --- !u!114 &43679096
@@ -20141,7 +20152,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.69803923}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -84419,7 +84430,7 @@ GameObject:
   - component: {fileID: 8922531386840566563}
   m_Layer: 7
   m_Name: IK.Hand.002
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84435,7 +84446,7 @@ GameObject:
   - component: {fileID: 282977779408534583}
   m_Layer: 7
   m_Name: Leg4
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84451,7 +84462,7 @@ GameObject:
   - component: {fileID: 2787119278390265597}
   m_Layer: 7
   m_Name: Toes.L
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85033,7 +85044,7 @@ GameObject:
   - component: {fileID: 1128078436801586047}
   m_Layer: 7
   m_Name: Foot.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85099,7 +85110,7 @@ GameObject:
   - component: {fileID: 9351775048896828}
   m_Layer: 7
   m_Name: Shoulder
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85237,7 +85248,7 @@ GameObject:
   - component: {fileID: 1699408133}
   m_Layer: 7
   m_Name: Hips
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85673,7 +85684,7 @@ GameObject:
   - component: {fileID: 628549423}
   m_Layer: 7
   m_Name: Michael Low
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86451,7 +86462,7 @@ GameObject:
   - component: {fileID: 8726337186819548284}
   m_Layer: 7
   m_Name: Leg 1
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87352,7 +87363,7 @@ GameObject:
   - component: {fileID: 3419963965456034194}
   m_Layer: 7
   m_Name: Arm 4.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87763,7 +87774,7 @@ GameObject:
   - component: {fileID: 4245832216454948788}
   m_Layer: 7
   m_Name: Hand
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93022,7 +93033,7 @@ GameObject:
   - component: {fileID: 1792255814623867517}
   m_Layer: 7
   m_Name: Heel.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93204,7 +93215,7 @@ GameObject:
   - component: {fileID: 1548405091931681132}
   m_Layer: 7
   m_Name: IK.Foot.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93422,7 +93433,7 @@ GameObject:
   - component: {fileID: 1482987186}
   m_Layer: 7
   m_Name: Arm 1.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93488,7 +93499,7 @@ GameObject:
   - component: {fileID: 640629632972895482}
   m_Layer: 7
   m_Name: Neck
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93571,7 +93582,7 @@ GameObject:
   - component: {fileID: 1497160202}
   m_Layer: 7
   m_Name: Arm 1
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93749,7 +93760,7 @@ GameObject:
   - component: {fileID: 2488358642016521751}
   m_Layer: 7
   m_Name: Shoulder.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93928,7 +93939,7 @@ GameObject:
   - component: {fileID: 2745924663062145344}
   m_Layer: 7
   m_Name: Arm 3
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94226,7 +94237,7 @@ GameObject:
   - component: {fileID: 1520041357}
   m_Layer: 7
   m_Name: Hip
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94448,7 +94459,7 @@ GameObject:
   - component: {fileID: 6801003156314810082}
   m_Layer: 7
   m_Name: Foot
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94978,7 +94989,7 @@ GameObject:
   - component: {fileID: 4694907826924420488}
   m_Layer: 7
   m_Name: Leg 2.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95063,7 +95074,7 @@ GameObject:
   - component: {fileID: 1428473456942302918}
   m_Layer: 7
   m_Name: Arm 3.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95468,7 +95479,7 @@ GameObject:
   - component: {fileID: 1244527903}
   m_Layer: 7
   m_Name: Leg 3
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95700,7 +95711,7 @@ GameObject:
   - component: {fileID: 913307710799050101}
   m_Layer: 7
   m_Name: Arm 4
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95883,7 +95894,7 @@ GameObject:
   - component: {fileID: 731039830}
   m_Layer: 7
   m_Name: Hip.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96170,7 +96181,7 @@ GameObject:
   - component: {fileID: 510598579}
   m_Layer: 7
   m_Name: Spine
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96483,7 +96494,7 @@ GameObject:
   - component: {fileID: 6321838807885174648}
   m_Layer: 7
   m_Name: Leg 2
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97864,7 +97875,7 @@ GameObject:
   - component: {fileID: 1958046000}
   m_Layer: 7
   m_Name: Arm 2
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -97992,7 +98003,7 @@ GameObject:
   - component: {fileID: 8879528567016184374}
   m_Layer: 7
   m_Name: Armature
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98179,7 +98190,7 @@ GameObject:
   - component: {fileID: 1576065792153258727}
   m_Layer: 7
   m_Name: IK.Leg
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98245,7 +98256,7 @@ GameObject:
   - component: {fileID: 2164670596675369421}
   m_Layer: 7
   m_Name: Roor
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98437,7 +98448,7 @@ GameObject:
   - component: {fileID: 2405095488338989197}
   m_Layer: 7
   m_Name: Toes
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98873,7 +98884,7 @@ GameObject:
   - component: {fileID: 538397685}
   m_Layer: 7
   m_Name: Arm 2.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98889,7 +98900,7 @@ GameObject:
   - component: {fileID: 8646981266558407790}
   m_Layer: 7
   m_Name: Leg 1.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98959,7 +98970,7 @@ GameObject:
   - component: {fileID: 1239855677}
   m_Layer: 7
   m_Name: Leg 3.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99228,7 +99239,7 @@ GameObject:
   - component: {fileID: 6195679260312868080}
   m_Layer: 7
   m_Name: IK.Hand
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99832,7 +99843,7 @@ GameObject:
   - component: {fileID: 7345257365606298396}
   m_Layer: 7
   m_Name: Heel
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100600,7 +100611,7 @@ GameObject:
   - component: {fileID: 1867399975}
   m_Layer: 7
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100616,7 +100627,7 @@ GameObject:
   - component: {fileID: 2478004750943580397}
   m_Layer: 7
   m_Name: Leg 4.R
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101528,7 +101539,7 @@ GameObject:
   - component: {fileID: 8392681588005075808}
   m_Layer: 7
   m_Name: Hand.001
-  m_TagString: Untagged
+  m_TagString: Micheal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

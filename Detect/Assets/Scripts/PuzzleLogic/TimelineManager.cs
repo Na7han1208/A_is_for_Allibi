@@ -71,6 +71,7 @@ public class TimeLineManager : MonoBehaviour
         if (allLocked && !puzzleSolved)
         {
             puzzleSolved = true;
+            SoundManager.Instance.StopAll();
             SoundManager.Instance.PlayComplex("StarUnlock", transform);
             SoundManager.Instance.PlayComplex("ClassroomSolve", transform);
             FindFirstObjectByType<FPController>().PlaySuccessParticles();

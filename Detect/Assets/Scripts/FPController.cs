@@ -63,6 +63,7 @@ public class FPController : MonoBehaviour
     public SubtitleSequence MissingPoster;
     private bool hasPickedUpSuspectSketch = false;
     private bool hasPickedUpHoward = false;
+    private bool hasPickedUpMicheal = false;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -274,6 +275,16 @@ public class FPController : MonoBehaviour
                         hasPickedUpHoward = true;
                         FindFirstObjectByType<HowardManager>().PickUpLogic();
                         return;
+                    }
+                }
+
+                // case: howard
+                if (hit.collider.CompareTag("Micheal"))
+                {
+                    if (!hasPickedUpMicheal)
+                    {
+                        CutsceneManager.Instance.PlayCutscene("Micheal");
+                        hasPickedUpMicheal = true;
                     }
                 }
 
