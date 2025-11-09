@@ -21,7 +21,7 @@ public class RainSoundManager : MonoBehaviour
         if (!outdoorRain.isPlaying) outdoorRain.Play();
         if (!indoorRain.isPlaying) indoorRain.Play();
         float sfxMult = PlayerPrefs.GetFloat("SFXVolume", 1f);
-        indoorRain.volume = outdoorVolume * sfxMult;
+        indoorRain.volume = 0f;
         outdoorRain.volume = 0f;
 
         indoorRain.loop = true;
@@ -30,6 +30,7 @@ public class RainSoundManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(!FindFirstObjectByType<TimeLineManager>().puzzleSolved) return;
         if (!systemActive) return;
         if (Time.time - lastTriggerTime < minTriggerDelay) return;
         lastTriggerTime = Time.time;

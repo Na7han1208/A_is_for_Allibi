@@ -300,6 +300,7 @@ public class FPController : MonoBehaviour
                 {
                     heldObject = hit.collider.gameObject;
                     heldRb = heldObject.GetComponent<Rigidbody>();
+                    if (heldRb.IsUnityNull()) heldObject.GetComponentInParent<Rigidbody>();
                     heldRb.useGravity = false;
 
                     heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;

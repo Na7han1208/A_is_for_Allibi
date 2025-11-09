@@ -17,10 +17,6 @@ public class TimeLineManager : MonoBehaviour
     public float FogDensity = 0.3f;
     public ParticleSystem RainParticles;
 
-    private bool fogLerping = false;
-    private float fogLerpTime = 3f;
-    private float fogLerpProgress = 0f;
-
     void Start()
     {
         isLocked = new bool[Blocks.Length];
@@ -28,8 +24,6 @@ public class TimeLineManager : MonoBehaviour
             isLocked[i] = false;
 
         RainParticles.Stop();
-        RenderSettings.fog = false;
-        RenderSettings.fogDensity = 0f;
     }
 
     void Update()
@@ -80,23 +74,8 @@ public class TimeLineManager : MonoBehaviour
             RenderSettings.fog = true;
             RenderSettings.fogColor = Color.gray;
             RenderSettings.fogMode = FogMode.Exponential;
-            RainParticles.Play();
+            //RainParticles.Play();
             FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
-
-            fogLerping = true;
-            fogLerpProgress = 0f;
-        }
-
-        if (fogLerping)
-        {
-            fogLerpProgress += Time.deltaTime / fogLerpTime;
-            RenderSettings.fogDensity = Mathf.Lerp(0f, FogDensity, fogLerpProgress);
-
-            if (fogLerpProgress >= 1f)
-            {
-                RenderSettings.fogDensity = FogDensity;
-                fogLerping = false;
-            }
         }
     }
 }
