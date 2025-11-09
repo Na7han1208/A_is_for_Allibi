@@ -334,10 +334,15 @@ public class MultiColourTracingPuzzle : TracingPuzzle
         SoundManager.Instance.PlayComplex("Suspect5", transform);
         yield return new WaitForSeconds(8f);
         SoundManager.Instance.PlayComplex("SuspectSketchSolve", transform);
-        this.enabled = false;
+        StarChartManager.Instance.UnlockStar("CR2");
+        
+
+        yield return new WaitForSeconds(3f);
         NiceDayTimeline.SetActive(true);
         EddyKitchentimeline.SetActive(true);
         SoundManager.Instance.PlayComplex("TimelineUnlock", transform);
+
+        this.enabled = false;
     }
 
     private void OnDestroy()

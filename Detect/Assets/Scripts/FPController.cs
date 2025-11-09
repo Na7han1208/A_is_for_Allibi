@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+
 //using System.Numerics;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -60,6 +62,7 @@ public class FPController : MonoBehaviour
     public SubtitleSequence FoxyDialogue;
     public SubtitleSequence MissingPoster;
     private bool hasPickedUpSuspectSketch = false;
+    private bool hasPickedUpHoward = false;
 
     [Header("PickupHighlight")]
     private GameObject currentHighlighted;
@@ -266,20 +269,12 @@ public class FPController : MonoBehaviour
                 // case: howard
                 if (hit.collider.CompareTag("Howard"))
                 {
-                    heldObject = hit.collider.gameObject;
-                    heldRb = heldObject.GetComponent<Rigidbody>();
-                    heldRb.useGravity = false;
-
-                    heldRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-                    heldRb.constraints = RigidbodyConstraints.FreezeRotation;
-                    heldRb.interpolation = RigidbodyInterpolation.Interpolate;
-
-                    heldObject.layer = LayerMask.NameToLayer("HeldObject"); //this doesnt collide with player layer
-
-                    isHoldingObject = true;
-                    heldRb.isKinematic = false;
-
-                    FindFirstObjectByType<HowardManager>().PickUpLogic();
+                    if (!hasPickedUpHoward)
+                    {
+                        hasPickedUpHoward = true;
+                        FindFirstObjectByType<HowardManager>().PickUpLogic();
+                        return;
+                    }
                 }
 
                 // case: combo lock

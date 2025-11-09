@@ -10,7 +10,6 @@ public class HowardManager : MonoBehaviour
     [SerializeField] private GameObject suspectDrawing;
     [SerializeField] private GameObject LightBulb;
 
-    private static bool beenPickedUp = false;
     private static bool cutscenePlayed = false;
 
     void Start()
@@ -21,8 +20,6 @@ public class HowardManager : MonoBehaviour
 
     public void PickUpLogic()
     {
-        if (beenPickedUp) return;
-        beenPickedUp = true;
         StartCoroutine(HowardPickipCoroutine());
     }
 
@@ -30,8 +27,10 @@ public class HowardManager : MonoBehaviour
     {
         SoundManager.Instance.PlayComplex("HowardPickup", transform);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
-        yield return new WaitForSeconds(10.5f);
+        FindFirstObjectByType<FPController>().DropObject();
+        yield return new WaitForSeconds(9.5f);
         StartCoroutine(LookAtMirrorCoroutine());
+        yield return new WaitForSeconds(1f);
         LightBulb.SetActive(true);
         yield return new WaitForSeconds(3.5f);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
