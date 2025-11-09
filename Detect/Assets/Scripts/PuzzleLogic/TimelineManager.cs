@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TimeLineManager : MonoBehaviour
@@ -15,33 +14,22 @@ public class TimeLineManager : MonoBehaviour
     public bool puzzleSolved = false;
 
     [Header("Fog and Rain")]
-    public float FogDensity;
+    public float FogDensity = 0.3f;
     public ParticleSystem RainParticles;
+
+    private bool fogLerping = false;
+    private float fogLerpTime = 3f;
+    private float fogLerpProgress = 0f;
 
     void Start()
     {
         isLocked = new bool[Blocks.Length];
         for (int i = 0; i < Blocks.Length; i++)
-        {
             isLocked[i] = false;
-        }
 
         RainParticles.Stop();
         RenderSettings.fog = false;
-
-        //debug
-        /*
-        RainParticles.Play();
-
-        RenderSettings.fog = true;
-        RenderSettings.fogColor = Color.gray;
-        RenderSettings.fogMode = FogMode.Exponential;
-        RenderSettings.fogDensity = FogDensity;
-
-        FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
-        SlidingDoor.transform.position += new Vector3(-2, 0, 0);
-        */
-        //debugend
+        RenderSettings.fogDensity = 0f;
     }
 
     void Update()
@@ -58,25 +46,22 @@ public class TimeLineManager : MonoBehaviour
                     case 3: SoundManager.Instance.PlayComplex("G4", transform); break;
                     case 4: SoundManager.Instance.PlayComplex("G5", transform); break;
                 }
+
                 isLocked[i] = true;
-                Vector3 offset = new Vector3(0, 3, 0);
                 Blocks[i].transform.SetPositionAndRotation(LockPos[i].transform.position, LockPos[i].transform.rotation);
                 Blocks[i].GetComponent<Rigidbody>().isKinematic = true;
                 Blocks[i].gameObject.layer = 0;
-                
+
                 FPController player = FindFirstObjectByType<FPController>();
                 if (player != null && player.heldObject == Blocks[i])
-                {
                     player.DropObject();
-                }
-                Blocks[i].layer = 0;
             }
         }
 
         bool allLocked = true;
-        for (int i = 0; i < isLocked.Length; i++)
+        foreach (bool locked in isLocked)
         {
-            if (!isLocked[i])
+            if (!locked)
             {
                 allLocked = false;
                 break;
@@ -85,24 +70,32 @@ public class TimeLineManager : MonoBehaviour
 
         if (allLocked && !puzzleSolved)
         {
-            // success and open
             puzzleSolved = true;
-            SoundManager.Instance.PlayComplex("StarUnlock", this.transform);
+            SoundManager.Instance.PlayComplex("StarUnlock", transform);
             SoundManager.Instance.PlayComplex("ClassroomSolve", transform);
             FindFirstObjectByType<FPController>().PlaySuccessParticles();
             SlidingDoor.transform.position += new Vector3(-2, 0, 0);
 
-            // eddy stuff
-
-
-            // fog and rain
             RenderSettings.fog = true;
             RenderSettings.fogColor = Color.gray;
             RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogDensity = FogDensity;
-
             RainParticles.Play();
             FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
+
+            fogLerping = true;
+            fogLerpProgress = 0f;
+        }
+
+        if (fogLerping)
+        {
+            fogLerpProgress += Time.deltaTime / fogLerpTime;
+            RenderSettings.fogDensity = Mathf.Lerp(0f, FogDensity, fogLerpProgress);
+
+            if (fogLerpProgress >= 1f)
+            {
+                RenderSettings.fogDensity = FogDensity;
+                fogLerping = false;
+            }
         }
     }
 }
