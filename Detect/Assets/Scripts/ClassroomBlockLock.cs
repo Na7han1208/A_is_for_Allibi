@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ClassroomBlockLock : MonoBehaviour
@@ -20,8 +21,7 @@ public class ClassroomBlockLock : MonoBehaviour
 
     [Header("Finish GameObjects")]
     public GameObject OutOfSugarTimeline;
-    public GameObject Door1;
-    public GameObject Door2;
+    public GameObject Wrapper;
     public GameObject SweetContainer;
 
     void Start()
@@ -49,6 +49,10 @@ public class ClassroomBlockLock : MonoBehaviour
             if (player != null)
                 player.PlaySuccessParticles();
             StarChartManager.Instance.UnlockStar("CR1");
+
+            CutsceneManager.Instance.PlayCutscene("Addiction");
+            
+            SweetContainer.SetActive(true);
         }
     }
 
@@ -104,14 +108,63 @@ public class ClassroomBlockLock : MonoBehaviour
     {
         foreach (bool b in array)
             if (!b) return false;
-
-        CutsceneManager.Instance.PlayCutscene("Addiction");
-        OutOfSugarTimeline.SetActive(true);
-        SoundManager.Instance.PlayComplex("TimelineUnlock", transform);
-        SweetContainer.SetActive(true);
-        Door1.SetActive(false);
-        Door2.SetActive(true);
-
         return true;
+    }
+
+    public void StartCompletedCoroutine()
+    {
+        StartCoroutine(CompletedCoroutine());
+    }
+
+    private IEnumerator CompletedCoroutine()
+    {
+        yield return new WaitForSeconds(3.4f);
+        StartCoroutine(LookAtSweets());
+
+    }
+
+    private IEnumerator LookAtSweets()
+    {
+        var fpc = FindFirstObjectByType<FPController>();
+        Transform camT = (fpc != null && fpc.cameraTransform != null) ? fpc.cameraTransform : Camera.main?.transform;
+        if (camT == null || Wrapper == null) yield break;
+
+        if (fpc != null) fpc.SetPuzzleActive(true);
+
+        Vector3 dir = Wrapper.transform.position - camT.position;
+        if (dir.sqrMagnitude <= 0.0001f)
+        {
+            if (fpc != null) fpc.SetPuzzleActive(false);
+            yield break;
+        }
+
+        Quaternion startRot = camT.rotation;
+        Quaternion targetRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
+        float speed = 90f;
+        float angle = Quaternion.Angle(startRot, targetRot);
+        float duration = Mathf.Max(0.01f, angle / speed);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            float t = Mathf.Clamp01(elapsed / duration);
+            camT.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        camT.rotation = targetRot;
+        yield return new WaitForSeconds(1f);
+
+        if (fpc != null)
+        {
+            Vector3 flatForward = new Vector3(camT.forward.x, 0f, camT.forward.z).normalized;
+            if (flatForward.sqrMagnitude > 0.001f)
+                fpc.transform.rotation = Quaternion.LookRotation(flatForward);
+
+            fpc.verticalRotation = camT.localEulerAngles.x;
+            if (fpc.verticalRotation > 180f) fpc.verticalRotation -= 360f;
+            fpc.SetPuzzleActive(false);
+        }
     }
 }
