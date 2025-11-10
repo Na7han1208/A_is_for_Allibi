@@ -41,6 +41,12 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     public GameObject NiceDayTimeline;
     public GameObject EddyKitchentimeline;
 
+    [Header("Subtitles")]
+    public SubtitleSequence Sub2;
+    public SubtitleSequence Sub3;
+    public SubtitleSequence Sub4;
+    public SubtitleSequence Sub5;
+
     protected override void Start()
     {
         if (maskImages != null && maskImages.Length > 0)
@@ -308,16 +314,19 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     private void OnYellowComplete()
     {
         SoundManager.Instance.PlayComplex("Suspect2", transform);
+        SubtitleManager.Instance.PlaySequence(Sub2);
     }
 
     private void OnRedComplete()
     {
         SoundManager.Instance.PlayComplex("Suspect3", transform);
+        SubtitleManager.Instance.PlaySequence(Sub3);
     }
 
     private void OnBlueComplete()
     {
         SoundManager.Instance.PlayComplex("Suspect4", transform);
+        SubtitleManager.Instance.PlaySequence(Sub4);
     }
 
     private void OnBlackComplete()
@@ -332,6 +341,7 @@ public class MultiColourTracingPuzzle : TracingPuzzle
     private IEnumerator FinishedDrawing()
     {
         SoundManager.Instance.PlayComplex("Suspect5", transform);
+        SubtitleManager.Instance.PlaySequence(Sub5);
         yield return new WaitForSeconds(6f);
         SoundManager.Instance.PlayComplex("SuspectSketchSolve", transform);
 

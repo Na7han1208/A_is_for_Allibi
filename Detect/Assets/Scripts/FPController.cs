@@ -62,6 +62,7 @@ public class FPController : MonoBehaviour
     private bool FoxyDialogueDone = false;
     public SubtitleSequence FoxyDialogue;
     public SubtitleSequence MissingPoster;
+    public SubtitleSequence Suspect1;
     private bool hasPickedUpSuspectSketch = false;
     private bool hasPickedUpHoward = false;
     private bool hasPickedUpMicheal = false;
@@ -231,7 +232,11 @@ public class FPController : MonoBehaviour
                 MultiColourTracingPuzzle multiColourTracingPuzzle = hit.collider.GetComponent<MultiColourTracingPuzzle>();
                 if (multiColourTracingPuzzle != null)
                 {
-                    if (!hasPickedUpSuspectSketch) SoundManager.Instance.PlayComplex("Suspect1", transform);
+                    if (!hasPickedUpSuspectSketch)
+                    {
+                        SoundManager.Instance.PlayComplex("Suspect1", transform);
+                        SubtitleManager.Instance.PlaySequence(Suspect1);
+                    } 
                     multiColourTracingPuzzle.ShowPuzzle();
                     hasPickedUpSuspectSketch = true;
                     return;

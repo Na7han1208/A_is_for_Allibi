@@ -179,6 +179,6 @@ public class MusicBoxPuzzle : MonoBehaviour
 
     public void OnExit(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed) HidePuzzle();
+        HidePuzzle();
     }
 }

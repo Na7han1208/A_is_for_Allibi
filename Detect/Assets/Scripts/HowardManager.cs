@@ -10,6 +10,7 @@ public class HowardManager : MonoBehaviour
     [SerializeField] private GameObject suspectDrawing;
     [SerializeField] private GameObject LightBulb;
     [SerializeField] private GameObject DoorStopper;
+    public SubtitleSequence howardPickup;
 
     private static bool cutscenePlayed = false;
 
@@ -28,6 +29,7 @@ public class HowardManager : MonoBehaviour
     private IEnumerator HowardPickipCoroutine()
     {
         SoundManager.Instance.PlayComplex("HowardPickup", transform);
+        SubtitleManager.Instance.PlaySequence(howardPickup);
         DoorStopper.SetActive(true);
         FindFirstObjectByType<FPController>().DropObject();
         yield return new WaitForSeconds(9.5f);

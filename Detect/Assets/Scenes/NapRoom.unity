@@ -26284,6 +26284,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -5936404740877256746, guid: 8ca08fd68f0c7ef4e9c5a3dc557dfc51, type: 3}
+    - {fileID: 1173565910604099213, guid: 8ca08fd68f0c7ef4e9c5a3dc557dfc51, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ca08fd68f0c7ef4e9c5a3dc557dfc51, type: 3}
@@ -34765,11 +34766,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
   - {fileID: 11400000, guid: 64b4373d64f658d40b522830ec9d41a9, type: 2}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 2eb559755a2b75f458238e9328ea0557, type: 2}
+  - {fileID: 11400000, guid: be43be1137931d14581cb75dddda1506, type: 2}
+  - {fileID: 11400000, guid: 19169da0aaee6fc4f915ba55592486fe, type: 2}
+  - {fileID: 11400000, guid: aa2edb6d83fef9c40915a689ecf9a5ee, type: 2}
+  - {fileID: 11400000, guid: db4ab5735fb244c4b830f359681dd20a, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
   hasInteracted: 
   dialogueVolumes:
   - 0.45
@@ -71260,6 +71268,10 @@ MonoBehaviour:
   - 0.2
   NiceDayTimeline: {fileID: 600147839938706048}
   EddyKitchentimeline: {fileID: 2524471096931837680}
+  Sub2: {fileID: 11400000, guid: 836987d5a8237ab48bb369bce934b374, type: 2}
+  Sub3: {fileID: 11400000, guid: b785adf330f44d248af9684800f43e45, type: 2}
+  Sub4: {fileID: 11400000, guid: 7b49d3f4d45aac54fb964c5df2c8620a, type: 2}
+  Sub5: {fileID: 11400000, guid: 85874ebe6df73ad4ebc5aa50d2f30d7b, type: 2}
 --- !u!65 &1770936653
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -95921,6 +95933,7 @@ MonoBehaviour:
   suspectDrawing: {fileID: 1770936641}
   LightBulb: {fileID: 887292006}
   DoorStopper: {fileID: 110450235}
+  howardPickup: {fileID: 11400000, guid: 761cd5e0283b7e347ab2d83beaa8b64c, type: 2}
 --- !u!1 &3761395814576809285
 GameObject:
   m_ObjectHideFlags: 0
@@ -101689,6 +101702,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 4470657343370612342}
+        m_TargetAssemblyTypeName: MusicBoxPuzzle, Assembly-CSharp
+        m_MethodName: OnExit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1405502451}
+        m_TargetAssemblyTypeName: LockController, Assembly-CSharp
+        m_MethodName: OnExit
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: f9eacfb9-2f7b-4760-924c-b2402cbc3c23
     m_ActionName: 'Puzzle/Cancel[/XInputControllerWindows/buttonEast]'
   - m_PersistentCalls:
@@ -103411,6 +103448,7 @@ MonoBehaviour:
   Foxy: {fileID: 919132147517964892}
   FoxyDialogue: {fileID: 11400000, guid: 32f1f5aed93c83749909f5d29991d93b, type: 2}
   MissingPoster: {fileID: 11400000, guid: c3de1e6a8b72b2c49a2991dddec612c8, type: 2}
+  Suspect1: {fileID: 11400000, guid: 81d42394e6d47de4f9dc557837634b8e, type: 2}
   outlineWidth: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   dartPrefab: {fileID: 550747888352737358, guid: 1a789604d1890bc439040262f506c363, type: 3}
@@ -103633,7 +103671,7 @@ Transform:
   m_GameObject: {fileID: 8402970696371532675}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.53813064, z: -0, w: 0.8428615}
-  m_LocalPosition: {x: -24.85, y: -2.43, z: 11.94}
+  m_LocalPosition: {x: -25.38, y: -2.43, z: 11.48}
   m_LocalScale: {x: 0.52, y: 0.52, z: 0.52}
   m_ConstrainProportionsScale: 1
   m_Children:
