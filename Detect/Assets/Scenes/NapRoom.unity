@@ -1426,7 +1426,7 @@ MonoBehaviour:
           m_CallState: 1
   - cutsceneName: Micheal
     videoClip: {fileID: 32900000, guid: a6c8d72346218484aa916396ff85f912, type: 3}
-    subtitleSequence: {fileID: 0}
+    subtitleSequence: {fileID: 11400000, guid: c1b66d0025e29174983fa6041a04fd85, type: 2}
     loop: 0
     skippable: 1
     onBeforeCutscene:
