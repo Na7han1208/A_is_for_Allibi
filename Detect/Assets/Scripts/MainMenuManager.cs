@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
@@ -20,6 +21,7 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         CutsceneManager.Instance.PlayCutscene("MainMenu");
         
         InMainMenu = true;
@@ -74,6 +76,8 @@ public class MainMenuManager : MonoBehaviour
     {
         canvas.SetActive(false);
         //InMainMenu = false;
+
+        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
 
         SoundManager.Instance.StopAll();
         CutsceneManager.Instance.PlayCutscene("Intro");

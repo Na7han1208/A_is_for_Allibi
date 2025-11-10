@@ -68,6 +68,7 @@ public class TimeLineManager : MonoBehaviour
             SoundManager.Instance.StopAll();
             SoundManager.Instance.PlayComplex("StarUnlock", transform);
             SoundManager.Instance.PlayComplex("ClassroomSolve", transform);
+            StarChartManager.Instance.UnlockStar("CR5");
             FindFirstObjectByType<FPController>().PlaySuccessParticles();
             SlidingDoor.transform.position += new Vector3(-2, 0, 0);
         }

@@ -56,6 +56,7 @@ public class FPController : MonoBehaviour
     private bool isColliding;
     private bool pickedUpMissingPoster = false;
     public GameObject SelfHelpCanvas;
+    public GameObject SelfHelpCanvas2;
 
     public GameObject Foxy;
     private bool FoxyDialogueDone = false;
@@ -128,6 +129,7 @@ public class FPController : MonoBehaviour
         postProcessVolume.profile.TryGet(out vignette);
         postProcessVolume.profile.TryGet<UnityEngine.Rendering.Universal.Vignette>(out vignette);
         SelfHelpCanvas.SetActive(false);
+        SelfHelpCanvas2.SetActive(false);
 
         UpdateSensitivity();
     }
@@ -319,6 +321,7 @@ public class FPController : MonoBehaviour
             else if (isHoldingObject)
             {
                 SelfHelpCanvas.SetActive(false);
+                SelfHelpCanvas2.SetActive(false);
                 SetPuzzleActive(false);
                 DropObject();
             }
@@ -407,6 +410,13 @@ public class FPController : MonoBehaviour
                     return;
                 }
 
+                // case: self help book 2
+                if (heldObject.CompareTag("SelfHelpBook2"))
+                {
+                    SelfHelpCanvas2.SetActive(true);
+                    return;
+                }
+
                 // case: case of the red stain
                 if (heldObject.CompareTag("Case3"))
                 {
@@ -430,6 +440,13 @@ public class FPController : MonoBehaviour
                 if (heldObject.CompareTag("SelfHelpBook"))
                 {
                     SelfHelpCanvas.SetActive(false);
+                    return;
+                }
+
+                // case: self help book 2
+                if (heldObject.CompareTag("SelfHelpBook2"))
+                {
+                    SelfHelpCanvas2.SetActive(false);
                     return;
                 }
 

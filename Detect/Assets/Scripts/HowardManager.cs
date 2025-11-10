@@ -9,6 +9,7 @@ public class HowardManager : MonoBehaviour
     [SerializeField] private GameObject cutsceneZone;
     [SerializeField] private GameObject suspectDrawing;
     [SerializeField] private GameObject LightBulb;
+    [SerializeField] private GameObject DoorStopper;
 
     private static bool cutscenePlayed = false;
 
@@ -16,6 +17,7 @@ public class HowardManager : MonoBehaviour
     {
         lampLight.GetComponent<Light>().enabled = false;
         LightBulb.SetActive(false);
+        DoorStopper.SetActive(false);
     }
 
     public void PickUpLogic()
@@ -26,9 +28,10 @@ public class HowardManager : MonoBehaviour
     private IEnumerator HowardPickipCoroutine()
     {
         SoundManager.Instance.PlayComplex("HowardPickup", transform);
-        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
+        DoorStopper.SetActive(true);
         FindFirstObjectByType<FPController>().DropObject();
         yield return new WaitForSeconds(9.5f);
+        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         StartCoroutine(LookAtMirrorCoroutine());
         yield return new WaitForSeconds(1f);
         LightBulb.SetActive(true);
@@ -36,6 +39,7 @@ public class HowardManager : MonoBehaviour
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
         yield return new WaitForSeconds(1f);
         LightBulb.SetActive(false);
+        DoorStopper.SetActive(false);
     }
 
     private IEnumerator LookAtMirrorCoroutine()
@@ -101,7 +105,7 @@ public class HowardManager : MonoBehaviour
         lampLight.GetComponent<Light>().enabled = true;
         transform.position = cutsceneZone.transform.position;
         transform.rotation = cutsceneZone.transform.rotation;
-        this.GetComponent<Rigidbody>().isKinematic = true;
+        //this.GetComponent<Rigidbody>().isKinematic = true;
         FindFirstObjectByType<FPController>().DropObject();
 
         yield return new WaitForSeconds(3f);

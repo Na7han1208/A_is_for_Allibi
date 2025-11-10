@@ -130,6 +130,7 @@ public class CombinationLock : MonoBehaviour
             HidePuzzle();
             SoundManager.Instance.PlayComplex("Unlock", this.transform);
             FindFirstObjectByType<FPController>().PlaySuccessParticles();
+            StarChartManager.Instance.UnlockStar("CR3");
             this.enabled = false;
         }
     }

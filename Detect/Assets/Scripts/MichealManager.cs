@@ -7,5 +7,6 @@ public class MichealManager : MonoBehaviour
     public void SpawnRats()
     {
         ratInfestationTimeline.SetActive(true);
+        StarChartManager.Instance.UnlockStar("CR4");
     }
 }
