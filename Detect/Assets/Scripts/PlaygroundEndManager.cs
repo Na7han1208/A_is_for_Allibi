@@ -2,6 +2,7 @@ using System.Collections;
 using System.Runtime.Serialization.Formatters;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlaygroundEndManager : MonoBehaviour
 {
@@ -72,6 +73,11 @@ public class PlaygroundEndManager : MonoBehaviour
 
     public void FinalCutsceneOver()
     {
-        
+        CutsceneManager.Instance.PlayCutscene("Credits");
+    }
+
+    public void CreditsOver()
+    {
+        SceneManager.LoadScene("Naproom");
     }
 }

@@ -1435,10 +1435,45 @@ MonoBehaviour:
         m_Calls: []
     onAfterCutscene:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 919132149455867923}
+          m_TargetAssemblyTypeName: MichealManager, Assembly-CSharp
+          m_MethodName: SpawnRats
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - cutsceneName: Final
     videoClip: {fileID: 32900000, guid: 4a8f865e77afb57478f799c8cd01a8db, type: 3}
     subtitleSequence: {fileID: 11400000, guid: eab4a4892a99dbe4c9db4f204634cb37, type: 2}
+    loop: 0
+    skippable: 0
+    onBeforeCutscene:
+      m_PersistentCalls:
+        m_Calls: []
+    onAfterCutscene:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9195684607633683103}
+          m_TargetAssemblyTypeName: PlaygroundEndManager, Assembly-CSharp
+          m_MethodName: FinalCutsceneOver
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - cutsceneName: Credits
+    videoClip: {fileID: 32900000, guid: 2d42a2489c4a0094db348d4485b7426b, type: 3}
+    subtitleSequence: {fileID: 0}
     loop: 0
     skippable: 1
     onBeforeCutscene:
@@ -1446,7 +1481,19 @@ MonoBehaviour:
         m_Calls: []
     onAfterCutscene:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 9195684607633683103}
+          m_TargetAssemblyTypeName: PlaygroundEndManager, Assembly-CSharp
+          m_MethodName: CreditsOver
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   dontDestroy: 1
   prepareTimeout: 5
 --- !u!114 &43679096
@@ -44254,7 +44301,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1213554271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65072,7 +65119,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: cfef297d3703e0e4bb9f75db7a0d9369, type: 2}
     - target: {fileID: -3216832798461142023, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.01
+      value: -2.56
       objectReference: {fileID: 0}
     - target: {fileID: -3216832798461142023, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -103133,7 +103180,7 @@ Transform:
   m_GameObject: {fileID: 5209812841517440698}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00068121054, y: 0.90225166, z: -0.0012968567, w: -0.43120757}
-  m_LocalPosition: {x: -1092.06, y: -91.55, z: -970.5}
+  m_LocalPosition: {x: -1093.915, y: -91.509, z: -973.723}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -103478,6 +103525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BathroomTimeline: {fileID: 7922626134809759529}
   WhiteBoard: {fileID: 1355918826}
+  Lock: {fileID: 75071643}
   timmyWait: {fileID: 11400000, guid: cefeff8869a4c36429c123d29b15acae, type: 2}
   classroomIntro: {fileID: 11400000, guid: e09145d925cb5dd46ba60a21c6796cb0, type: 2}
 --- !u!114 &9195684607633683100

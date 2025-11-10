@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [Serializable]
 public class CutsceneData
@@ -208,7 +209,7 @@ public class CutsceneManager : MonoBehaviour
     {
         if (!playing) return;
 
-        crosshair.SetActive(true);
+        var finishedCutscene = current;
 
         playing = false;
         IsInCutscene = false;
@@ -216,18 +217,29 @@ public class CutsceneManager : MonoBehaviour
         pendingPrepare = false;
         prepareTimer = 0f;
 
-        if (current != null && current.subtitleSequence != null && SubtitleManager.Instance != null)
-            SubtitleManager.Instance.StopSubtitles();
-
-        videoPlayer.Stop();
-        audioSource.Stop();
+        if (videoPlayer.isPlaying)
+            videoPlayer.Stop();
+        if (audioSource.isPlaying)
+            audioSource.Stop();
 
         if (rawImage != null) rawImage.gameObject.SetActive(false);
         if (skipImage != null) skipImage.SetActive(false);
+        if (crosshair != null) crosshair.SetActive(true);
 
-        current?.onAfterCutscene?.Invoke();
+        if (SubtitleManager.Instance != null)
+            SubtitleManager.Instance.StopSubtitles();
+
         current = null;
+
+        StartCoroutine(InvokeAfterEndOfFrame(finishedCutscene));
     }
+
+    private IEnumerator InvokeAfterEndOfFrame(CutsceneData data)
+    {
+        yield return null; // wait one frame
+        data?.onAfterCutscene?.Invoke();
+    }
+
 
     private void StopCurrentQuiet()
     {

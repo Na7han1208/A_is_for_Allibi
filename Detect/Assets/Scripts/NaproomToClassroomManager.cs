@@ -10,10 +10,16 @@ public class NaproomToClassroomManager : MonoBehaviour
     private bool hasPlayedClassIntro = false;
     public GameObject BathroomTimeline;
     public GameObject WhiteBoard;
+    public GameObject Lock;
 
     [Header("Subs")]
     public SubtitleSequence timmyWait;
     public SubtitleSequence classroomIntro;
+
+    void Start()
+    {
+        Lock.layer = 0;
+    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -52,6 +58,7 @@ public class NaproomToClassroomManager : MonoBehaviour
         yield return new WaitForSeconds(10f);
         BathroomTimeline.SetActive(true);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
+        Lock.layer = 7;
     }
 
     private IEnumerator LookAtBoard()
