@@ -18,7 +18,9 @@ public class LightningStrikeManager : MonoBehaviour
             SoundManager.Instance.PlayComplex("Lightning", transform);
             FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
             RenderSettings.skybox = greySkybox;
+            RenderSettings.fog = true;
             RenderSettings.fogDensity = 0.3f;
+            RenderSettings.fogMode = FogMode.Exponential;
             RenderSettings.fogColor = color;
             StartCoroutine(lightningStrike());
             rainfx.Play();

@@ -11,10 +11,11 @@ public class RainSoundManager : MonoBehaviour
     [SerializeField] private float minTriggerDelay = 3f;
     [SerializeField] private float outdoorVolume = 1f;
     [SerializeField] private float indoorVolume = 1f;
-
+    
     private bool inClassroom = false;
     private bool isFading = false;
     private float lastTriggerTime;
+    private float sfxMult;
 
     void Start()
     {
@@ -30,7 +31,7 @@ public class RainSoundManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!FindFirstObjectByType<TimeLineManager>().puzzleSolved) return;
+        if (!FindFirstObjectByType<TimeLineManager>().puzzleSolved) return;
         if (!systemActive) return;
         if (Time.time - lastTriggerTime < minTriggerDelay) return;
         lastTriggerTime = Time.time;
@@ -47,11 +48,23 @@ public class RainSoundManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        
+        if (!systemActive)
+        {
+            sfxMult = 0;
+        }
+        else
+        {
+            sfxMult = PlayerPrefs.GetFloat("SFXVolume", 1);
+        }
+    }
+
     private IEnumerator Crossfade(bool toClassroom)
     {
         isFading = true;
         float elapsed = 0f;
-        float sfxMult = PlayerPrefs.GetFloat("SFXVolume", 1f);
         float startOutdoor = outdoorRain.volume;
         float startIndoor = indoorRain.volume;
         float targetOutdoor = toClassroom ? 0f : outdoorVolume * sfxMult;

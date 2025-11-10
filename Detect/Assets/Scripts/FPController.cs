@@ -278,7 +278,7 @@ public class FPController : MonoBehaviour
                     }
                 }
 
-                // case: howard
+                // case: Micheal
                 if (hit.collider.CompareTag("Micheal"))
                 {
                     if (!hasPickedUpMicheal)

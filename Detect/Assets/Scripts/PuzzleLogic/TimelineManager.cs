@@ -70,12 +70,6 @@ public class TimeLineManager : MonoBehaviour
             SoundManager.Instance.PlayComplex("ClassroomSolve", transform);
             FindFirstObjectByType<FPController>().PlaySuccessParticles();
             SlidingDoor.transform.position += new Vector3(-2, 0, 0);
-
-            RenderSettings.fog = true;
-            RenderSettings.fogColor = Color.gray;
-            RenderSettings.fogMode = FogMode.Exponential;
-            //RainParticles.Play();
-            FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
         }
     }
 }
