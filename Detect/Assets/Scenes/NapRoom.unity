@@ -1404,7 +1404,7 @@ MonoBehaviour:
           m_CallState: 2
   - cutsceneName: Addiction
     videoClip: {fileID: 32900000, guid: 1a0fd8e1b354a204fa3fd5f8e941582c, type: 3}
-    subtitleSequence: {fileID: 0}
+    subtitleSequence: {fileID: 11400000, guid: 41a9b2e9c645eff438f74699734c0d8a, type: 2}
     loop: 0
     skippable: 1
     onBeforeCutscene:
@@ -34406,7 +34406,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2860588026531144558, guid: 12265efcd83b4ef4da9296b7f287e3a6, type: 3}
+  - {fileID: 2100000, guid: 35ac55f476b1e5f4ea70b02a04fbd839, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
