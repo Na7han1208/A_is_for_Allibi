@@ -1334,7 +1334,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
   - cutsceneName: Intro
-    videoClip: {fileID: 32900000, guid: 1fa71135367d2f045a0d3a7e31707ad6, type: 3}
+    videoClip: {fileID: 32900000, guid: 568a22cefe22ec14ca53e3cf115620c4, type: 3}
     subtitleSequence: {fileID: 11400000, guid: bbd82138aabf0d04f8a55e0b2fe84258, type: 2}
     loop: 0
     skippable: 1
@@ -11849,15 +11849,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: f8a86cc77c984c748b37da0d7c405309, type: 3}
       propertyPath: m_LocalScale.x
-      value: -0.46967
+      value: -0.12427937
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8a86cc77c984c748b37da0d7c405309, type: 3}
       propertyPath: m_LocalScale.y
-      value: -0.46967
+      value: -0.12427937
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8a86cc77c984c748b37da0d7c405309, type: 3}
       propertyPath: m_LocalScale.z
-      value: -0.029304713
+      value: -0.00775432
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f8a86cc77c984c748b37da0d7c405309, type: 3}
       propertyPath: m_LocalPosition.x
@@ -34938,6 +34938,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
   - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
   - {fileID: 11400000, guid: eb0442f0fb39db44f811ead3517ffa3c, type: 2}
+  - {fileID: 11400000, guid: 6346ca2333c8e2a46bee4db190ef2261, type: 2}
+  - {fileID: 11400000, guid: e4d6bedd84fe0524681e0e1702c41c9e, type: 2}
+  - {fileID: 11400000, guid: e42e95df653e25749a438e3f56c3b2a0, type: 2}
   hasInteracted: 
   dialogueVolumes:
   - 0.45
@@ -41067,6 +41070,7 @@ MonoBehaviour:
   puzzleSolved: 0
   FogDensity: 0.3
   RainParticles: {fileID: 203370506}
+  classroomSolve: {fileID: 11400000, guid: 3cc810d99c716c94fa479af87cb35ee2, type: 2}
 --- !u!1 &1094767311 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0bb8658d0acbb2145a5564b7e46f2627, type: 3}
@@ -65232,7 +65236,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: cfef297d3703e0e4bb9f75db7a0d9369, type: 2}
     - target: {fileID: -3216832798461142023, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.04
+      value: -2.43
       objectReference: {fileID: 0}
     - target: {fileID: -3216832798461142023, guid: 05c1f23882a91c645ab26f38f57e4e2a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -103293,7 +103297,7 @@ Transform:
   m_GameObject: {fileID: 5209812841517440698}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00068121054, y: 0.90225166, z: -0.0012968567, w: -0.43120757}
-  m_LocalPosition: {x: -1093.915, y: -91.509, z: -973.723}
+  m_LocalPosition: {x: -1062.08, y: -91.509, z: -956.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:

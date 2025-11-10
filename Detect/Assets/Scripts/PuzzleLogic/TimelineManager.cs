@@ -16,6 +16,7 @@ public class TimeLineManager : MonoBehaviour
     [Header("Fog and Rain")]
     public float FogDensity = 0.3f;
     public ParticleSystem RainParticles;
+    public SubtitleSequence classroomSolve;
 
     void Start()
     {
@@ -68,6 +69,7 @@ public class TimeLineManager : MonoBehaviour
             SoundManager.Instance.StopAll();
             SoundManager.Instance.PlayComplex("StarUnlock", transform);
             SoundManager.Instance.PlayComplex("ClassroomSolve", transform);
+            SubtitleManager.Instance.PlaySequence(classroomSolve);
             StarChartManager.Instance.UnlockStar("CR5");
             FindFirstObjectByType<FPController>().PlaySuccessParticles();
             SlidingDoor.transform.position += new Vector3(-2, 0, 0);

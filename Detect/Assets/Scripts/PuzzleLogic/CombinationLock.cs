@@ -15,6 +15,7 @@ public class CombinationLock : MonoBehaviour
     [SerializeField] private Button returnButton;
 
     private bool timmySpoken = false;
+    public SubtitleSequence Lock;
 
     private PlayerInput playerInput;
     private int currentIndex = 0;
@@ -27,7 +28,11 @@ public class CombinationLock : MonoBehaviour
 
     public void ShowPuzzle()
     {
-        if (!timmySpoken) SoundManager.Instance.PlayComplex("Lock", transform);
+        if (!timmySpoken)
+        {
+            SoundManager.Instance.PlayComplex("Lock", transform);
+            SubtitleManager.Instance.PlaySequence(Lock) ;
+        } 
 
         if (playerInput != null)
             playerInput.SwitchCurrentActionMap("Puzzle");
