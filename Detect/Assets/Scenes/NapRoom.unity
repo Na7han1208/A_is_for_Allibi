@@ -1380,7 +1380,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
   - cutsceneName: HowardInterrogation
-    videoClip: {fileID: 32900000, guid: e6a288ebeb1dc534993592a4eb2b8cfe, type: 3}
+    videoClip: {fileID: 32900000, guid: 4ad8c57f606d17b4ca2b87c18415da50, type: 3}
     subtitleSequence: {fileID: 0}
     loop: 0
     skippable: 1
