@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
-  m_Name: SubtitleLine 1
+  m_Name: SubtitleLine 7
   m_EditorClassIdentifier: 
-  speaker: 
-  text: Except during nap time.
-  startTime: 3.44
-  duration: 0.95
+  speaker: Timmy
+  text: That way we can arragne the order of events we find out and see exactly what
+    happened.
+  startTime: 0
+  duration: 4.06

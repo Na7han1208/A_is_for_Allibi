@@ -11,6 +11,10 @@ public class NaproomToClassroomManager : MonoBehaviour
     public GameObject BathroomTimeline;
     public GameObject WhiteBoard;
 
+    [Header("Subs")]
+    public SubtitleSequence timmyWait;
+    public SubtitleSequence classroomIntro;
+
     private void OnTriggerExit(Collider other)
     {
 
@@ -21,6 +25,7 @@ public class NaproomToClassroomManager : MonoBehaviour
                 if (hasPlayedFoxy) return;
                 hasPlayedFoxy = true;
                 SoundManager.Instance.PlayComplex("FoxyLeave", transform);
+                SubtitleManager.Instance.PlaySequence(timmyWait);
             }
         }
     }
@@ -40,6 +45,7 @@ public class NaproomToClassroomManager : MonoBehaviour
     private IEnumerator ClassroomIntro()
     {
         SoundManager.Instance.PlayComplex("ClassroomIntro", transform);
+        SubtitleManager.Instance.PlaySequence(classroomIntro);
         yield return new WaitForSeconds(25f);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         yield return StartCoroutine(LookAtBoard());

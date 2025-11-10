@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
-  m_Name: SubtitleLine 4
+  m_Name: SubtitleLine 9
   m_EditorClassIdentifier: 
-  speaker: 
-  text: Out here, trust is traded for stickers, and justice is just another word
-    scribbled in crayon.
-  startTime: 1.7
-  duration: 6.93
+  speaker: Foxy
+  text: We can use the white board!
+  startTime: 0
+  duration: 1.98
