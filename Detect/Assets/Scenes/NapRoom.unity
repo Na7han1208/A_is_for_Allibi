@@ -1438,7 +1438,7 @@ MonoBehaviour:
         m_Calls: []
   - cutsceneName: Final
     videoClip: {fileID: 32900000, guid: 4a8f865e77afb57478f799c8cd01a8db, type: 3}
-    subtitleSequence: {fileID: 0}
+    subtitleSequence: {fileID: 11400000, guid: eab4a4892a99dbe4c9db4f204634cb37, type: 2}
     loop: 0
     skippable: 1
     onBeforeCutscene:

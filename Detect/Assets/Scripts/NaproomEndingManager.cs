@@ -30,7 +30,7 @@ public class NaproomEndingManager : MonoBehaviour
     public void OpenDoor()
     {
         SoundManager.Instance.PlayComplex("Unlock", transform);
-        SoundManager.Instance.PlayComplex("Naproom", transform);
+        SoundManager.Instance.PlayComplex("NaproomMusic", transform);
         Door.SetActive(false);
         Door2.SetActive(true);
         CutsceneCanvas.SetActive(false);
