@@ -1,59 +1,39 @@
 using System.Collections;
+using System.Runtime.Serialization.Formatters;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class LightningStrikeManager : MonoBehaviour
+public class PlaygroundEndManager : MonoBehaviour
 {
-    [SerializeField] private Material greySkybox;
-    [SerializeField] private GameObject lightning;
-    [SerializeField] private Color color;
-    private bool hasStruck = false;
-    [SerializeField] ParticleSystem rainfx;
-    [SerializeField] private GameObject EddyStuff;
-
-    [SerializeField] private GameObject stuffing;
+    [SerializeField] private GameObject eddy;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Playground"))
+        if (other.CompareTag("EddyEye"))
         {
-            if (hasStruck) return;
-            hasStruck = true;
-            SoundManager.Instance.PlayComplex("Lightning", transform);
-            FindFirstObjectByType<RainSoundManager>().SetSystemActive(true);
-            RenderSettings.skybox = greySkybox;
-            RenderSettings.fog = true;
-            RenderSettings.fogDensity = 0.3f;
-            RenderSettings.fogMode = FogMode.Exponential;
-            RenderSettings.fogColor = color;
-            StartCoroutine(lightningStrike());
-            rainfx.Play();
-            EddyStuff.SetActive(true);
+            StartCoroutine(Ending());
         }
     }
 
-    private IEnumerator lightningStrike()
+    private IEnumerator Ending()
     {
-        lightning.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
-        lightning.SetActive(false);
-        yield return new WaitForSeconds(2f);
         FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Puzzle");
         StartCoroutine(LookAt());
-        SoundManager.Instance.PlayComplex("Stuffing", transform);
         yield return new WaitForSeconds(3f);
-        FindFirstObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
+        FindAnyObjectByType<PlayerInput>().SwitchCurrentActionMap("Player");
+        SoundManager.Instance.StopAll();
+        CutsceneManager.Instance.PlayCutscene("Final");
     }
 
     private IEnumerator LookAt()
     {
         var fpc = FindFirstObjectByType<FPController>();
         Transform camT = (fpc != null && fpc.cameraTransform != null) ? fpc.cameraTransform : Camera.main?.transform;
-        if (camT == null || stuffing == null) yield break;
+        if (camT == null || eddy == null) yield break;
 
         if (fpc != null) fpc.SetPuzzleActive(true);
 
-        Vector3 dir = stuffing.transform.position - camT.position;
+        Vector3 dir = eddy.transform.position - camT.position;
         if (dir.sqrMagnitude <= 0.0001f)
         {
             if (fpc != null) fpc.SetPuzzleActive(false);
@@ -90,4 +70,8 @@ public class LightningStrikeManager : MonoBehaviour
         }
     }
 
+    public void FinalCutsceneOver()
+    {
+        
+    }
 }
