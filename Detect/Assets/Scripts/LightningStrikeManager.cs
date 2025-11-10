@@ -8,6 +8,7 @@ public class LightningStrikeManager : MonoBehaviour
     [SerializeField] private Color color;
     private bool hasStruck = false;
     [SerializeField] ParticleSystem rainfx;
+    [SerializeField] private GameObject EddyStuff;
 
     void OnTriggerEnter(Collider other)
     {
@@ -24,6 +25,7 @@ public class LightningStrikeManager : MonoBehaviour
             RenderSettings.fogColor = color;
             StartCoroutine(lightningStrike());
             rainfx.Play();
+            EddyStuff.SetActive(true);
         }
     }
 
