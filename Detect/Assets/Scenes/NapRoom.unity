@@ -82296,7 +82296,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1770936652}
         m_TargetAssemblyTypeName: TracingPuzzle, Assembly-CSharp
         m_MethodName: HidePuzzle
         m_Mode: 1

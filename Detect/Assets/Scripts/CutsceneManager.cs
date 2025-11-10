@@ -26,6 +26,7 @@ public class CutsceneManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private RawImage rawImage;
     [SerializeField] private GameObject skipImage;
+    [SerializeField] private GameObject crosshair;
 
     [Header("Audio/Video")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -124,6 +125,8 @@ public class CutsceneManager : MonoBehaviour
     {
         StopCurrentQuiet();
 
+        crosshair.SetActive(false);
+
         current = data;
         playing = true;
         IsInCutscene = true;
@@ -204,6 +207,8 @@ public class CutsceneManager : MonoBehaviour
     private void EndCutscene()
     {
         if (!playing) return;
+
+        crosshair.SetActive(true);
 
         playing = false;
         IsInCutscene = false;
