@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 35
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
+  speaker: 'Howard '
+  text: "You know how he loves making codes and puzzles. \r\n"
   startTime: 0
-  duration: 2
+  duration: 3

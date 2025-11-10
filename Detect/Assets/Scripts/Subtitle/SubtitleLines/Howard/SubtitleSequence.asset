@@ -12,4 +12,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9548f73f0391b084d87619d5f1a842a0, type: 3}
   m_Name: SubtitleSequence
   m_EditorClassIdentifier: 
-  lines: []
+  lines:
+  - {fileID: 11400000, guid: e30f70b0406adeb44b592097572cbbe6, type: 2}
+  - {fileID: 11400000, guid: b9a196271344fef43973a91c768a4177, type: 2}
+  - {fileID: 11400000, guid: 8d046d9f1d33f074b99c8f14c3111234, type: 2}
+  - {fileID: 11400000, guid: 1b78ca941f832724a9a843f5aa880c0d, type: 2}
+  - {fileID: 11400000, guid: 77f13bde0e522a1489e173dc19582994, type: 2}
+  - {fileID: 11400000, guid: 68a6141abbe99cb4ba1cb7b5f33ee822, type: 2}
+  - {fileID: 11400000, guid: 487f49a691b396849be20e61d2f96374, type: 2}
+  - {fileID: 11400000, guid: e5cc392fe2b1ed34ca28215c7bf7e00b, type: 2}
+  - {fileID: 11400000, guid: 0f6efbf6305f1ef47b8379d7cb5ee6a8, type: 2}
+  - {fileID: 11400000, guid: 1d5c8b49d1d266f4abc8ef2963e4aae8, type: 2}
+  - {fileID: 11400000, guid: e07a64241593e8d4285b97f470b4cb91, type: 2}
+  - {fileID: 11400000, guid: 32ae6dedfced95c46a78a93ede2646d1, type: 2}
+  - {fileID: 11400000, guid: 995765674ee0e314db7e2ec601a0c81e, type: 2}
+  - {fileID: 11400000, guid: b6aa9d0d74b7e6c4b8eb285417a608da, type: 2}
+  - {fileID: 11400000, guid: 5360f36fd7870944386fa9d638868340, type: 2}
+  - {fileID: 11400000, guid: 3c5cc8801d0f47944ab9abefb04767b9, type: 2}
+  - {fileID: 11400000, guid: 6323f4d8fe007cb468d71eab0b3f9b34, type: 2}
+  - {fileID: 11400000, guid: 4cbfd155882d2014fbe68503e3e41e88, type: 2}
+  - {fileID: 11400000, guid: 5414527a23dade14c8c0a4ebbd7cb48e, type: 2}
+  - {fileID: 11400000, guid: 5c642560c19425f4291f4a4a401f206e, type: 2}
+  - {fileID: 11400000, guid: f0dc510df85e34646a24c838edf9d41f, type: 2}
+  - {fileID: 11400000, guid: 6bd525c9400bebd439dd749d67beb3fd, type: 2}
+  - {fileID: 11400000, guid: 8eebd1b5d8dece04685cc58a7524bcca, type: 2}
+  - {fileID: 11400000, guid: 26edf1db5a88ec04289ca7f2d262e474, type: 2}
+  - {fileID: 11400000, guid: 75e2798060df5344fbd52697464e6b58, type: 2}
+  - {fileID: 11400000, guid: c2b08f50e9d82d24cace2a34bc1aa979, type: 2}
+  - {fileID: 11400000, guid: d149464630c29d94194a18817b17dbbf, type: 2}
+  - {fileID: 11400000, guid: eb99ffa0dc2fe65498a576c752378eb7, type: 2}
+  - {fileID: 11400000, guid: 7cf28f6727b7b3c498744f2ed979985d, type: 2}
+  - {fileID: 11400000, guid: f3df264fc42445447a0c6beb5345942b, type: 2}
+  - {fileID: 11400000, guid: 0a88c431c9d75024296a909a7a285cd0, type: 2}
+  - {fileID: 11400000, guid: 171ff5724a3568e48b9b4ee14f090476, type: 2}
+  - {fileID: 11400000, guid: 8f5d7f2561947084b8102ede73e48a2f, type: 2}
+  - {fileID: 11400000, guid: 6db5c785a9266e547a27eaba02a66322, type: 2}
+  - {fileID: 11400000, guid: f50c49ffe66de094c8af098ff37b886d, type: 2}
+  - {fileID: 11400000, guid: 6c0e1f0fae61d6f48ac4b098659f857d, type: 2}
+  - {fileID: 11400000, guid: 0a197ca4d1b58f845b79ecec7749d161, type: 2}
+  - {fileID: 11400000, guid: 31c7babeee1df08488f03480599c64c8, type: 2}
+  - {fileID: 11400000, guid: 46f8f0819c56ad641ae5fc3828baeddc, type: 2}
+  - {fileID: 11400000, guid: 47a9b3c2dc7a9164e96a4a232925ce1c, type: 2}
+  - {fileID: 11400000, guid: 0e2b83f334d02d94188c94582cd72e51, type: 2}
+  - {fileID: 11400000, guid: ec2086994dde60840b14a33ad9d83e99, type: 2}
+  - {fileID: 11400000, guid: d789f7bd2c13f7e418a3bb71fed0caed, type: 2}
+  - {fileID: 11400000, guid: d0e767480efd54c4a97e91c5aa4447bf, type: 2}
+  - {fileID: 11400000, guid: d9aa17bed8e942645bbdd215bd9fc800, type: 2}
+  - {fileID: 11400000, guid: ebbf6fbe78adfe347b6b32222453659a, type: 2}
+  - {fileID: 11400000, guid: 6a50be52fe88ae049870475b88fc8b19, type: 2}
+  - {fileID: 11400000, guid: 32aba63fc12c7dd42bf87ea703c4bfd6, type: 2}
+  - {fileID: 11400000, guid: 2ab4a6dd7a6aa9a479f20f438a2ccce3, type: 2}
+  - {fileID: 11400000, guid: 087e4e00c02a6f14cae3eb07c186ee3a, type: 2}
+  - {fileID: 11400000, guid: 4499072069f46cf41a654d1cec565eff, type: 2}
+  - {fileID: 11400000, guid: 6f2439751217ae946885a96efa8afcee, type: 2}
+  - {fileID: 11400000, guid: 8cc86bc1cdc04194bb35377b6bd85870, type: 2}
+  - {fileID: 11400000, guid: 1ee8964b888683145945555f4768f08a, type: 2}

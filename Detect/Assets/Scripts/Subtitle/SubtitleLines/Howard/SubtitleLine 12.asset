@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 12
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
-  startTime: 0
-  duration: 2
+  speaker: Howard
+  text: 'But then since it was Miss M''s birthday, I had just a tiny little ity,
+    weensy little little nibble bit of a cupcake.
+
+'
+  startTime: 1
+  duration: 8
