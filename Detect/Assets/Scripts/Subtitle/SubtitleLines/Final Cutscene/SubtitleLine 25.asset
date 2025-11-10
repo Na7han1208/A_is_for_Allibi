@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 25
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
-  startTime: 0
+  speaker: Foxy
+  text: "Sorry it had to end this way\u2026"
+  startTime: 2
   duration: 2

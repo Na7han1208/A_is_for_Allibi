@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 4
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
-  startTime: 0
-  duration: 2
+  speaker: Timmy
+  text: "I should have helped you! I can\u2019t- I can\u2019t believe it\u2019s come
+    to this\u2026 \r\n"
+  startTime: 1
+  duration: 4

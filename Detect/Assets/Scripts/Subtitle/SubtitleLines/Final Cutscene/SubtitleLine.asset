@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
-  startTime: 0
+  speaker: Timmy
+  text: "No, it can\u2019t be\u2026\r\n"
+  startTime: 7
   duration: 2

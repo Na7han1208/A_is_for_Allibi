@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 17
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
-  startTime: 0
-  duration: 2
+  speaker: Timmy
+  text: "And now... You sick bastard, what type of malicious revenge is this? \r\n"
+  startTime: 1
+  duration: 5
