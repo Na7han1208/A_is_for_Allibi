@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 39
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
+  speaker: 'Howard '
+  text: "I don\u2019t know what he was cooking up. \r\n"
   startTime: 0
   duration: 2

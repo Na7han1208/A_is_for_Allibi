@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 8
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
-  startTime: 0
-  duration: 2
+  speaker: 'Howard '
+  text: 'Okay okay what do you want to know?
+
+'
+  startTime: 1
+  duration: 3

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 52
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
+  speaker: Foxy
+  text: "you\u2019re so skilled couldn\u2019t you make a suspect sketch if he described
+    this criminal? "
   startTime: 0
-  duration: 2
+  duration: 7

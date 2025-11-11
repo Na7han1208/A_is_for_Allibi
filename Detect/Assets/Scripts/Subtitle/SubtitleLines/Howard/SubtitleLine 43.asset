@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0521eb755e5bc941a155f0c47126483, type: 3}
   m_Name: SubtitleLine 43
   m_EditorClassIdentifier: 
-  speaker: 
-  text: 
+  speaker: 'Howard '
+  text: "But come to think of it not everybody had left yet, maybe Eddy was making
+    something for him and\u2014\r\n"
   startTime: 0
-  duration: 2
+  duration: 6
